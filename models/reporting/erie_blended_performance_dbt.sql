@@ -87,7 +87,7 @@ WITH office_data as
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM (SELECT * FROM reporting.erie_googleads_sub_source_for_blended WHERE campaign_type_default != 'Campaign Type: Youtube')
+    FROM (SELECT * FROM {{ ref('erie_googleads_sub_source_for_blended') }} WHERE campaign_type_default != 'Campaign Type: Youtube')
     LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, advertising_channel_type,  
             case 
                 when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
@@ -132,7 +132,7 @@ WITH office_data as
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM (SELECT * FROM reporting.erie_googleads_sub_source_for_blended WHERE campaign_type_default = 'Campaign Type: Youtube')
+    FROM (SELECT * FROM {{ ref('erie_googleads_sub_source_for_blended') }} WHERE campaign_type_default = 'Campaign Type: Youtube')
     LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, advertising_channel_type,  
                 case 
                     when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
@@ -148,7 +148,7 @@ WITH office_data as
     
     UNION ALL
     
-    (SELECT * FROM reporting.erie_tiktok_sub_source_for_blended)
+    (SELECT * FROM {{ ref('erie_tiktok_sub_source_for_blended') }})
     
     UNION ALL
     
