@@ -57,7 +57,16 @@ group by 1,2,3,4,5,6
 )
 
 , joined_data as (
-SELECT 'TikTok' AS channel, date, date_granularity, NULL as office, NULL as office_location, NULL as sf_locations, sub_source_id, sub_source, NULL as zip, 'Roofing' as erie_type,
+SELECT 'TikTok' AS channel, 
+        date, 
+        date_granularity, 
+        NULL::VARCHAR(256) as office, 
+        NULL::VARCHAR(256) as office_location, 
+        NULL::VARCHAR(256) as sf_locations, 
+        sub_source_id, 
+        sub_source, 
+        NULL::VARCHAR(256) as zip, 
+        'Roofing' as erie_type,
         CASE WHEN campaign_name ~* 'National' THEN 'National'
             --WHEN campaign_name ~* 'Consolidation' THEN 'Consolidation'
             WHEN campaign_name !~* 'National' THEN 'Local'
@@ -66,9 +75,9 @@ SELECT 'TikTok' AS channel, date, date_granularity, NULL as office, NULL as offi
             WHEN campaign_name ~* 'Retargeting' THEN 'Retargeting'
         END as campaign_type,
         campaign_name,
-        NULL as dispo,
-        NULL as call_disposition,
-        NULL as status_detail,
+        NULL::VARCHAR(256) as dispo,
+        NULL::VARCHAR(256) as call_disposition,
+        NULL::VARCHAR(256) as status_detail,
         COALESCE(SUM(spends),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(submit_form),0) AS inplatform_leads,
