@@ -5,7 +5,7 @@ WITH office_data as
             WHEN LEFT(office,1)='B'THEN SPLIT_PART(office,' ',1)
         end as code, 
         SPLIT_PART(office,' ',2) + SPLIT_PART(office,' ',3) + SPLIT_PART(office,' ',4) as location
-    FROM gsheet_raw.office_locations
+    FROM {{ source('gsheet_raw', 'office_locations') }}
     GROUP BY office
     ORDER BY code ASC)
 
@@ -41,7 +41,7 @@ WITH office_data as
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM reporting.erie_facebook_ad_performance
+    FROM {{ source('reporting', 'erie_facebook_ad_performance') }}
     LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_effective_status, 
         case 
             when (account_id = '813620678687014' OR account_id = '306770030564777') then RIGHT(LEFT(campaign_name,4),3) 
@@ -49,7 +49,7 @@ WITH office_data as
             when account_id = '1349056908916556' AND LEFT(campaign_name,4) = 'B078' THEN 'B002'
             when account_id = '1349056908916556' THEN LEFT(campaign_name,4)
         end as code 
-        FROM facebook_base.facebook_campaigns) c
+        FROM {{ source('facebook_base', 'facebook_campaigns') }}) c
         USING(campaign_id, campaign_name, account_id, campaign_effective_status)
     LEFT JOIN office_data USING(code)
     WHERE date >= '2023-05-01'
@@ -87,7 +87,7 @@ WITH office_data as
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM (SELECT * FROM {{ ref('erie_googleads_sub_source_for_blended') }} WHERE campaign_type_default != 'Campaign Type: Youtube')
+    FROM (SELECT * FROM {{ ref('erie_googleads_sub_sources') }} WHERE campaign_type_default != 'Campaign Type: Youtube')
     LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, advertising_channel_type,  
             case 
                 when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
@@ -95,7 +95,7 @@ WITH office_data as
                 when account_id = '2819798401' AND LEFT(campaign_name,4) = '0078' THEN 'B002'
                 when account_id = '2819798401' THEN LEFT(campaign_name,4)
             end as code 
-                FROM googleads_base.googleads_campaigns) USING(campaign_id, campaign_name, account_id, campaign_status)
+                FROM {{ source('googleads_base', 'googleads_campaigns') }}) USING(campaign_id, campaign_name, account_id, campaign_status)
     LEFT JOIN office_data USING(code)
     WHERE date >= '2023-05-01'
     AND advertising_channel_type != 'VIDEO'
@@ -132,7 +132,7 @@ WITH office_data as
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM (SELECT * FROM {{ ref('erie_googleads_sub_source_for_blended') }} WHERE campaign_type_default = 'Campaign Type: Youtube')
+    FROM (SELECT * FROM {{ ref('erie_googleads_sub_sources') }} WHERE campaign_type_default = 'Campaign Type: Youtube')
     LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, advertising_channel_type,  
                 case 
                     when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
@@ -140,7 +140,7 @@ WITH office_data as
                     when account_id = '2819798401' AND LEFT(campaign_name,4) = '0078' THEN 'B002'
                     when account_id = '2819798401' THEN LEFT(campaign_name,4)
                 end as code 
-                FROM googleads_base.googleads_campaigns) USING(campaign_id, campaign_name, account_id, campaign_status)
+                FROM {{ source('googleads_base', 'googleads_campaigns') }}) USING(campaign_id, campaign_name, account_id, campaign_status)
     LEFT JOIN office_data USING(code)
     WHERE date >= '2023-05-01'
     AND advertising_channel_type = 'VIDEO'
@@ -148,7 +148,7 @@ WITH office_data as
     
     UNION ALL
     
-    (SELECT * FROM {{ ref('erie_tiktok_sub_source_for_blended') }})
+    (SELECT * FROM {{ ref('erie_tiktok_sub_sources') }})
     
     UNION ALL
     
@@ -175,7 +175,7 @@ WITH office_data as
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM reporting.erie_bingads_campaign_performance
+    FROM {{ source('reporting', 'erie_bingads_campaign_performance') }}
     WHERE date >= '2023-05-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
     
@@ -222,7 +222,7 @@ WITH office_data as
         COALESCE(SUM(hits),0) as hits,
         COALESCE(SUM(issues),0) as issues,
         COALESCE(SUM(ooa_leads),0) as ooa_leads
-    FROM reporting.erie_salesforce_performance 
+    FROM {{ source('reporting', 'erie_salesforce_performance') }}
     LEFT JOIN office_data ON erie_salesforce_performance.market = office_data.sf_office
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
     
