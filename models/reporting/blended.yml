@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: googleads_raw
+    schema: googleads_raw
+    tables:
+      - name: ad_performance_report
+        identifier: ad_performance_report
+      
+      - name: campaign_history
+        identifier: campaign_history
+
+  - name: supermetrics_raw
+    schema: supermetrics_raw
+    tables:
+      - name: tik_ads_insights
+        identifier: tik_ads_insights
+
+  - name: gsheet_raw
+    schema: gsheet_raw
+    tables:
+      - name: office_locations
+        identifier: office_locations
+      
+
+  - name: reporting
+    schema: reporting
+    tables:
+      - name: erie_salesforce_performance
+        identifier: erie_salesforce_performance
+
+      - name: erie_googleads_campaign_performance
+        identifier: erie_googleads_campaign_performance
+
+      - name: erie_facebook_ad_performance
+        identifier: erie_facebook_ad_performance
+
+      - name: erie_bingads_campaign_performance
+        identifier: erie_bingads_campaign_performance
+
+      
