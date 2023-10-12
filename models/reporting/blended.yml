@@ -38,4 +38,7 @@ sources:
       - name: erie_bingads_campaign_performance
         identifier: erie_bingads_campaign_performance
 
+      - name: erie_tiktok_ad_performance
+        identifier: erie_tiktok_ad_performance
+
       
