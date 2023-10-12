@@ -21,7 +21,18 @@ sources:
     tables:
       - name: office_locations
         identifier: office_locations
-      
+
+  - name: googleads_base
+    schema: googleads_base
+    tables:
+      - name: googleads_campaigns
+        identifier: googleads_campaigns
+
+  - name: facebook_base
+    schema: facebook_base
+    tables:
+      - name: facebook_campaigns
+        identifier: facebook_campaigns  
 
   - name: reporting
     schema: reporting
