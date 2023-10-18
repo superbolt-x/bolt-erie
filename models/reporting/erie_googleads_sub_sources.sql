@@ -189,6 +189,8 @@ select
     spend,
     clicks,
     leads
-from joined_data)
+from joined_data
+where (sub_source !~* 'CallRail' and sub_source !~* 'Link Extension')
+)
 
 select * from final_data
