@@ -63,6 +63,7 @@ joined_data as  ( (
                 sub_source, 
                 spends as spend, 
                 clicks, 
+                impressions,
                 leads, 
                 account_id, 
                 campaign_status
@@ -156,6 +157,7 @@ joined_data as  ( (
                 sub_source, 
                 spend, 
                 clicks, 
+                impressions,
                 leads, 
                 account_id, 
                 campaign_status
@@ -188,6 +190,7 @@ select
     date_granularity,
     spend,
     clicks,
+    impressions,
     leads
 from joined_data
 where (sub_source !~* 'CallRail' and sub_source !~* 'Link Extension')
