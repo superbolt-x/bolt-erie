@@ -155,33 +155,7 @@ WITH office_data as
     
     UNION ALL
     
-    (SELECT 'Bing' AS channel, date, date_granularity, office, office_location, NULL as sf_locations, NULL as zip, 'Roofing' as erie_type, 'National' as market, NULL as sub_source_id, NULL as sub_source,
-        CASE WHEN campaign_name ~* 'Branded' OR campaign_name ~* 'Metal Roofing Keywords' THEN 'Search'
-            ELSE 'Other' 
-        END as campaign_type,
-        campaign_name,
-        NULL as dispo,
-        NULL as call_disposition,
-        NULL as status_detail,
-        COALESCE(SUM(spend),0) AS spend,
-        COALESCE(SUM(clicks),0) AS clicks,
-        COALESCE(SUM(impressions),0) AS impressions,
-        COALESCE(SUM(leads),0) AS inplatform_leads,
-        0 as sf_leads,
-        0 as calls,
-        0 as appointments,
-        0 as demos,
-        0 as down_payments,
-        0 as closed_deals,
-        0 as gross,
-        0 as net,
-        0 as workable_leads,
-        0 as hits,
-        0 as issues,
-        0 as ooa_leads
-    FROM {{ source('reporting', 'erie_bingads_campaign_performance') }}
-    WHERE date >= '2023-05-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+    (SELECT * FROM {{ ref('erie_bingads_sub_sources') }})
     
     UNION ALL 
     
