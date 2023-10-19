@@ -24,8 +24,18 @@ SELECT ad_group_id,
     WHERE source IN ('IL3','BIL3')
     GROUP BY 1,2,3,4)
 
-SELECT 'Bing' AS channel, date, date_granularity, office, office_location, NULL as sf_locations, 
-        NULL as zip, 'Roofing' as erie_type, 'National' as market, sub_source_id, sub_source,
+SELECT 
+        'Bing' AS channel, 
+        date, 
+        date_granularity, 
+        office, 
+        office_location, 
+        NULL as sf_locations,  
+        sub_source_id, 
+        sub_source,
+        NULL as zip,
+        'Roofing' as erie_type,
+        'National' as market,
         CASE WHEN campaign_name ~* 'Branded' OR campaign_name ~* 'Metal Roofing Keywords' THEN 'Search'
             ELSE 'Other' 
         END as campaign_type,
