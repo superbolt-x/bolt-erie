@@ -9,7 +9,15 @@ WITH office_data as
     GROUP BY office
     ORDER BY code ASC)
 
-    (SELECT 'Facebook' AS channel, date, date_granularity, CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, sf_office as office_location, NULL as sf_locations, NULL as sub_source_id, NULL as sub_source,
+    (SELECT 
+        'Facebook' AS channel, 
+        date, 
+        date_granularity, 
+        CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
+        sf_office as office_location, 
+        NULL as sf_locations, 
+        NULL as sub_source_id, 
+        NULL as sub_source,
         NULL as zip, 
         CASE WHEN (account_id = '813620678687014' OR account_id = '306770030564777') THEN 'Roofing' 
             WHEN account_id = '1349056908916556' THEN 'Basement'
