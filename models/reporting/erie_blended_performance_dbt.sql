@@ -66,8 +66,18 @@ WITH office_data as
 
     UNION ALL
     
-    (SELECT 'Google' AS channel, date, date_granularity, CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, sf_office as office_location, NULL as sf_locations, sub_source_id, sub_source,
-        NULL as zip, erie_type, market, 
+    (SELECT 
+        'Google' AS channel, 
+        date, 
+        date_granularity, 
+        CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
+        sf_office as office_location, 
+        NULL as sf_locations, 
+        sub_source_id, 
+        sub_source,
+        NULL as zip, 
+        erie_type, 
+        market, 
         CASE WHEN campaign_name ~* 'Discovery' THEN 'Discovery'
             WHEN campaign_name ~* 'Performance Max' OR campaign_name ~* 'PMAX' THEN 'Performance Max'
             WHEN 
@@ -114,7 +124,15 @@ WITH office_data as
     
     UNION ALL
     
-    (SELECT 'YouTube' AS channel, date, date_granularity, CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, sf_office as office_location,  NULL as sf_locations, sub_source_id, sub_source,
+    (SELECT 
+        'YouTube' AS channel, 
+        date, 
+        date_granularity, 
+        CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
+        sf_office as office_location,  
+        NULL as sf_locations, 
+        sub_source_id, 
+        sub_source,
         NULL as zip, erie_type, 
         CASE WHEN campaign_name ~* 'all areas' THEN 'National'
             WHEN campaign_name ~* 'warm' THEN 'Retargeting'
@@ -174,7 +192,14 @@ WITH office_data as
             WHEN source IN ('IL3','BIL3') THEN 'Bing'
             ELSE 'Other'
         END AS channel, 
-        date, date_granularity, location as office, sf_office as office_location, CASE WHEN market IS NULL THEN '999 - Invalid' ELSE market END as sf_locations, sub_source_id, sub_source, zip,
+        date, 
+        date_granularity, 
+        location as office, 
+        sf_office as office_location, 
+        CASE WHEN market IS NULL THEN '999 - Invalid' ELSE market END as sf_locations, 
+        sub_source_id, 
+        sub_source, 
+        zip,
         CASE WHEN source ~* 'B' THEN 'Basement'
             WHEN source !~* 'B' THEN 'Roofing' 
         END as erie_type,
