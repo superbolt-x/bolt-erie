@@ -193,7 +193,7 @@ select
     impressions,
     leads
 from joined_data
-where (sub_source !~* 'CallRail' and sub_source !~* 'Link Extension')
+where ((sub_source !~* 'CallRail' and sub_source !~* 'Link Extension') or sub_source is null or sub_source = '')
 )
 
 select * from final_data
