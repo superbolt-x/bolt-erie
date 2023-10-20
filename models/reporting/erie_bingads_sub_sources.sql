@@ -47,6 +47,7 @@ SELECT
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(leads),0) AS inplatform_leads,
+        0 as video_views,
         COALESCE(SUM(sf_leads),0) sf_leads,
         COALESCE(SUM(calls),0) calls,
         COALESCE(SUM(appointments),0) appointments,
