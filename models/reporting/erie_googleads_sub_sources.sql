@@ -65,6 +65,7 @@ joined_data as  ( (
                 clicks, 
                 impressions,
                 leads, 
+                video_views,
                 account_id, 
                 campaign_status
         FROM {{ source('reporting', 'erie_googleads_campaign_performance') }}
@@ -159,6 +160,7 @@ joined_data as  ( (
                 clicks, 
                 impressions,
                 leads, 
+                video_views,
                 account_id, 
                 campaign_status
         FROM 
@@ -191,7 +193,8 @@ select
     spend,
     clicks,
     impressions,
-    leads
+    leads,
+    video_views
 from joined_data
 where ((sub_source !~* 'CallRail' and sub_source !~* 'Link Extension') or sub_source is null or sub_source = '')
 )
