@@ -167,7 +167,7 @@ joined_data as  ( (
         (select *,
         case 
             when campaign_name !~* '0000' then right(split_part(campaign_name,' Warm',1),3)
-            else 'pmax national'
+            else '797'
         end as sub_source_id
         from {{ source('reporting', 'erie_googleads_campaign_performance') }}) t 
         left join campaign_types USING(campaign_id)
