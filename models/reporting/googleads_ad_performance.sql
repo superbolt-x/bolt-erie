@@ -23,11 +23,11 @@ ad_group_id,
 campaign_name,
 campaign_id,
 campaign_status,
-CASE WHEN campaign_name ~* 'Discovery' THEN 'Campaign Type: Discovery'
-    WHEN campaign_name ~* 'Performance Max' OR campaign_name ~* 'PMAX' THEN 'Campaign Type: Performance Max'
+CASE WHEN advertising_channel_type = 'DISCOVERY' THEN 'Campaign Type: Discovery'
+    WHEN advertising_channel_type = 'PERFORMANCE_MAX' THEN 'Campaign Type: Performance Max'
+    WHEN advertising_channel_type = 'VIDEO' THEN 'Campaign Type: Youtube'
     WHEN campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
-    WHEN campaign_name ~* 'metal roofing keywords' OR campaign_name ~* 'NBS evergreen keywords' THEN 'Campaign Type: Non Branded'
-    WHEN campaign_name ~* 'youtube' THEN 'Campaign Type: Youtube'
+    WHEN campaign_name ~* 'metal roofing keywords' OR campaign_name ~* 'NBS evergreen keywords' or campaign_name ~* 'basements keywords' THEN 'Campaign Type: Non Branded'
     ELSE 'Campaign Type: Other'
 END as campaign_type_default,
 date,
