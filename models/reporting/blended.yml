@@ -1,6 +1,12 @@
 version: 2
 
 sources:
+  - name: snowflake_superbolt
+    schema: snowflake_superbolt
+    tables:
+      - name: superbolt_daily_file
+        identifier: superbolt_daily_file
+        
   - name: googleads_raw
     schema: googleads_raw
     tables:
