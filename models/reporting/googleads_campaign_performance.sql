@@ -2,6 +2,17 @@
     alias = target.database + '_googleads_campaign_performance'
 )}}
 
+WITH office_data as
+    (SELECT office as sf_office, 
+        case 
+            WHEN LEFT(office,1)='R' THEN SPLIT_PART(SPLIT_PART(office,' ',1),'R',2) 
+            WHEN LEFT(office,1)='B'THEN SPLIT_PART(office,' ',1)
+        end as code, 
+        SPLIT_PART(office,' ',2) + SPLIT_PART(office,' ',3) + SPLIT_PART(office,' ',4) as location
+    FROM {{ source('gsheet_raw', 'office_locations') }}
+    GROUP BY office
+    ORDER BY code ASC)
+
 SELECT 
 account_id,
 campaign_name,
@@ -31,3 +42,12 @@ conversions_value as revenue,
 kashurbagetpricing as leads,
 video_views
 FROM {{ ref ('googleads_performance_by_campaign') }}
+LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, advertising_channel_type,  
+            case 
+                when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
+                when account_id = '2819798401' AND LEFT(campaign_name,4) = '0071' THEN 'B001'
+                when account_id = '2819798401' AND LEFT(campaign_name,4) = '0078' THEN 'B002'
+                when account_id = '2819798401' THEN LEFT(campaign_name,4)
+            end as code 
+                FROM {{ ref('googleads_campaigns') }}) USING(campaign_id, campaign_name, account_id, campaign_status)
+    LEFT JOIN office_data USING(code)
