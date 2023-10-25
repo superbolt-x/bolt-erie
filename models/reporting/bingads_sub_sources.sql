@@ -1,8 +1,12 @@
+{{ config (
+    alias = target.database + '_bingads_sub_sources'
+)}}
+
 WITH sub_source_data as (
 SELECT ad_group_id,
         right(ad_group_name,3)::varchar as sub_source_id,
         count(*)
-    FROM {{ source ('reporting','erie_bingads_ad_performance') }}
+    FROM {{ ref('bingads_ad_performance') }}
     WHERE date >= '2023-05-01'
     GROUP BY 1,2)
 
@@ -20,7 +24,7 @@ SELECT ad_group_id,
         COALESCE(SUM(hits),0) hits,
         COALESCE(SUM(issues),0) issues,
         COALESCE(SUM(ooa_leads),0) ooa_leads
-    FROM {{ source ('reporting','erie_salesforce_performance') }}
+    FROM {{ ref('salesforce_performance') }}
     WHERE source IN ('IL3','BIL3')
     GROUP BY 1,2,3,4)
 
@@ -60,7 +64,7 @@ SELECT
         COALESCE(SUM(hits),0) hits,
         COALESCE(SUM(issues),0) issues,
         COALESCE(SUM(ooa_leads),0) ooa_leads
-    FROM {{ source ('reporting','erie_bingads_ad_performance') }}
+    FROM {{ ref('bingads_ad_performance') }}
     LEFT JOIN sub_source_data USING(ad_group_id)
     LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
     WHERE date >= '2023-05-01'
