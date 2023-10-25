@@ -4,7 +4,7 @@
 
 WITH final_data as
     (SELECT *
-    FROM snowflake_superbolt.superbolt_daily_file
+    FROM {{ source('snowflake_superbolt','superbolt_daily_file') }}
     WHERE (source = 'BPMX' OR _fivetran_deleted IS false))
 
 SELECT DATE_TRUNC('day',lead_entry_date::date) as date, 'day' as date_granularity,
