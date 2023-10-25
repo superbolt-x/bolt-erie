@@ -34,6 +34,8 @@ CASE WHEN campaign_name ~* 'all areas' THEN 'National'
     WHEN campaign_name ~* 'warm' THEN 'Retargeting'
     WHEN campaign_name !~* 'all areas' OR campaign_name !~* 'warm' THEN 'Local'
 END as market,
+CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
+sf_office as office_location, 
 spend,
 impressions,
 clicks,
