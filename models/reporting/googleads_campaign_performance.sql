@@ -44,7 +44,7 @@ conversions_value as revenue,
 kashurbagetpricing as leads,
 video_views
 FROM {{ ref ('googleads_performance_by_campaign') }}
-LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, advertising_channel_type,  
+LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
             case 
                 when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
                 when account_id = '2819798401' AND LEFT(campaign_name,4) = '0071' THEN 'B001'
