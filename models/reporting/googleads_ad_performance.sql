@@ -38,6 +38,8 @@ CASE WHEN account_id  = '4560674777' THEN 'Roofing'
 CASE WHEN campaign_name ~* 'All Areas' THEN 'National'
     ELSE 'Local'
     END as market,
+CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
+sf_office as office_location, 
 spend,
 impressions,
 clicks,
