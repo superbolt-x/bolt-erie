@@ -18,3 +18,12 @@ sources:
     tables:
       - name: office_locations
         identifier: office_locations
+
+  - name: googleads_raw
+    schema: googleads_raw
+    tables:
+      - name: ad_performance_report
+        identifier: ad_performance_report
+
+      - name: campaign_history
+        identifier: campaign_history
