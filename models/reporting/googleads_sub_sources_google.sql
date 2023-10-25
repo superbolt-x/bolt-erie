@@ -248,6 +248,6 @@ SELECT
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM (SELECT * FROM final_data WHERE campaign_type_default != 'Campaign Type: Youtube')
+    FROM (SELECT * FROM final_data)
     WHERE date >= '2023-05-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
