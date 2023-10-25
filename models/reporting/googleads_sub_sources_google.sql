@@ -79,7 +79,6 @@ joined_data as  ( (
         left join (
             
             select  ad_final_urls,
-                    advertising_channel_type,
                     campaign_id,
                     date_trunc('day', date) as date, 
                     'day' as date_granularity,
@@ -92,7 +91,6 @@ joined_data as  ( (
             Union all 
             
             select  ad_final_urls, 
-                    advertising_channel_type,
                     campaign_id,
                     date_trunc('week', date) as date, 
                     'week' as date_granularity,
@@ -105,7 +103,6 @@ joined_data as  ( (
             Union all
             
             select  ad_final_urls, 
-                    advertising_channel_type,
                     campaign_id,
                     date_trunc('month', date) as date, 
                     'month' as date_granularity,
@@ -118,7 +115,6 @@ joined_data as  ( (
             Union all
             
             select  ad_final_urls, 
-                    advertising_channel_type,
                     campaign_id,
                     date_trunc('quarter', date) as date, 
                     'quarter' as date_granularity,
@@ -131,7 +127,6 @@ joined_data as  ( (
             Union all
             
             select  ad_final_urls, 
-                    advertising_channel_type,
                     campaign_id,
                     date_trunc('year', date) as date, 
                     'year' as date_granularity,
