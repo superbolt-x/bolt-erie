@@ -21,4 +21,4 @@ cost as spend,
 impressions,
 clicks,
 form_submission_events as submit_form
-FROM {{ ref('erie_tiktok_performance_by_ad') }}
+FROM {{ ref('tiktok_performance_by_ad') }}
