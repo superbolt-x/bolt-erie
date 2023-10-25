@@ -15,6 +15,7 @@ WITH office_data as
 
 SELECT 
 account_id,
+advertising_channel_type,
 campaign_name,
 campaign_id,
 campaign_status,
