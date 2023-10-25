@@ -82,6 +82,7 @@ joined_data as  ( (
                     campaign_id,
                     date_trunc('day', date) as date, 
                     'day' as date_granularity,
+                    advertising_channel_type,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
@@ -94,6 +95,7 @@ joined_data as  ( (
                     campaign_id,
                     date_trunc('week', date) as date, 
                     'week' as date_granularity,
+                    advertising_channel_type,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
@@ -106,6 +108,7 @@ joined_data as  ( (
                     campaign_id,
                     date_trunc('month', date) as date, 
                     'month' as date_granularity,
+                    advertising_channel_type,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
@@ -118,6 +121,7 @@ joined_data as  ( (
                     campaign_id,
                     date_trunc('quarter', date) as date, 
                     'quarter' as date_granularity,
+                    advertising_channel_type,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
@@ -130,6 +134,7 @@ joined_data as  ( (
                     campaign_id,
                     date_trunc('year', date) as date, 
                     'year' as date_granularity,
+                    advertising_channel_type,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
@@ -189,6 +194,7 @@ select
     campaign_id, 
     campaign_type_default,
     campaign_status,
+    advertising_channel_type,
     sub_source_id, 
     sub_source, 
     erie_type, 
