@@ -119,6 +119,7 @@ SELECT
     market, state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail,
     location as office, 
     sf_office as office_location,
+    leads,
     calls,
     appointments,
     demos,
