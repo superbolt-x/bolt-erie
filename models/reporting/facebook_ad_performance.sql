@@ -2,6 +2,17 @@
     alias = target.database + '_facebook_ad_performance'
 )}}
 
+WITH office_data as
+    (SELECT office as sf_office, 
+        case 
+            WHEN LEFT(office,1)='R' THEN SPLIT_PART(SPLIT_PART(office,' ',1),'R',2) 
+            WHEN LEFT(office,1)='B'THEN SPLIT_PART(office,' ',1)
+        end as code, 
+        SPLIT_PART(office,' ',2) + SPLIT_PART(office,' ',3) + SPLIT_PART(office,' ',4) as location
+    FROM {{ source('gsheet_raw', 'office_locations') }}
+    GROUP BY office
+    ORDER BY code ASC)
+
 SELECT 
 account_id,
 campaign_name,
@@ -25,8 +36,20 @@ format_visual,
 visual_copy,
 date,
 date_granularity,
+CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
+sf_office as office_location, 
 spend,
 impressions,
 link_clicks,
 website_leads+onfacebook_leads as leads
 FROM {{ ref('facebook_performance_by_ad') }}
+LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_effective_status, 
+        case 
+            when (account_id = '813620678687014' OR account_id = '306770030564777') then RIGHT(LEFT(campaign_name,4),3) 
+            when account_id = '1349056908916556' AND LEFT(campaign_name,4) = 'B071' THEN 'B001'
+            when account_id = '1349056908916556' AND LEFT(campaign_name,4) = 'B078' THEN 'B002'
+            when account_id = '1349056908916556' THEN LEFT(campaign_name,4)
+        end as code 
+        FROM {{ ref('facebook_campaigns') }}) c
+        USING(campaign_id, campaign_name, account_id, campaign_effective_status)
+    LEFT JOIN office_data USING(code)
