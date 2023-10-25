@@ -34,7 +34,6 @@ WITH office_data as
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
     FROM filetered_data
-    where source = 'BPMX'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11
     
     UNION ALL
