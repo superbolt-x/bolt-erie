@@ -1,3 +1,7 @@
+{{ config (
+    alias = target.database + '_bingads_ad_performance'
+)}}
+
 WITH office_data as
     (SELECT office as sf_office, SPLIT_PART(SPLIT_PART(office,' ',1),'R',2) as code, SPLIT_PART(office,' ',2) as location
     FROM {{ source('gsheet_raw', 'office_locations') }}
