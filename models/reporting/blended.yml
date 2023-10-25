@@ -6,15 +6,6 @@ sources:
     tables:
       - name: superbolt_daily_file
         identifier: superbolt_daily_file
-        
-  - name: googleads_raw
-    schema: googleads_raw
-    tables:
-      - name: ad_performance_report
-        identifier: ad_performance_report
-      
-      - name: campaign_history
-        identifier: campaign_history
 
   - name: supermetrics_raw
     schema: supermetrics_raw
@@ -27,36 +18,3 @@ sources:
     tables:
       - name: office_locations
         identifier: office_locations
-
-  - name: googleads_base
-    schema: googleads_base
-    tables:
-      - name: googleads_campaigns
-        identifier: googleads_campaigns
-
-  - name: facebook_base
-    schema: facebook_base
-    tables:
-      - name: facebook_campaigns
-        identifier: facebook_campaigns  
-
-  - name: reporting
-    schema: reporting
-    tables:
-      - name: erie_salesforce_performance
-        identifier: erie_salesforce_performance
-
-      - name: erie_googleads_campaign_performance
-        identifier: erie_googleads_campaign_performance
-
-      - name: erie_facebook_ad_performance
-        identifier: erie_facebook_ad_performance
-
-      - name: erie_bingads_campaign_performance
-        identifier: erie_bingads_campaign_performance
-
-      - name: erie_tiktok_ad_performance
-        identifier: erie_tiktok_ad_performance
-
-      - name: erie_bingads_ad_performance
-        identifier: erie_bingads_ad_performance
