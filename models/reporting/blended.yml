@@ -32,20 +32,20 @@ sources:
     schema: reporting
     tables:
       - name: facebook_ad_performance
-        identifier: facebook_ad_performance
+        identifier: erie_facebook_ad_performance
 
       - name: googleads_ad_performance
-        identifier: googleads_ad_performance
+        identifier: erie_googleads_ad_performance
 
       - name: salesforce_performance
-        identifier: salesforce_performance
+        identifier: erie_salesforce_performance
 
       - name: googleads_campaign_performance
-        identifier: googleads_campaign_performance
+        identifier: erie_googleads_campaign_performance
 
       - name: tiktok_ad_performance
-        identifier: tiktok_ad_performance
+        identifier: erie_tiktok_ad_performance
 
       - name: bingads_ad_performance
-        identifier: bingads_ad_performance
+        identifier: erie_bingads_ad_performance
   
