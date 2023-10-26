@@ -4,7 +4,7 @@
 
 WITH subsource_cte as (
     select sub_source_id as sf_sub_source_id,sub_source,count(*)
-    from {{ ref('salesforce_performance') }}
+    from {{ source('reporting','salesforce_performance') }}
     group by 1,2
     ),
 
@@ -75,7 +75,7 @@ joined_data as  ( (
                 video_views,
                 account_id, 
                 campaign_status
-        FROM {{ ref('googleads_campaign_performance') }}
+        FROM {{ source('reporting','googleads_campaign_performance') }}
         left join (
             
             select  ad_final_urls,
@@ -179,7 +179,7 @@ joined_data as  ( (
             when campaign_name !~* '0000' then right(split_part(campaign_name,' Warm',1),3)
             else '797'
         end as sub_source_id
-        from {{ ref('googleads_campaign_performance') }}) t 
+        from {{ source('reporting','googleads_campaign_performance') }}) t 
         left join campaign_types USING(campaign_id)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = t.sub_source_id::varchar
         where date between '2023-05-01' and current_date
