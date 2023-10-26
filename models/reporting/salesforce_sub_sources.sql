@@ -52,5 +52,5 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR') THEN 'Fa
         COALESCE(SUM(hits),0) as hits,
         COALESCE(SUM(issues),0) as issues,
         COALESCE(SUM(ooa_leads),0) as ooa_leads
-    FROM {{ ref('salesforce_performance') }}
+    FROM {{ source('reporting','salesforce_performance') }}
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
