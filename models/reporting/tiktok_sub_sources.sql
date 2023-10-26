@@ -3,7 +3,7 @@
 )}}
 
 with source_cte as (select sub_source_id, sub_source
-from {{ ref('salesforce_performance') }}
+from {{ source('reporting','salesforce_performance') }}
 group by 1,2) 
 
 , url_cte as (
@@ -99,7 +99,7 @@ SELECT 'TikTok' AS channel,
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM {{ ref('tiktok_ad_performance') }}
+    FROM {{ source('reporting','tiktok_ad_performance') }}
     LEFT JOIN source using(ad_id, date, date_granularity)
     WHERE date >= '2023-05-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
