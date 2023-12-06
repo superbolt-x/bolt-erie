@@ -52,7 +52,7 @@ LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_effective_sta
             when (account_id = '813620678687014' OR account_id = '306770030564777') AND campaign_name ~* 'soc -' then RIGHT(split_part(campaign_name,' - ',6),3) 
             when account_id = '1349056908916556' AND RIGHT(split_part(campaign_name,' - ',6),4) = 'B071' AND campaign_name ~* 'soc -' THEN 'B001'
             when account_id = '1349056908916556' AND RIGHT(split_part(campaign_name,' - ',6),4) = 'B078' AND campaign_name ~* 'soc -' THEN 'B002'
-            when account_id = '1349056908916556' AND campaign_name ~* 'soc -' then RIGHT(split_part(campaign_name,' - ',6),3)
+            when account_id = '1349056908916556' AND campaign_name ~* 'soc -' then RIGHT(split_part(campaign_name,' - ',6),4)
         end as code 
         FROM {{ ref('facebook_campaigns') }}) c
         USING(campaign_id, campaign_name, account_id, campaign_effective_status)
