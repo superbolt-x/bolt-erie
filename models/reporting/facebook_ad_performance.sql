@@ -18,7 +18,7 @@ account_id,
 campaign_name,
 campaign_id,
 campaign_effective_status,
-CASE WHEN campaign_name ~* 'cold' THEN 'Campaign Type: Prospecting' 
+CASE WHEN campaign_name !~* 'warm' THEN 'Campaign Type: Prospecting' 
     WHEN campaign_name ~* 'warm' THEN 'Campaign Type: Retargeting' 
     WHEN campaign_name ~* 'LP Clicks Traffic' THEN 'Campaign Type: Traffic' 
     WHEN campaign_name ~* 'LP Views Leads' THEN 'Campaign Type: View Content' 
