@@ -13,7 +13,7 @@ SELECT
              WHEN account_id = '1349056908916556' THEN 'Basement'
         END as erie_type,
         CASE WHEN (campaign_name ~* 'All Area' and (account_id = '813620678687014' OR account_id = '306770030564777') ) or (campaign_name ~* 'sandbox' and account_id = '1349056908916556')  THEN 'National'
-             WHEN campaign_name !~* 'All Area'  THEN 'Local'
+             WHEN (campaign_name !~* 'All Area' and (account_id = '813620678687014' OR account_id = '306770030564777') ) or (campaign_name !~* 'sandbox' and account_id = '1349056908916556')THEN 'Local'
         END as market,
         CASE WHEN campaign_name !~* 'warm' THEN 'Prospecting' 
             WHEN campaign_name ~* 'warm' THEN 'Retargeting' 
