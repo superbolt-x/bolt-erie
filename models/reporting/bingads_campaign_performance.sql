@@ -13,8 +13,8 @@ account_id,
 c.campaign_name,
 campaign_id,
 c.campaign_status,
-CASE WHEN campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
-    WHEN campaign_name ~* 'Metal Roofing Keywords' THEN 'Campaign Type: Non Branded'
+CASE WHEN c.campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
+    WHEN c.campaign_name ~* 'Metal Roofing Keywords' THEN 'Campaign Type: Non Branded'
     ELSE 'Campaign Type: Other'
 END as campaign_type_default,
 date,
