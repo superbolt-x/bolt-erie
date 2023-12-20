@@ -34,7 +34,7 @@ SELECT ad_group_id,
         date_granularity, 
         office, 
         office_location, 
-        campaign_name
+        campaign_name,
         ad_group_id,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
