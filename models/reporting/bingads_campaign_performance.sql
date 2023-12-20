@@ -10,9 +10,9 @@ WITH office_data as
 
 SELECT 
 account_id,
-campaign_name,
+c.campaign_name,
 campaign_id,
-campaign_status,
+c.campaign_status,
 CASE WHEN campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
     WHEN campaign_name ~* 'Metal Roofing Keywords' THEN 'Campaign Type: Non Branded'
     ELSE 'Campaign Type: Other'
@@ -29,5 +29,5 @@ revenue as revenue
 FROM {{ ref('bingads_performance_by_campaign') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, RIGHT(LEFT(campaign_name,4),3) as code 
             FROM {{ ref('bingads_campaigns') }}) c 
-    USING(campaign_id, campaign_name, account_id, campaign_status)
+    USING(campaign_id, account_id)
 LEFT JOIN office_data USING(code)
