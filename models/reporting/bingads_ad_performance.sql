@@ -14,7 +14,7 @@ ad_id,
 ad_group_name,
 ad_status,
 ad_group_id,
-ad_group_status
+ad_group_status,
 c.campaign_name,
 campaign_id,
 c.campaign_status,
