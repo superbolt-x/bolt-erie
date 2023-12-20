@@ -83,18 +83,18 @@ SELECT
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(inplatform_leads),0) AS inplatform_leads,
         0 as video_views,
-        COALESCE(SUM(sf_leads),0) sf_leads,
-        COALESCE(SUM(calls),0) calls,
-        COALESCE(SUM(appointments),0) appointments,
-        COALESCE(SUM(demos),0) demos,
-        COALESCE(SUM(down_payments),0) down_payments,
-        COALESCE(SUM(closed_deals),0) closed_deals,
-        COALESCE(SUM(gross),0) gross,
-        COALESCE(SUM(net),0) net,
-        COALESCE(SUM(workable_leads),0) workable_leads,
-        COALESCE(SUM(hits),0) hits,
-        COALESCE(SUM(issues),0) issues,
-        COALESCE(SUM(ooa_leads),0) ooa_leads
+        0 as sf_leads,
+        0 as calls,
+        0 as appointments,
+        0 as demos,
+        0 as down_payments,
+        0 as closed_deals,
+        0 as gross,
+        0 as net,
+        0 as workable_leads,
+        0 as hits,
+        0 as issues,
+        0 as ooa_leads
     FROM joined_data
     LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
     WHERE date >= '2023-05-01'
