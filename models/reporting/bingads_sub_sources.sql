@@ -39,6 +39,24 @@ SELECT ad_group_id,
         COALESCE(SUM(inplatform_leads),0) AS inplatform_leads
     FROM bingads_data left join sub_source_data USING(ad_group_id)
     GROUP BY 1,2,3,4,5,6)
+
+, sf_data as 
+    (SELECT date, date_granularity, sub_source_id, sub_source,
+        COALESCE(SUM(leads),0) sf_leads,
+        COALESCE(SUM(calls),0) calls,
+        COALESCE(SUM(appointments),0) appointments,
+        COALESCE(SUM(demos),0) demos,
+        COALESCE(SUM(down_payments),0) down_payments,
+        COALESCE(SUM(closed_deals),0) closed_deals,
+        COALESCE(SUM(gross),0) gross,
+        COALESCE(SUM(net),0) net,
+        COALESCE(SUM(workable_leads),0) workable_leads,
+        COALESCE(SUM(hits),0) hits,
+        COALESCE(SUM(issues),0) issues,
+        COALESCE(SUM(ooa_leads),0) ooa_leads
+    FROM {{ source('reporting','salesforce_performance') }}
+    WHERE source IN ('IL3','BIL3')
+    GROUP BY 1,2,3,4)
     
 
 SELECT 
@@ -77,6 +95,6 @@ SELECT
         0 as hits,
         0 as issues,
         0 as ooa_leads
-    FROM joined_data
+    FROM joined_data LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
     WHERE date >= '2023-05-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
