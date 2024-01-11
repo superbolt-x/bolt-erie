@@ -8,6 +8,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR') THEN 'Fa
             WHEN source = 'SM6' THEN 'TikTok'
             WHEN source IN ('IL3','BIL3') THEN 'Bing'
             WHEN source IN ('SM5','BSM5') THEN 'Nextdoor'
+            WHEN source = 'SM3' THEN 'Outbrain'
             ELSE 'Other'
         END AS channel, 
         date, 
