@@ -28,6 +28,15 @@ sources:
       - name: campaign_history
         identifier: campaign_history
 
+  - name: outbrain_raw
+    schema: outbrain_raw
+    tables:
+      - name: campaign_report
+        identifier: campaign_report
+
+      - name: campaign_history
+        identifier: campaign_history
+
   - name: reporting
     schema: reporting
     tables:
@@ -48,4 +57,7 @@ sources:
 
       - name: bingads_ad_performance
         identifier: erie_bingads_ad_performance
+
+      - name: outbrain_campaign_performance
+        identifier: erie_outbrain_campaign_performance
   
