@@ -3,8 +3,8 @@
 )}}
 
 WITH campaign_data as 
-    (SELECT id as campaign_id, name as campaign_name, last_modified, max(last_modified) over (partition by campaign_id) as last_updated_date FROM {{ source('outbrain_raw','campaign_history') }} )
-    , campaign_names as (SELECT campaign_id, campaign_name FROM campaign_data WHERE last_modified = last_updated_date)
+    (SELECT id, name as campaign_name, last_modified, max(last_modified) over (partition by id) as last_updated_date FROM {{ source('outbrain_raw','campaign_history') }} )
+    , campaign_names as (SELECT id as campaign_id, campaign_name FROM campaign_data WHERE last_modified = last_updated_date)
 
 SELECT DATE_TRUNC('day',date::date) as date, 'day' as date_granularity,
   campaign_id,
