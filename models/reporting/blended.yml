@@ -18,6 +18,8 @@ sources:
     tables:
       - name: office_locations
         identifier: office_locations
+      - name: outbrain_campaign_insights
+        identifier: outbrain_campaign_insights
 
   - name: googleads_raw
     schema: googleads_raw
