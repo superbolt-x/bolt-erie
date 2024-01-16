@@ -2,7 +2,7 @@
     alias = target.database + '_outbrain_campaign_performance'
 )}}
 
-SELECT DATE_TRUNC('day',day::date) as date, 'day' as date_granularity,
+SELECT DATE_TRUNC('day',date::date) as date, 'day' as date_granularity,
   campaign_id,
   campaign_name,
   --platform,
@@ -21,7 +21,7 @@ GROUP BY 1,2,3,4
 
 UNION ALL
 
-SELECT DATE_TRUNC('week',day::date) as date, 'week' as date_granularity,
+SELECT DATE_TRUNC('week',date::date) as date, 'week' as date_granularity,
   campaign_id,
   campaign_name,
   --platform,
@@ -40,7 +40,7 @@ GROUP BY 1,2,3,4
 
 UNION ALL
 
-SELECT DATE_TRUNC('month',day::date) as date, 'month' as date_granularity,
+SELECT DATE_TRUNC('month',date::date) as date, 'month' as date_granularity,
   campaign_id,
   campaign_name,
   platform,
@@ -59,7 +59,7 @@ GROUP BY 1,2,3,4
 
 UNION ALL
 
-SELECT DATE_TRUNC('quarter',day::date) as date, 'quarter' as date_granularity,
+SELECT DATE_TRUNC('quarter',date::date) as date, 'quarter' as date_granularity,
   campaign_id,
   campaign_name,
   platform,
@@ -78,7 +78,7 @@ GROUP BY 1,2,3,4
 
 UNION ALL
 
-SELECT DATE_TRUNC('year',day::date) as date, 'year' as date_granularity,
+SELECT DATE_TRUNC('year',date::date) as date, 'year' as date_granularity,
   campaign_id,
   campaign_name,
   --platform,
