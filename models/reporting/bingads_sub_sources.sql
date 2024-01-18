@@ -7,7 +7,7 @@ SELECT ad_group_id,
         right(ad_group_name,3)::varchar as sub_source_id,
         count(*)
     FROM {{ source('reporting','bingads_ad_performance') }}
-    WHERE date >= '2023-05-01'
+    WHERE date >= '2022-12-01'
     GROUP BY 1,2)
 
 , bingads_data as 
@@ -96,5 +96,5 @@ SELECT
         0 as issues,
         0 as ooa_leads
     FROM joined_data LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
-    WHERE date >= '2023-05-01'
+    WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
