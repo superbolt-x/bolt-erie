@@ -145,7 +145,7 @@ joined_data as  ( (
                     using(campaign_id,date, date_granularity)
         left join subsource_id_cte using(ad_final_urls)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
-        where date between '2023-05-01' and current_date
+        where date >= '2022-12-01'
         and advertising_channel_type != 'PERFORMANCE_MAX'
         order by date, sub_source_id, campaign_name,ad_final_urls
         
@@ -182,7 +182,7 @@ joined_data as  ( (
         from {{ source('reporting','googleads_campaign_performance') }}) t 
         left join campaign_types USING(campaign_id)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = t.sub_source_id::varchar
-        where date between '2023-05-01' and current_date
+        where date >= '2022-12-01'
         and advertising_channel_type = 'PERFORMANCE_MAX'
         order by date, sub_source_id, campaign_name )),
         
@@ -252,5 +252,5 @@ SELECT
         0 as issues,
         0 as ooa_leads
     FROM (SELECT * FROM final_data)
-    WHERE date >= '2023-05-01'
+    WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
