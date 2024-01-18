@@ -15,7 +15,7 @@ select ad_id,landing_page_url, campaign_name, campaign_id, date,
         sum(cost) as spends
 
 from {{ source('supermetrics_raw', 'tik_ads_insights') }}
-WHERE date >= '2023-05-01'
+WHERE date >= '2022-12-01'
 group by 1,2,3,4,5,6
 )
 , source as (
@@ -101,7 +101,7 @@ SELECT 'TikTok' AS channel,
         0 as ooa_leads
     FROM {{ source('reporting','tiktok_ad_performance') }}
     LEFT JOIN source using(ad_id, date, date_granularity)
-    WHERE date >= '2023-05-01'
+    WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
     
 select * from joined_data
