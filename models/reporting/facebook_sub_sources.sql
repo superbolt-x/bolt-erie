@@ -42,5 +42,5 @@ SELECT
         0 as issues,
         0 as ooa_leads
     FROM {{ source('reporting','facebook_ad_performance') }}
-    WHERE date >= '2023-05-01'
+    WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
