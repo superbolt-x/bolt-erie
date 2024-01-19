@@ -34,6 +34,7 @@ visual,
 copy,
 format_visual,
 visual_copy,
+landing_page as landing_page_url,
 date,
 date_granularity,
 CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
@@ -42,7 +43,9 @@ spend,
 impressions,
 link_clicks,
 website_leads+onfacebook_leads as leads
-FROM {{ ref('facebook_performance_by_ad') }}
+FROM 
+    (SELECT * FROM {{ ref('facebook_performance_by_ad') }} r
+    LEFT JOIN {{ source('gsheet_raw','facebook_lp_urls') }} g ON r.ad_name = g.name)
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_effective_status, 
         case
             --when campaign_name = 'Soc - Meta - Basement - Prospecting - Local - Cold Traffic Sandbox - Lead ABO' and split_part(adset_name,' ',1) = 'Broad' then RIGHT(trim(split_part(adset_name,'-',1)),3)
