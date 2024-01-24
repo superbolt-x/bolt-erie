@@ -6,6 +6,7 @@ SELECT
         office, 
         office_location, 
         NULL as sf_locations, 
+        NULL as source,
         NULL as sub_source_id, 
         NULL as sub_source,
         NULL as zip, 
@@ -20,10 +21,17 @@ SELECT
             WHEN campaign_name ~* 'LP Clicks Traffic' THEN 'Traffic' 
             WHEN campaign_name ~* 'LP Views Leads' THEN 'View Content' 
         END as campaign_type,
-        campaign_name,
         NULL as dispo,
         NULL as call_disposition,
         NULL as status_detail,
+        NULL as utm_medium,
+        campaign_name as utm_campaign,
+        NULL as utm_term,
+        NULL as utm_content,
+        NULL as utm_keyword,
+        NULL as utm_match_type,
+        NULL as utm_placement,
+        NULL as utm_discount,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(link_clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
@@ -43,4 +51,4 @@ SELECT
         0 as ooa_leads
     FROM {{ source('reporting','facebook_ad_performance') }}
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
