@@ -67,6 +67,7 @@ SELECT 'TikTok' AS channel,
         NULL::VARCHAR(256) as office, 
         NULL::VARCHAR(256) as office_location, 
         NULL::VARCHAR(256) as sf_locations, 
+        NULL as source,
         sub_source_id, 
         sub_source, 
         NULL::VARCHAR(256) as zip, 
@@ -78,10 +79,17 @@ SELECT 'TikTok' AS channel,
         CASE WHEN campaign_name ~* 'Prospecting' THEN 'Prospecting' 
             WHEN campaign_name ~* 'Retargeting' THEN 'Retargeting'
         END as campaign_type,
-        campaign_name,
         NULL::VARCHAR(256) as dispo,
         NULL::VARCHAR(256) as call_disposition,
         NULL::VARCHAR(256) as status_detail,
+        NULL as utm_medium,
+        campaign_name as utm_campaign,
+        NULL as utm_term,
+        NULL as utm_content,
+        NULL as utm_keyword,
+        NULL as utm_match_type,
+        NULL as utm_placement,
+        NULL as utm_discount,
         COALESCE(SUM(spends),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
@@ -102,6 +110,6 @@ SELECT 'TikTok' AS channel,
     FROM {{ source('reporting','tiktok_ad_performance') }}
     LEFT JOIN source using(ad_id, date, date_granularity)
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
     
 select * from joined_data
