@@ -36,7 +36,6 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR') OR utm_s
             WHEN source IN ('PMX','BPMX') OR (utm_source = 'google' AND advertising_channel_type = 'PERFORMANCE_MAX') THEN 'Performance Max'
             WHEN source IN ('IL2','BIL2','IL3','BIL3') OR (utm_source = 'google' AND advertising_channel_type = 'SEARCH')THEN 'Search'
         END as campaign_type,
-        NULL as campaign_name,
         dispo,
         call_disposition,
         status_detail,
@@ -69,4 +68,4 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR') OR utm_s
     LEFT JOIN (SELECT campaign_id as utm_campaign, campaign_name, advertising_channel_type
             FROM {{ ref('googleads_campaigns') }}) USING(utm_campaign)
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
