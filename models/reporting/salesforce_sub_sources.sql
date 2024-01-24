@@ -65,7 +65,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR') OR utm_s
         COALESCE(SUM(issues),0) as issues,
         COALESCE(SUM(ooa_leads),0) as ooa_leads
     FROM {{ source('reporting','salesforce_performance') }}
-    LEFT JOIN (SELECT campaign_id as utm_campaign, campaign_name, advertising_channel_type
+    LEFT JOIN (SELECT campaign_id::VARCHAR as utm_campaign, campaign_name, advertising_channel_type
             FROM {{ ref('googleads_campaigns') }}) USING(utm_campaign)
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
