@@ -20,7 +20,8 @@ WITH office_data as
 
     final_data as 
     (SELECT DATE_TRUNC('day',lead_entry_date::date) as date, 'day' as date_granularity,
-        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail,
+        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+        utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
         COUNT(DISTINCT lead_id) as leads,
         COALESCE(SUM(number_of_calls),0) as calls,
         COALESCE(SUM("set"),0) as appointments,
@@ -34,12 +35,13 @@ WITH office_data as
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
     FROM filetered_data
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
     
     UNION ALL
     
     SELECT DATE_TRUNC('week',lead_entry_date::date) as date, 'week' as date_granularity,
-        market, state, source,zip,sub_source_id, sub_source, dispo, call_disposition, status_detail,
+        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+        utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
         COUNT(DISTINCT lead_id) as leads,
         COALESCE(SUM(number_of_calls),0) as calls,
         COALESCE(SUM("set"),0) as appointments,
@@ -53,12 +55,13 @@ WITH office_data as
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
     FROM filetered_data
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
     
     UNION ALL
     
     SELECT DATE_TRUNC('month',lead_entry_date::date) as date, 'month' as date_granularity,
-        market, state, source,zip,sub_source_id, sub_source, dispo, call_disposition, status_detail,
+        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+        utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
         COUNT(DISTINCT lead_id) as leads,
         COALESCE(SUM(number_of_calls),0) as calls,
         COALESCE(SUM("set"),0) as appointments,
@@ -72,12 +75,13 @@ WITH office_data as
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
     FROM filetered_data
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
     
     UNION ALL
     
     SELECT DATE_TRUNC('quarter',lead_entry_date::date) as date, 'quarter' as date_granularity,
-        market, state, source,zip,sub_source_id, sub_source, dispo, call_disposition, status_detail,
+        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+        utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
         COUNT(DISTINCT lead_id) as leads,
         COALESCE(SUM(number_of_calls),0) as calls,
         COALESCE(SUM("set"),0) as appointments,
@@ -91,12 +95,13 @@ WITH office_data as
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
     FROM filetered_data
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
     
     UNION ALL
     
     SELECT DATE_TRUNC('year',lead_entry_date::date) as date, 'year' as date_granularity,
-        market, state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail,
+        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+        utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
         COUNT(DISTINCT lead_id) as leads,
         COALESCE(SUM(number_of_calls),0) as calls,
         COALESCE(SUM("set"),0) as appointments,
@@ -110,14 +115,15 @@ WITH office_data as
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
     FROM filetered_data
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11)
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
 
 SELECT 
     date,
     date_granularity,
-    market, state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail,
+    market, state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail, 
     location as office, 
     sf_office as office_location,
+    utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
     leads,
     calls,
     appointments,
