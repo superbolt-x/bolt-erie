@@ -77,7 +77,7 @@ joined_data as  ( (
                 video_views,
                 account_id, 
                 campaign_status
-        FROM {{ source('reporting','googleads_campaign_performance') }}
+        FROM {{ source('reporting','googleads_ad_performance') }}
         left join (
             
             select  ad_final_urls,
