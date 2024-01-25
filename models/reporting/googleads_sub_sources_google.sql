@@ -81,8 +81,6 @@ joined_data as  ( (
         left join (
             
             select  ad_final_urls,
-                    ad_id,
-                    ad_group_id,
                     campaign_id,
                     date_trunc('day', date) as date, 
                     'day' as date_granularity,
@@ -91,13 +89,11 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
+                    group by 1,2,3,4,5
                     
             Union all 
             
             select  ad_final_urls, 
-                    ad_id,
-                    ad_group_id,
                     campaign_id,
                     date_trunc('week', date) as date, 
                     'week' as date_granularity,
@@ -106,13 +102,11 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
+                    group by 1,2,3,4,5
             
             Union all
             
             select  ad_final_urls, 
-                    ad_id,
-                    ad_group_id,
                     campaign_id,
                     date_trunc('month', date) as date, 
                     'month' as date_granularity,
@@ -121,13 +115,11 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
+                    group by 1,2,3,4,5
                     
             Union all
             
-            select  ad_final_urls, 
-                    ad_id,
-                    ad_group_id,
+            select  ad_final_urls,
                     campaign_id,
                     date_trunc('quarter', date) as date, 
                     'quarter' as date_granularity,
@@ -136,13 +128,11 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
+                    group by 1,2,3,4,5
                     
             Union all
             
-            select  ad_final_urls, 
-                    ad_id,
-                    ad_group_id,
+            select  ad_final_urls,
                     campaign_id,
                     date_trunc('year', date) as date, 
                     'year' as date_granularity,
@@ -151,10 +141,10 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
+                    group by 1,2,3,4,5
                     
                     ) 
-                    using(ad_id, ad_group_id, campaign_id, date, date_granularity)
+                    using(campaign_id, date, date_granularity)
         left join subsource_id_cte using(ad_final_urls)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
         where date >= '2022-12-01'
