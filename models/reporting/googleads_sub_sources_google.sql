@@ -57,8 +57,8 @@ joined_data as  ( (
     
         SELECT  ad_final_urls,
                 sub_source_id, 
-                ad_id,
-                ad_group_id,
+                ad_id::VARCHAR,
+                ad_group_id::VARCHAR,
                 campaign_name,
                 date, 
                 campaign_id,
