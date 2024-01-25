@@ -11,7 +11,7 @@ WITH subsource_cte as (
  subsource_id_cte as (
         
         select  
-                ad_final_urls,
+                ad_final_urls, ad_id, ad_group_id,
                 case
                     when RIGHT(ad_final_urls, 5) = 'tep/]' then LEFT(RIGHT(ad_final_urls, 16),3)
                         when (ad_final_urls = '[http://go.eriemetalroofs.com/erie-youtube-metal-roofing-f/]' 
@@ -34,7 +34,7 @@ WITH subsource_cte as (
                 end as sub_source_id,
                 sum(cost_micros::FLOAT)
         from {{ source('googleads_raw','ad_performance_report') }}
-        group by 1,2
+        group by 1,2,3,4
         
     ),
 
@@ -57,6 +57,8 @@ joined_data as  ( (
     
         SELECT  ad_final_urls,
                 sub_source_id, 
+                ad_id,
+                ad_group_id,
                 campaign_name,
                 date, 
                 campaign_id,
@@ -79,6 +81,8 @@ joined_data as  ( (
         left join (
             
             select  ad_final_urls,
+                    ad_id,
+                    ad_group_id,
                     campaign_id,
                     date_trunc('day', date) as date, 
                     'day' as date_granularity,
@@ -87,11 +91,13 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5
+                    group by 1,2,3,4,5,6,7
                     
             Union all 
             
             select  ad_final_urls, 
+                    ad_id,
+                    ad_group_id,
                     campaign_id,
                     date_trunc('week', date) as date, 
                     'week' as date_granularity,
@@ -100,11 +106,13 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5
+                    group by 1,2,3,4,5,6,7
             
             Union all
             
             select  ad_final_urls, 
+                    ad_id,
+                    ad_group_id,
                     campaign_id,
                     date_trunc('month', date) as date, 
                     'month' as date_granularity,
@@ -113,11 +121,13 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5
+                    group by 1,2,3,4,5,6,7
                     
             Union all
             
             select  ad_final_urls, 
+                    ad_id,
+                    ad_group_id,
                     campaign_id,
                     date_trunc('quarter', date) as date, 
                     'quarter' as date_granularity,
@@ -126,11 +136,13 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5
+                    group by 1,2,3,4,5,6,7
                     
             Union all
             
             select  ad_final_urls, 
+                    ad_id,
+                    ad_group_id,
                     campaign_id,
                     date_trunc('year', date) as date, 
                     'year' as date_granularity,
@@ -139,7 +151,7 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    group by 1,2,3,4,5
+                    group by 1,2,3,4,5,6,7
                     
                     ) 
                     using(campaign_id,date, date_granularity)
@@ -154,6 +166,8 @@ joined_data as  ( (
         Union all 
         
         (SELECT  '(not set)' as ad_final_urls,
+                NULL as ad_id,
+                NULL as ad_group_id,
                 sub_source_id, 
                 campaign_name,
                 date, 
@@ -190,6 +204,8 @@ joined_data as  ( (
 final_data as (
 select 
     account_id, 
+    ad_id,
+    ad_group_id,
     campaign_name, 
     campaign_id, 
     campaign_type_default,
@@ -236,8 +252,8 @@ SELECT
         NULL as status_detail,
         NULL as utm_medium,
         campaign_id::VARCHAR as utm_campaign,
-        NULL as utm_term,
-        NULL as utm_content,
+        ad_group_id::VARCHAR as utm_term,
+        ad_id::VARCHAR as utm_content,
         NULL as utm_keyword,
         NULL as utm_match_type,
         NULL as utm_placement,
