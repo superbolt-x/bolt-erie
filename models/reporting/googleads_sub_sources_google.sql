@@ -11,7 +11,7 @@ WITH subsource_cte as (
  subsource_id_cte as (
         
         select  
-                ad_final_urls, ad_id, ad_group_id,
+                ad_final_urls,
                 case
                     when RIGHT(ad_final_urls, 5) = 'tep/]' then LEFT(RIGHT(ad_final_urls, 16),3)
                         when (ad_final_urls = '[http://go.eriemetalroofs.com/erie-youtube-metal-roofing-f/]' 
@@ -34,7 +34,7 @@ WITH subsource_cte as (
                 end as sub_source_id,
                 sum(cost_micros::FLOAT)
         from {{ source('googleads_raw','ad_performance_report') }}
-        group by 1,2,3,4
+        group by 1,2
         
     ),
 
