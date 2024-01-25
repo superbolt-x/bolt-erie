@@ -154,7 +154,7 @@ joined_data as  ( (
                     group by 1,2,3,4,5,6,7
                     
                     ) 
-                    using(campaign_id,date, date_granularity)
+                    using(ad_id, ad_group_id, campaign_id, date, date_granularity)
         left join subsource_id_cte using(ad_final_urls)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
         where date >= '2022-12-01'
