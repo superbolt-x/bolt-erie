@@ -25,7 +25,7 @@ SELECT ad_group_id,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(leads),0) AS inplatform_leads
     FROM {{ source('reporting','bingads_ad_performance') }}
-    GROUP BY 1,2,3,4,5,6,7,8,9)
+    GROUP BY 1,2,3,4,5,6,7,8)
 
 , joined_data as 
     (SELECT 
