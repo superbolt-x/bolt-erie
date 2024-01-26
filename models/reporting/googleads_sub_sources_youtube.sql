@@ -240,10 +240,7 @@ SELECT
         sub_source_id, 
         sub_source,
         NULL as zip, erie_type, 
-        CASE WHEN campaign_name ~* 'all areas' THEN 'National'
-            WHEN campaign_name ~* 'warm' THEN 'Retargeting'
-            WHEN campaign_name !~* 'all areas' OR campaign_name !~* 'warm' THEN 'Local'
-        END as market,
+        market,
         CASE WHEN campaign_name ~* 'cold' THEN 'Prospecting' 
             WHEN campaign_name ~* 'warm' THEN 'Retargeting'
         END as campaign_type,
