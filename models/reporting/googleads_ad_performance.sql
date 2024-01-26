@@ -36,9 +36,10 @@ date_granularity,
 CASE WHEN account_id  = '4560674777' THEN 'Roofing'
     WHEN account_id = '2819798401' THEN 'Basement'
     END AS erie_type,
-CASE WHEN campaign_name ~* 'All Areas' THEN 'National'
-    ELSE 'Local'
-    END as market,
+CASE WHEN campaign_name ~* 'all areas' THEN 'National'
+    WHEN campaign_name ~* 'warm' THEN 'Retargeting'
+    WHEN campaign_name !~* 'all areas' OR campaign_name !~* 'warm' THEN 'Local'
+END as market,
 CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
 sf_office as office_location, 
 spend,
