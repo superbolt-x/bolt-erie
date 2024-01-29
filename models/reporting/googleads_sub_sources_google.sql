@@ -242,8 +242,7 @@ SELECT
         NULL as zip, 
         erie_type, 
         market, 
-        CASE WHEN campaign_name ~* 'Discovery' THEN 'Discovery'
-            WHEN campaign_name ~* 'Demand Gen' THEN 'Demand Gen'
+        CASE WHEN campaign_name ~* 'Discovery' or campaign_name ~* 'Demand Gen' THEN 'Discovery'
             WHEN campaign_name ~* 'Performance Max' OR campaign_name ~* 'PMAX' THEN 'Performance Max'
             WHEN 
                 (campaign_name ~* 'Branded' 
