@@ -2,7 +2,7 @@
     alias = target.database + '_salesforce_sub_sources'
 )}}
 
-SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR') OR utm_source = 'facebook' THEN 'Facebook'
+SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') OR utm_source = 'facebook' THEN 'Facebook'
             WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN 'YouTube'
             WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN 'Google'
             WHEN source = 'SM6' OR utm_source = 'tiktok' THEN 'TikTok'
@@ -23,12 +23,12 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR') OR utm_s
         CASE WHEN source ~* 'B' THEN 'Basement'
             WHEN source !~* 'B' THEN 'Roofing' 
         END as erie_type,
-        CASE WHEN source IN ('SMR','SM1','SM4','BSM4','IL3','BIL3','SM3') THEN 'National'
+        CASE WHEN source IN ('SMR','SM1','SM4','BSM4','IL3','BIL3','SM3','BSMR','BSM1') THEN 'National'
             WHEN source IN ('SM','SMO','SM2','BSM','BSM2') THEN 'Local'
             WHEN source = 'RYT' THEN 'Retargeting'
             ELSE 'Other'
         END as market,
-        CASE WHEN source IN ('SM2','SM4','SM1','SM','BSM','BSM2') 
+        CASE WHEN source IN ('SM2','SM4','SM1','SM','BSM','BSM2','BSM1') 
                 OR (utm_source = 'facebook' AND utm_campaign !~* 'warm') THEN 'Prospecting'
             WHEN source IN ('SMR','SMO','BSMR')
                 OR (utm_source = 'facebook' AND utm_campaign ~* 'warm') THEN 'Retargeting'
