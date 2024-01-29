@@ -18,8 +18,7 @@ account_id,
 campaign_name,
 campaign_id,
 campaign_status,
-CASE WHEN campaign_name ~* 'discovery' THEN 'Campaign Type: Discovery'
-    WHEN campaign_name ~* 'demand gen' THEN 'Campaign Type: Demand Gen'
+CASE WHEN campaign_name ~* 'discovery' or campaign_name ~* 'demand gen' THEN 'Campaign Type: Discovery'
     WHEN advertising_channel_type = 'PERFORMANCE_MAX' THEN 'Campaign Type: Performance Max'
     WHEN advertising_channel_type = 'VIDEO' THEN 'Campaign Type: Youtube'
     WHEN campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
