@@ -58,6 +58,7 @@ joined_data as  ( (
         SELECT  ad_final_urls,
                 sub_source_id, 
                 ad_id::VARCHAR,
+                ad_name,
                 ad_group_id::VARCHAR,
                 campaign_name,
                 date, 
@@ -167,6 +168,7 @@ joined_data as  ( (
         
         (SELECT  '(not set)' as ad_final_urls,
                 NULL as ad_id,
+                NULL as ad_name,
                 NULL as ad_group_id,
                 sub_source_id, 
                 campaign_name,
@@ -205,6 +207,7 @@ final_data as (
 select 
     account_id, 
     ad_id,
+    ad_name,
     ad_group_id,
     campaign_name, 
     campaign_id, 
@@ -250,7 +253,7 @@ SELECT
         NULL as utm_medium,
         campaign_id::VARCHAR as utm_campaign,
         ad_group_id::VARCHAR as utm_term,
-        ad_id::VARCHAR as utm_content,
+        LOWER(ad_name)::VARCHAR as utm_content,
         NULL as utm_keyword,
         NULL as utm_match_type,
         NULL as utm_placement,
