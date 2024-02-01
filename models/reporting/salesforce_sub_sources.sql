@@ -42,7 +42,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         utm_medium,
         utm_campaign,
         utm_term,
-        utm_content
+        utm_content,
         utm_keyword,
         utm_match_type,
         utm_placement,
