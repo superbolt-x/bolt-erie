@@ -42,7 +42,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         utm_medium,
         utm_campaign,
         utm_term,
-        utm_content,
+        CASE WHEN channel = 'Youtube' THEN REPLACE(utm_content,'_',' ') ELSE utm_content END as utm_content,
         utm_keyword,
         utm_match_type,
         utm_placement,
