@@ -28,7 +28,7 @@ left join source_cte on source_cte.sub_source_id = url_cte.sub_source_id
 group by 1,2,3,4,5,6
 union all 
 select ad_id, 
-date_trunc('week',date) as date,
+date_trunc('week',date+1)-1 as date,
 'week' as date_granularity,
 landing_page_url, url_cte.sub_source_id, sub_source, sum(spends) as spends
 from url_cte
