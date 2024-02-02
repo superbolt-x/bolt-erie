@@ -99,7 +99,7 @@ joined_data as  ( (
                     ad_id,
                     ad_group_id,
                     campaign_id,
-                    date_trunc('week', date) as date, 
+                    date_trunc('week', date+1)-1 as date, 
                     'week' as date_granularity,
                     advertising_channel_type,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
