@@ -29,7 +29,7 @@ GROUP BY 1,2,3,4
 
 UNION ALL
 
-SELECT DATE_TRUNC('week',date::date) as date, 'week' as date_granularity,
+SELECT DATE_TRUNC('week',date::date+1)-1 as date, 'week' as date_granularity,
   campaign_id,
   campaign_name,
   --platform,
