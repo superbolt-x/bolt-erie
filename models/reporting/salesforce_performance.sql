@@ -41,7 +41,7 @@ WITH office_data as
     
     UNION ALL
     
-    SELECT DATE_TRUNC('week',lead_entry_date::date) as date, 'week' as date_granularity,
+    SELECT DATE_TRUNC('week',lead_entry_date::date+1)-1 as date, 'week' as date_granularity,
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
         CASE WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN REPLACE(utm_content,'_',' ') ELSE utm_content END as utm_content_adj,
