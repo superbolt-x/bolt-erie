@@ -253,7 +253,7 @@ SELECT
         NULL as utm_medium,
         campaign_id::VARCHAR as utm_campaign,
         ad_group_id::VARCHAR as utm_term,
-        REPLACE(LOWER(ad_name),'-','')::VARCHAR as utm_content,
+        TRIM(REPLACE(LOWER(ad_name),'-',''))::VARCHAR as utm_content,
         NULL as utm_keyword,
         NULL as utm_match_type,
         NULL as utm_placement,
