@@ -21,10 +21,11 @@ WITH office_data as
     FROM {{ source('snowflake_superbolt','superbolt_daily_file') }}
     WHERE _fivetran_deleted IS false),
 
-    {%- for date_granularity in date_granularity_list %}
+    
     final_data as 
     (
     SELECT  
+    {%- for date_granularity in date_granularity_list %}
         {% if date_granularity == 'day' %}
             {{ date_parts.day }} AS date
         {% elif date_granularity == 'week' %}
