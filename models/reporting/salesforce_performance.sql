@@ -25,15 +25,15 @@ WITH office_data as
     ({%- for date_granularity in date_granularity_list %}
     SELECT '{{date_granularity}}' as date_granularity, 
         {% if date_granularity == 'day' %}
-            {{ date_parts[0] }} AS date
+            {{ date_parts.day }} AS date
         {% elif date_granularity == 'week' %}
-            {{ date_parts[1] }} AS date
+            {{ date_parts.week }} AS date
         {% elif date_granularity == 'month' %}
-            {{ date_parts[2] }} AS date
+            {{ date_parts.month }} AS date
         {% elif date_granularity == 'quarter' %}
-            {{ date_parts[3] }} AS date
+            {{ date_parts.quarter }} AS date
         {% elif date_granularity == 'year' %}
-            {{ date_parts[4] }} AS date
+            {{ date_parts.year }} AS date
         {% endif %},
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
@@ -51,11 +51,11 @@ WITH office_data as
         COALESCE(SUM("net__"),0) as net,
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
-    FROM filetered_data
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
-    {% if not loop.last %}UNION ALL
-    {% endif %}
-    {% endfor %}),
+        FROM filetered_data
+        GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+        {% if not loop.last %}UNION ALL
+        {% endif %}
+    {% endfor %})
     
 
 SELECT 
