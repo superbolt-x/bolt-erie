@@ -23,9 +23,8 @@ WITH office_data as
 
     
     final_data as 
-    (
+    ({%- for date_granularity in date_granularity_list %}
     SELECT  
-    {%- for date_granularity in date_granularity_list %}
         {% if date_granularity == 'day' %}
             {{ date_parts.day }} AS date
         {% elif date_granularity == 'week' %}
