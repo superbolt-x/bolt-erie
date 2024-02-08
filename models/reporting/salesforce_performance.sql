@@ -44,7 +44,7 @@ WITH office_data as
 
     final_data as 
     ({%- for date_granularity in date_granularity_list %}
-    SELECT '{{date_granularity}}' as date_granularity, '{{date_granularity}}' as date,
+    SELECT {{date_granularity}} as date_granularity, {{date_granularity}} as date,
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
         utm_content as utm_content_adj,
