@@ -3,6 +3,7 @@
 )}}
 
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
+{% set date_parts = get_date_parts('date') %}
     
 WITH office_data as
     (SELECT office as sf_office, 
@@ -20,8 +21,20 @@ WITH office_data as
     FROM {{ source('snowflake_superbolt','superbolt_daily_file') }}
     WHERE _fivetran_deleted IS false),
 
-    data_date as 
-    (SELECT {{get_date_parts('date')}} as date,
+    final_data as 
+    ({%- for date_granularity in date_granularity_list %}
+    SELECT '{{date_granularity}}' as date_granularity, 
+        {% if date_granularity == 'day' %}
+            {{ date_parts[0] }} AS date,
+        {% elif date_granularity == 'week' %}
+            {{ date_parts[1] }} AS date,
+        {% elif date_granularity == 'month' %}
+            {{ date_parts[2] }} AS date,
+        {% elif date_granularity == 'quarter' %}
+            {{ date_parts[3] }} AS date,
+        {% elif date_granularity == 'year' %}
+            {{ date_parts[4] }} AS date,
+        {% endif %},
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
         CASE WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(utm_content,'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
@@ -39,33 +52,11 @@ WITH office_data as
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
     FROM filetered_data
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24),
-    
-
-    final_data as 
-    ({%- for date_granularity in date_granularity_list %}
-    SELECT '{{date_granularity}}' as date_granularity, {{date_granularity}} as date,
-        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
-        utm_source, utm_medium, utm_campaign, utm_term, 
-        utm_content as utm_content_adj,
-        utm_keyword, utm_match_type, utm_placement, utm_discount,
-        COUNT(DISTINCT leads) as leads,
-        COALESCE(SUM(calls),0) as calls,
-        COALESCE(SUM(appointments),0) as appointments,
-        COALESCE(SUM(demos),0) as demos,
-        COALESCE(SUM(hits),0) as hits,
-        COALESCE(SUM(issues),0) as issues,
-        COALESCE(SUM(down_payments),0) as down_payments,
-        COALESCE(SUM(colsed_deals),0) as closed_deals,
-        COALESCE(SUM(gross),0) as gross,
-        COALESCE(SUM(net),0) as net,
-        COUNT(DISTINCT leads)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN leads END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN leads END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN leads END)) as workable_leads,
-        COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN leads END) as ooa_leads
-    FROM data_date
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
     {% if not loop.last %}UNION ALL
     {% endif %}
-    {% endfor %})
+    {% endfor %}),
+    
 
 SELECT 
     date,
