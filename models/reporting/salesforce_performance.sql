@@ -33,7 +33,7 @@ WITH office_data as
         {% elif date_granularity == 'quarter' %}
             {{ date_parts.quarter }} AS date
         {% elif date_granularity == 'year' %}
-            {{ date_parts.year }} AS date
+            {{ date_parts.year }} aS date
         {% endif %},
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
