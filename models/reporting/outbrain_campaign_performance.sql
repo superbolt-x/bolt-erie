@@ -3,6 +3,7 @@
 )}}
     
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
+{% set date_parts = get_date_parts('date') %}
     
 WITH campaign_data as 
     (SELECT id, name as campaign_name, last_modified, max(last_modified) over (partition by id) as last_updated_date FROM {{ source('outbrain_raw','campaign_history') }} )
@@ -13,7 +14,18 @@ WITH campaign_data as
     (SELECT * FROM campaign_insights_data where api_sync_timestamp=last_updated_date )
 
 {%- for date_granularity in date_granularity_list %}    
-    SELECT DATE_TRUNC('day',date::date) as date, '{{date_granularity}}' as date_granularity,
+    SELECT 
+    {% if date_granularity == 'day' %}
+            {{ date_parts.day }} AS date
+        {% elif date_granularity == 'week' %}
+            {{ date_parts.week }} AS date
+        {% elif date_granularity == 'month' %}
+            {{ date_parts.month }} AS date
+        {% elif date_granularity == 'quarter' %}
+            {{ date_parts.quarter }} AS date
+        {% elif date_granularity == 'year' %}
+            {{ date_parts.year }} AS date
+        {% endif %}, '{{date_granularity}}' as date_granularity,
       campaign_id,
       campaign_name,
       --platform,
