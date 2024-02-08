@@ -25,16 +25,16 @@ WITH office_data as
     ({%- for date_granularity in date_granularity_list %}
     SELECT '{{date_granularity}}' as date_granularity, 
         {% if date_granularity == 'day' %}
-            {{ date_parts.day }} AS date,
+            {{ date_parts.day }} AS date
         {% elif date_granularity == 'week' %}
-            {{ date_parts.week }} AS date,
+            {{ date_parts.week }} AS date
         {% elif date_granularity == 'month' %}
-            {{ date_parts.month }} AS date,
+            {{ date_parts.month }} AS date
         {% elif date_granularity == 'quarter' %}
-            {{ date_parts.quarter }} AS date,
+            {{ date_parts.quarter }} AS date
         {% elif date_granularity == 'year' %}
-            {{ date_parts.year }} AS date,
-        {% endif %},
+            {{ date_parts.year }} AS date
+        {% endif %}
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
         CASE WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(utm_content,'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
