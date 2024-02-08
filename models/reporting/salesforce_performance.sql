@@ -25,9 +25,9 @@ WITH office_data as
     ({%- for date_granularity in date_granularity_list %}
     SELECT '{{date_granularity}}' as date_granularity, 
         {% if date_granularity == 'day' %}
-            {{ date_parts.day }} AS date
+            {{ date_parts.day }} As date
         {% elif date_granularity == 'week' %}
-            {{ date_parts.week }} AS date
+            {{ date_parts.week }} aS date
         {% elif date_granularity == 'month' %}
             {{ date_parts.month }} AS date
         {% elif date_granularity == 'quarter' %}
