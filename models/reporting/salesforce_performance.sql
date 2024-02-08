@@ -20,7 +20,8 @@ WITH office_data as
     FROM {{ source('snowflake_superbolt','superbolt_daily_file') }}
     WHERE _fivetran_deleted IS false),
 
-    data_date as (SELECT {{get_date_parts('date')}} as date,
+    data_date as 
+    (SELECT {{get_date_parts('date')}} as date,
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
         CASE WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(utm_content,'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
@@ -64,8 +65,7 @@ WITH office_data as
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
     {% if not loop.last %}UNION ALL
     {% endif %}
-    {% endfor %}
-    )
+    {% endfor %})
 
 SELECT 
     date,
