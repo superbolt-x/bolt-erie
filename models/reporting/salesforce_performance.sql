@@ -25,15 +25,15 @@ WITH office_data as
     ({%- for date_granularity in date_granularity_list %}
     SELECT '{{date_granularity}}' as date_granularity, 
         {% if date_granularity == 'day' %}
-            {{ date_parts[0] }} AS date,
+            {{ date_parts[0] }} AS date
         {% elif date_granularity == 'week' %}
-            {{ date_parts[1] }} AS date,
+            {{ date_parts[1] }} AS date
         {% elif date_granularity == 'month' %}
-            {{ date_parts[2] }} AS date,
+            {{ date_parts[2] }} AS date
         {% elif date_granularity == 'quarter' %}
-            {{ date_parts[3] }} AS date,
+            {{ date_parts[3] }} AS date
         {% elif date_granularity == 'year' %}
-            {{ date_parts[4] }} AS date,
+            {{ date_parts[4] }} AS date
         {% endif %},
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
