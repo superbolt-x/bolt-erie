@@ -20,9 +20,7 @@ WITH office_data as
     FROM {{ source('snowflake_superbolt','superbolt_daily_file') }}
     WHERE _fivetran_deleted IS false),
 
-    final_data as 
-    ({%- for date_granularity in date_granularity_list %}
-    SELECT '{{date_granularity}}' as date_granularity, '{{date_granularity}}' as date_granularity,
+    data_date as (SELECT {{get_date_part('date')}} as date,
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
         CASE WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(utm_content,'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
@@ -40,7 +38,30 @@ WITH office_data as
         COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
         COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
     FROM filetered_data
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24),
+    
+
+    final_data as 
+    ({%- for date_granularity in date_granularity_list %}
+    SELECT '{{date_granularity}}' as date_granularity, '{{date_granularity}}' as date,
+        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+        utm_source, utm_medium, utm_campaign, utm_term, 
+        CASE WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(utm_content,'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
+        utm_keyword, utm_match_type, utm_placement, utm_discount,
+        COUNT(DISTINCT lead_id) as leads,
+        COALESCE(SUM(number_of_calls),0) as calls,
+        COALESCE(SUM("set"),0) as appointments,
+        COALESCE(SUM(demo),0) as demos,
+        COALESCE(SUM(hits),0) as hits,
+        COALESCE(SUM(issued),0) as issues,
+        COALESCE(SUM(CASE WHEN paid_out_date IS NOT NULL THEN 1 ELSE 0 END),0) as down_payments,
+        COALESCE(SUM(sold),0) as closed_deals,
+        COALESCE(SUM("gross__"),0) as gross,
+        COALESCE(SUM("net__"),0) as net,
+        COUNT(DISTINCT lead_id)-(COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Wrong Number' THEN lead_id END)+COUNT(DISTINCT CASE WHEN status_detail ~* 'Duplicate Record' THEN lead_id END)) as workable_leads,
+        COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
+    FROM data_date
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
     {% if not loop.last %}UNION ALL
     {% endif %}
     {% endfor %}
