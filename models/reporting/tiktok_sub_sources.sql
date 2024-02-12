@@ -2,12 +2,14 @@
     alias = target.database + '_tiktok_sub_sources'
 )}}
 
+{% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
+    
 with source_cte as (select sub_source_id, sub_source
 from {{ source('reporting','salesforce_performance') }}
 group by 1,2) 
 
 , url_cte as (
-select ad_id,landing_page_url, campaign_name, campaign_id, date,
+select ad_id,landing_page_url, campaign_name, campaign_id, date,{{ get_date_parts('date') }},
         case
             when split_part(landing_page_url,'&',2) ~* 'slc' then split_part(split_part(landing_page_url,'&',2),'=',2)
             else right(split_part(landing_page_url,'/',4),3)
@@ -16,12 +18,12 @@ select ad_id,landing_page_url, campaign_name, campaign_id, date,
 
 from {{ source('supermetrics_raw', 'tik_ads_insights') }}
 WHERE date >= '2022-12-01'
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7,8,9,10,11
 )
 , source as (
 select ad_id, 
-date_trunc('day',date) as date,
-'day' as date_granularity,
+'{{date_granularity}}' as date_granularity,
+{{date_granularity}} as date,
 landing_page_url, url_cte.sub_source_id, sub_source, sum(spends) as spends
 from url_cte
 left join source_cte on source_cte.sub_source_id = url_cte.sub_source_id
