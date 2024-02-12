@@ -55,7 +55,7 @@ campaign_types as (
 ), 
 date_cte as (select campaign_id,{{ get_date_parts('date') }} 
     from {{ source('googleads_raw','ad_performance_report') }}
-    group by 1,2,3,4,5,6),
+   ),
 
 joined_data as  ( (  
     
