@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_googleads_sub_sources_google'
+    alias = target.database + '_googleads_sub_sources_google_test'
 )}}
 
 WITH subsource_cte as (
@@ -45,7 +45,7 @@ campaign_max_updated_date as (
 ),
 
 campaign_types as (
- SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type
+ SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type,{{ get_date_parts('date') }}
  FROM campaign_max_updated_date 
  LEFT JOIN {{ source('googleads_raw', 'campaign_history') }}
  ON campaign_max_updated_date.id = campaign_history.id 
@@ -79,80 +79,22 @@ joined_data as  ( (
                 campaign_status
         FROM {{ source('reporting','googleads_ad_performance') }}
         left join (
-            
+            {%- for date_granularity in date_granularity_list %} 
             select  ad_final_urls,
                     ad_id,
                     ad_group_id,
                     campaign_id,
-                    date_trunc('day', date) as date, 
-                    'day' as date_granularity,
+                    '{{date_granularity}}' as date_granularity,
+                    {{date_granularity}} as date,
                     advertising_channel_type,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
                     group by 1,2,3,4,5,6,7
-                    
-            Union all 
-            
-            select  ad_final_urls, 
-                    ad_id,
-                    ad_group_id,
-                    campaign_id,
-                    date_trunc('week', date+1)-1 as date, 
-                    'week' as date_granularity,
-                    advertising_channel_type,
-                    sum(cost_micros::FLOAT/1000000::FLOAT) as spends
-                    from {{ source('googleads_raw', 'ad_performance_report') }}
-                    left join campaign_types
-                    USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
-            
-            Union all
-            
-            select  ad_final_urls, 
-                    ad_id,
-                    ad_group_id,
-                    campaign_id,
-                    date_trunc('month', date) as date, 
-                    'month' as date_granularity,
-                    advertising_channel_type,
-                    sum(cost_micros::FLOAT/1000000::FLOAT) as spends
-                    from {{ source('googleads_raw', 'ad_performance_report') }}
-                    left join campaign_types
-                    USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
-                    
-            Union all
-            
-            select  ad_final_urls,
-                    ad_id,
-                    ad_group_id,
-                    campaign_id,
-                    date_trunc('quarter', date) as date, 
-                    'quarter' as date_granularity,
-                    advertising_channel_type,
-                    sum(cost_micros::FLOAT/1000000::FLOAT) as spends
-                    from {{ source('googleads_raw', 'ad_performance_report') }}
-                    left join campaign_types
-                    USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
-                    
-            Union all
-            
-            select  ad_final_urls,
-                    ad_id,
-                    ad_group_id,
-                    campaign_id,
-                    date_trunc('year', date) as date, 
-                    'year' as date_granularity,
-                    advertising_channel_type,
-                    sum(cost_micros::FLOAT/1000000::FLOAT) as spends
-                    from {{ source('googleads_raw', 'ad_performance_report') }}
-                    left join campaign_types
-                    USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
-                    
+                    {% if not loop.last %}UNION ALL
+                    {% endif %}
+                {% endfor %}
                     ) 
                     using(ad_id, ad_group_id, campaign_id, date, date_granularity)
         left join subsource_id_cte using(ad_final_urls)
