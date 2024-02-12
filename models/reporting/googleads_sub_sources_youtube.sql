@@ -47,15 +47,14 @@ campaign_max_updated_date as (
 ),
 
 campaign_types as (
- SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type
+ SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type,{{ get_date_parts('date') }}
  FROM campaign_max_updated_date 
  LEFT JOIN {{ source('googleads_raw', 'campaign_history') }}
  ON campaign_max_updated_date.id = campaign_history.id 
  AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at
-), 
-date_cte as (select campaign_id,{{ get_date_parts('date') }} 
-    from {{ source('googleads_raw','ad_performance_report') }}
-   ),
+ left join {{ source('googleads_raw','ad_performance_report') }}
+ using (campaign_id)
+),
 
 joined_data as  ( (  
     
