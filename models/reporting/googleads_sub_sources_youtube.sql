@@ -52,7 +52,10 @@ campaign_types as (
  LEFT JOIN {{ source('googleads_raw', 'campaign_history') }}
  ON campaign_max_updated_date.id = campaign_history.id 
  AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at
-),
+), 
+date_cte as (select campaign_id,{{ get_date_parts('date') }} 
+    from {{ source('googleads_raw','ad_performance_report') }}
+    group by 1,2,3,4,5,6),
 
 joined_data as  ( (  
     
@@ -78,7 +81,7 @@ joined_data as  ( (
                 leads, 
                 video_views,
                 account_id, 
-                campaign_status,{{ get_date_parts('date') }}
+                campaign_status
         FROM {{ source('reporting','googleads_ad_performance') }}
         left join (
             {%- for date_granularity in date_granularity_list %}
@@ -89,7 +92,9 @@ joined_data as  ( (
                     '{{date_granularity}}' as date_granularity,
                     {{date_granularity}} as date,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
-                    from {{ source('googleads_raw', 'ad_performance_report') }}
+                    from date_cte
+                    left join {{ source('googleads_raw', 'ad_performance_report') }}
+                    USING(campaign_id)
                     left join campaign_types
                     USING(campaign_id)
                     group by 1,2,3,4,5,6,7
