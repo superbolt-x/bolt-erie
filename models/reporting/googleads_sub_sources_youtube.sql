@@ -47,7 +47,7 @@ campaign_max_updated_date as (
 ),
 
 campaign_types as (
- SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type,{{ get_date_parts('date') }}
+ SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type
  FROM campaign_max_updated_date 
  LEFT JOIN {{ source('googleads_raw', 'campaign_history') }}
  ON campaign_max_updated_date.id = campaign_history.id 
@@ -78,7 +78,7 @@ joined_data as  ( (
                 leads, 
                 video_views,
                 account_id, 
-                campaign_status
+                campaign_status,{{ get_date_parts('date') }}
         FROM {{ source('reporting','googleads_ad_performance') }}
         left join (
             {%- for date_granularity in date_granularity_list %}
