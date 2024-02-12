@@ -16,7 +16,7 @@ WITH office_data as
     ORDER BY code ASC),
     
     filetered_data as
-    (SELECT *, {{ get_date_parts('date') }}
+    (SELECT *, {{ get_date_parts('lead_entry_date') }}
     FROM {{ source('snowflake_superbolt','superbolt_daily_file') }}
     WHERE _fivetran_deleted IS false),
 
