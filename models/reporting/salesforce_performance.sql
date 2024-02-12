@@ -3,7 +3,6 @@
 )}}
 
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
-{% set date_parts = get_date_parts('date') %}
     
 WITH office_data as
     (SELECT office as sf_office, 
@@ -17,7 +16,7 @@ WITH office_data as
     ORDER BY code ASC),
     
     filetered_data as
-    (SELECT *
+    (SELECT *, {{ get_date_parts('date') }}
     FROM {{ source('snowflake_superbolt','superbolt_daily_file') }}
     WHERE _fivetran_deleted IS false),
 
@@ -25,17 +24,8 @@ WITH office_data as
     final_data as 
     ({%- for date_granularity in date_granularity_list %}
     SELECT  
-        {% if date_granularity == 'day' %}
-            {{ date_parts.day }} AS date
-        {% elif date_granularity == 'week' %}
-            {{ date_parts.week }} AS date
-        {% elif date_granularity == 'month' %}
-            {{ date_parts.month }} AS date
-        {% elif date_granularity == 'quarter' %}
-            {{ date_parts.quarter }} AS date
-        {% elif date_granularity == 'year' %}
-            {{ date_parts.year }} AS date
-        {% endif %}, '{{date_granularity}}' as date_granularity,
+        '{{date_granularity}}' as date_granularity,
+        {{date_granularity}} as date,
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, utm_campaign, utm_term, 
         CASE WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(utm_content,'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
