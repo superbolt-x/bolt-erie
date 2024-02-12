@@ -92,10 +92,10 @@ joined_data as  ( (
                     '{{date_granularity}}' as date_granularity,
                     {{date_granularity}} as date,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
-                    from date_cte
-                    left join {{ source('googleads_raw', 'ad_performance_report') }}
-                    USING(campaign_id)
+                    from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
+                    USING(campaign_id)
+                    left join date_cte
                     USING(campaign_id)
                     group by 1,2,3,4,5,6,7
                     {% if not loop.last %}UNION ALL
