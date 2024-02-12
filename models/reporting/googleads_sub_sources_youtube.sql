@@ -53,8 +53,7 @@ campaign_types as (
  ON campaign_max_updated_date.id = campaign_history.id 
  AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at
  left join {{ source('googleads_raw','ad_performance_report') }}
- using (campaign_id)
-),
+ on campaign_max_updated_date.id = ad_performance_report.campaign_id),
 
 joined_data as  ( (  
     
