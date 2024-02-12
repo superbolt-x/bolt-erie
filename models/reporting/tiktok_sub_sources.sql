@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_tiktok_sub_sources'
+    alias = target.database + '_tiktok_sub_sources_test'
 )}}
 
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
