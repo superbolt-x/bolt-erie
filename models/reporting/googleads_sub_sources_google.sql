@@ -53,8 +53,6 @@ campaign_types as (
 ),
 
 joined_data as  ( (  
-    
-    
         SELECT  ad_final_urls,
                 sub_source_id, 
                 ad_id::VARCHAR,
