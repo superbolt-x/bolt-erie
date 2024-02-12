@@ -13,7 +13,7 @@ WITH subsource_cte as (
  subsource_id_cte as (
         
         select  
-                ad_final_urls, 
+                ad_final_urls,{{ get_date_parts('date') }}, 
                 case
                     when RIGHT(ad_final_urls, 5) = 'tep/]' then LEFT(RIGHT(ad_final_urls, 16),3)
                         when (ad_final_urls = '[http://go.eriemetalroofs.com/erie-youtube-metal-roofing-f/]' 
@@ -36,7 +36,7 @@ WITH subsource_cte as (
                 end as sub_source_id,
                 sum(cost_micros::FLOAT)
         from {{ source('googleads_raw','ad_performance_report') }}
-        group by 1,2
+        group by 1,2,3
         
     ),
 
@@ -47,13 +47,11 @@ campaign_max_updated_date as (
 ),
 
 campaign_types as (
- SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type,{{ get_date_parts('date') }}
+ SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type
  FROM campaign_max_updated_date 
  LEFT JOIN {{ source('googleads_raw', 'campaign_history') }}
  ON campaign_max_updated_date.id = campaign_history.id 
- AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at
- left join {{ source('googleads_raw','ad_performance_report') }}
- on campaign_max_updated_date.id = ad_performance_report.campaign_id),
+ AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at)
 
 joined_data as  ( (  
     
