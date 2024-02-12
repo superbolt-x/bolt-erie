@@ -36,7 +36,7 @@ WITH subsource_cte as (
                 end as sub_source_id,
                 sum(cost_micros::FLOAT)
         from {{ source('googleads_raw','ad_performance_report') }}
-        group by 1,2,3
+        group by 1,2,3,4,5,6,7
         
     ),
 
