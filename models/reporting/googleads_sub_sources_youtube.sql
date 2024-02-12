@@ -51,7 +51,7 @@ campaign_types as (
  FROM campaign_max_updated_date 
  LEFT JOIN {{ source('googleads_raw', 'campaign_history') }}
  ON campaign_max_updated_date.id = campaign_history.id 
- AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at)
+ AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at),
 
 joined_data as  ( (  
     
