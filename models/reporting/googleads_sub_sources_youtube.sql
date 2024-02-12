@@ -93,8 +93,6 @@ joined_data as  ( (
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
                     USING(campaign_id)
-                    left join date_cte
-                    USING(campaign_id)
                     group by 1,2,3,4,5,6,7
                     {% if not loop.last %}UNION ALL
                     {% endif %}
