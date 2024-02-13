@@ -7,8 +7,7 @@
 WITH subsource_cte as (
     select sub_source_id as sf_sub_source_id,sub_source,count(*)
     from {{ source('reporting','salesforce_performance') }}
-    group by 1,2
-    ),
+    group by 1,2),
 
  subsource_id_cte as (
         
@@ -36,23 +35,19 @@ WITH subsource_cte as (
                 end as sub_source_id,
                 sum(cost_micros::FLOAT)
         from {{ source('googleads_raw','ad_performance_report') }}
-        group by 1,2,3,4,5,6,7
-        
-    ),
+        group by 1,2,3,4,5,6,7),
 
 campaign_max_updated_date as (
  SELECT id , max(updated_at) as max_updated_at
  from {{ source('googleads_raw', 'campaign_history') }}
- group by 1
-),
+ group by 1),
 
 campaign_types as (
  SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type
  FROM campaign_max_updated_date 
  LEFT JOIN {{ source('googleads_raw', 'campaign_history') }}
  ON campaign_max_updated_date.id = campaign_history.id 
- AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at
-),
+ AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at),
 
 joined_data as  ( (  
     
