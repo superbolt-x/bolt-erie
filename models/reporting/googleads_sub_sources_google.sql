@@ -2,6 +2,8 @@
     alias = target.database + '_googleads_sub_sources_google_test'
 )}}
 
+{% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
+    
 WITH subsource_cte as (
     select sub_source_id as sf_sub_source_id,sub_source,count(*)
     from {{ source('reporting','salesforce_performance') }}
