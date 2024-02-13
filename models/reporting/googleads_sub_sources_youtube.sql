@@ -94,7 +94,7 @@ joined_data as  ( (
                     USING(campaign_id)
                     left join subsource_id_cte
                     using(ad_final_urls)
-                    group by 1,2,3,4,5,6
+                    group by 1,2,3,4,5,6,7
                     {% if not loop.last %}UNION ALL
                     {% endif %}
                 {% endfor %}
