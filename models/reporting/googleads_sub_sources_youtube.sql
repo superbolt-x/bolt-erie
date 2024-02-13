@@ -87,6 +87,7 @@ joined_data as  ( (
                     campaign_id,
                     '{{date_granularity}}' as date_granularity,
                     {{date_granularity}} as date,
+                    advertising_channel_type,
                     sum(cost_micros::FLOAT/1000000::FLOAT) as spends
                     from {{ source('googleads_raw', 'ad_performance_report') }}
                     left join campaign_types
