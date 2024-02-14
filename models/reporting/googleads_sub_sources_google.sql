@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_googleads_sub_sources_google_test'
+    alias = target.database + '_googleads_sub_sources_google'
 )}}
 
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
