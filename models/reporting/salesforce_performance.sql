@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_salesforce_performance_test'
+    alias = target.database + '_salesforce_performance'
 )}}
 
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
