@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_outbrain_campaign_performance_test'
+    alias = target.database + '_outbrain_campaign_performance'
 )}}
     
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
