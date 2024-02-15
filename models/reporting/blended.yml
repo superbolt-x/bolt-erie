@@ -66,4 +66,9 @@ sources:
 
       - name: outbrain_campaign_performance
         identifier: erie_outbrain_campaign_performance
-  
+
+  - name: s3_raw
+    schema: s3_raw
+    tables:
+      - name: spend_files
+        identifier: spend_files
