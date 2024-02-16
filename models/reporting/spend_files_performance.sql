@@ -4,10 +4,10 @@
 
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
     
-WITH filetered_data as
+WITH filtered_data as
     (SELECT *, {{ get_date_parts('date') }}
     FROM {{ source('s3_raw','spend_files') }}
-    WHERE _fivetran_synced IN (SELECT MAX(_fivetran_synced) FROM {{ source('s3_raw','spend_files') }})),
+    WHERE _file IN (SELECT MAX(_file) FROM {{ source('s3_raw','spend_files') }})),
 
     
     final_data as 
@@ -25,7 +25,7 @@ WITH filetered_data as
         COALESCE(SUM(sum_issues_),0) as issues,
         COALESCE(SUM(sum_net_sales_),0) as net,
         COALESCE(SUM(sum_workable_leads_),0) as workable_leads
-        FROM filetered_data
+        FROM filtered_data
         GROUP BY 1,2,3,4
         {% if not loop.last %}UNION ALL
         {% endif %}
