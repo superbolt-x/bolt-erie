@@ -40,7 +40,10 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         call_disposition,
         status_detail,
         utm_medium,
-        utm_campaign,
+        CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN bg_campaign_name
+            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN bg_campaign_name
+            ELSE utm_campaign
+        END as utm_campaign,
         utm_term,
         utm_content,
         utm_keyword,
@@ -64,8 +67,12 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         COALESCE(SUM(hits),0) as hits,
         COALESCE(SUM(issues),0) as issues,
         COALESCE(SUM(ooa_leads),0) as ooa_leads
-    FROM {{ source('reporting','salesforce_performance') }}
-    LEFT JOIN (SELECT campaign_id::VARCHAR as utm_campaign, campaign_name, advertising_channel_type
-            FROM {{ ref('googleads_campaigns') }}) USING(utm_campaign)
+    FROM {{ source('reporting','salesforce_performance') }} s
+    LEFT JOIN (SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, advertising_channel_type
+            FROM {{ ref('googleads_campaigns') }}
+            UNION ALL
+            SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, NULL as advertising_channel_type
+            FROM {{ ref('bingads_campaigns') }}
+            ) bg ON s.utm_campaign = bg.campaign_id
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
