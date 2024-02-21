@@ -194,7 +194,7 @@ SELECT
         NULL as call_disposition,
         NULL as status_detail,
         NULL as utm_medium,
-        campaign_id::VARCHAR as utm_campaign,
+        campaign_name as utm_campaign,
         ad_group_id::VARCHAR as utm_term,
         ad_id::VARCHAR as utm_content,
         NULL as utm_keyword,
