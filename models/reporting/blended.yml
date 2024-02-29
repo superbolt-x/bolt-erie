@@ -67,6 +67,9 @@ sources:
       - name: outbrain_campaign_performance
         identifier: erie_outbrain_campaign_performance
 
+      - name: bingads_keyword_performance
+        identifier: erie_bingads_keyword_performance
+
   - name: s3_raw
     schema: s3_raw
     tables:
