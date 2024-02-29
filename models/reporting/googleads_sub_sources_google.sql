@@ -53,7 +53,10 @@ joined_data as  ( (
     
     
         SELECT  ad_final_urls,
-                sub_source_id, 
+                sub_source_id,
+                keyword_id::VARCHAR,
+                keyword_name,
+                keyword_match_type,
                 ad_id::VARCHAR,
                 ad_group_id::VARCHAR,
                 campaign_name,
@@ -67,33 +70,15 @@ joined_data as  ( (
                 sub_source,
                 office,
                 office_location,
-                spends as spend, 
+                spend, 
                 clicks, 
                 impressions,
                 leads, 
                 video_views,
                 account_id, 
                 campaign_status
-        FROM {{ source('reporting','googleads_ad_performance') }}
-        left join (
-            {%- for date_granularity in date_granularity_list %}
-            select  ad_final_urls,
-                    ad_id,
-                    ad_group_id,
-                    campaign_id,
-                    '{{date_granularity}}' as date_granularity,
-                    {{date_granularity}} as date,
-                    advertising_channel_type,
-                    sum(cost_micros::FLOAT/1000000::FLOAT) as spends
-                    from (select *, {{ get_date_parts('date') }} from {{ source('googleads_raw', 'ad_performance_report') }})
-                    left join campaign_types
-                    USING(campaign_id)
-                    group by 1,2,3,4,5,6,7
-                    {% if not loop.last %}UNION ALL
-                    {% endif %}
-                {% endfor %}
-                    ) 
-                    using(ad_id, ad_group_id, campaign_id, date, date_granularity)
+        FROM {{ source('reporting','googleads_keyword_ad_performance') }}
+        left join campaign_types USING(campaign_id)
         left join subsource_id_cte using(ad_final_urls)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
         where date >= '2022-12-01'
@@ -105,9 +90,12 @@ joined_data as  ( (
         Union all 
         
         (SELECT  '(not set)' as ad_final_urls,
+                sub_source_id, 
+                NULL as keyword_id,
+                NULL as keyword_name,
+                NULL as keyword_match_type,
                 NULL as ad_id,
                 NULL as ad_group_id,
-                sub_source_id, 
                 campaign_name,
                 date, 
                 campaign_id,
@@ -142,7 +130,10 @@ joined_data as  ( (
     
 final_data as (
 select 
-    account_id, 
+    account_id,
+    keyword_id,
+    keyword_name,
+    keyword_match_type,
     ad_id,
     ad_group_id,
     campaign_name, 
@@ -197,8 +188,8 @@ SELECT
         campaign_name as utm_campaign,
         ad_group_id::VARCHAR as utm_term,
         ad_id::VARCHAR as utm_content,
-        NULL as utm_keyword,
-        NULL as utm_match_type,
+        keyword_id as utm_keyword,
+        keyword_match_type as utm_match_type,
         NULL as utm_placement,
         NULL as utm_discount,
         COALESCE(SUM(spend),0) AS spend,
