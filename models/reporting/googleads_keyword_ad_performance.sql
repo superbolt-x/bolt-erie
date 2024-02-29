@@ -52,7 +52,7 @@ sum(clicks) as clicks,
 sum(conversions) as purchases,
 sum(conversions_value) as revenue,
 sum(kashurbagetpricing) as leads,
-sum(video_views) as video_views
+sum(0) as video_views
 FROM {{ ref('googleads_performance_by_keyword_ad') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
             case 
