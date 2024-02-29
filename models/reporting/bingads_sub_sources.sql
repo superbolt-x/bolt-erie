@@ -6,7 +6,7 @@ WITH sub_source_data as (
 SELECT ad_group_id,
         right(ad_group_name,3)::varchar as sub_source_id,
         count(*)
-    FROM {{ source('reporting','bingads_ad_performance') }}
+    FROM {{ source('reporting','bingads_keyword_performance') }}
     WHERE date >= '2022-12-01'
     GROUP BY 1,2)
 
@@ -20,12 +20,15 @@ SELECT ad_group_id,
         campaign_id, 
         ad_id,
         ad_group_id,
+        keyword_id,
+        keyword_name,
+        keyword_match_type,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(leads),0) AS inplatform_leads
-    FROM {{ source('reporting','bingads_ad_performance') }}
-    GROUP BY 1,2,3,4,5,6,7,8)
+    FROM {{ source('reporting','bingads_keyword_performance') }}
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11)
 
 , joined_data as 
     (SELECT 
@@ -38,12 +41,15 @@ SELECT ad_group_id,
         ad_id,
         ad_group_id,
         sub_source_id,
+        keyword_id,
+        keyword_name,
+        keyword_match_type,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(inplatform_leads),0) AS inplatform_leads
     FROM bingads_data left join sub_source_data USING(ad_group_id)
-    GROUP BY 1,2,3,4,5,6,7,8,9)
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12)
 
 , sf_data as 
     (SELECT date, date_granularity, sub_source_id, sub_source,
@@ -87,8 +93,8 @@ SELECT
         campaign_name as utm_campaign,
         ad_group_id::VARCHAR as utm_term,
         ad_id::VARCHAR as utm_content,
-        NULL as utm_keyword,
-        NULL as utm_match_type,
+        keyword_id utm_keyword,
+        keyword_match_type as utm_match_type,
         NULL as utm_placement,
         NULL as utm_discount,
         COALESCE(SUM(spend),0) AS spend,
