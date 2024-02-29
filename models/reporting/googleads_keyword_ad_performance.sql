@@ -63,4 +63,4 @@ LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,
             end as code 
                 FROM {{ ref('googleads_campaigns') }}) USING(campaign_id, campaign_name, account_id, campaign_status)
     LEFT JOIN office_data USING(code)
-GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
