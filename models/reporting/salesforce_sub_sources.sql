@@ -44,7 +44,10 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN bg_campaign_name
             ELSE utm_campaign
         END as utm_campaign,
-        utm_term,
+        CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN gb_ad_group_name
+            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN gb_ad_group_name
+            ELSE utm_term
+        END as utm_term,
         utm_content,
         utm_keyword,
         utm_match_type,
@@ -74,5 +77,11 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, NULL as advertising_channel_type
             FROM {{ ref('bingads_campaigns') }}
             ) bg ON s.utm_campaign = bg.campaign_id
+    LEFT JOIN (SELECT ad_group_id::VARCHAR as ad_group_id, ad_group_name as gb_ad_group_name
+            FROM {{ ref('googleads_ad_groups') }}
+            UNION ALL
+            SELECT ad_group_id::VARCHAR as ad_group_id, ad_group_name as gb_ad_group_name
+            FROM {{ ref('bingads_ad_groups') }}
+            ) gb ON s.utm_term = gb.ad_group_id
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
