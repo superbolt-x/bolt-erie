@@ -91,7 +91,7 @@ SELECT
         NULL as status_detail,
         NULL as utm_medium,
         campaign_name as utm_campaign,
-        ad_group_id::VARCHAR as utm_term,
+        ad_group_name as utm_term,
         ad_id::VARCHAR as utm_content,
         keyword_id::VARCHAR as utm_keyword,
         keyword_match_type as utm_match_type,
