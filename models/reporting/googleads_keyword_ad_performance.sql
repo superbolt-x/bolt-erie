@@ -16,7 +16,11 @@ WITH office_data as
 SELECT 
 account_id,
 keyword_text,
-keyword_match_type,
+case 
+  when keyword_match_type = 'BROAD' then 'b'
+  when keyword_match_type = 'PHRASE' then 'p'
+  when keyword_match_type = 'EXACT' then 'e'
+end as keyword_match_type,
 keyword_id,
 ad_name,
 ad_id,
