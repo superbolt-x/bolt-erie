@@ -16,6 +16,7 @@ SELECT ad_group_id,
         date_granularity, 
         office, 
         office_location, 
+        erie_type,
         campaign_name,
         campaign_id, 
         ad_id,
@@ -29,7 +30,7 @@ SELECT ad_group_id,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(leads),0) AS inplatform_leads
     FROM {{ source('reporting','bingads_keyword_performance') }}
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12)
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13)
 
 , joined_data as 
     (SELECT 
@@ -37,6 +38,7 @@ SELECT ad_group_id,
         date_granularity, 
         office, 
         office_location, 
+        erie_type,
         campaign_name,
         campaign_id, 
         ad_id,
@@ -51,7 +53,7 @@ SELECT ad_group_id,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(inplatform_leads),0) AS inplatform_leads
     FROM bingads_data left join sub_source_data USING(ad_group_id)
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13)
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14)
 
 , sf_data as 
     (SELECT date, date_granularity, sub_source_id, sub_source,
@@ -83,7 +85,7 @@ SELECT
         sub_source_id, 
         sub_source,
         NULL as zip,
-        'Roofing' as erie_type,
+        erie_type,
         'National' as market,
         CASE WHEN campaign_name ~* 'Branded' OR campaign_name ~* 'Metal Roofing Keywords' THEN 'Search'
             ELSE 'Other' 
