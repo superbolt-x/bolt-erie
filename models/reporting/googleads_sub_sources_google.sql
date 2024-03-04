@@ -158,7 +158,25 @@ joined_data as  ( (
                 account_id, 
                 campaign_status
         FROM {{ source('reporting','googleads_ad_performance') }}
-        left join campaign_types USING(campaign_id)
+        left join (
+            {%- for date_granularity in date_granularity_list %}
+            select  ad_final_urls,
+                    ad_id,
+                    ad_group_id,
+                    campaign_id,
+                    '{{date_granularity}}' as date_granularity,
+                    {{date_granularity}} as date,
+                    advertising_channel_type,
+                    sum(cost_micros::FLOAT/1000000::FLOAT) as spends
+                    from (select *, {{ get_date_parts('date') }} from {{ source('googleads_raw', 'ad_performance_report') }})
+                    left join campaign_types
+                    USING(campaign_id)
+                    group by 1,2,3,4,5,6,7
+                    {% if not loop.last %}UNION ALL
+                    {% endif %}
+                {% endfor %}
+                    ) 
+                    using(ad_id, ad_group_id, campaign_id, date, date_granularity)
         left join subsource_id_cte using(ad_final_urls)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
         where date >= '2022-12-01'
