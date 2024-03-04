@@ -83,7 +83,7 @@ joined_data as  ( (
         left join subsource_id_cte using(ad_final_urls)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
         where date >= '2022-12-01'
-        and advertising_channel_type != 'PERFORMANCE_MAX'
+        and advertising_channel_type = 'SEARCH'
         order by date, sub_source_id, campaign_name,ad_final_urls
         
         )
@@ -127,7 +127,46 @@ joined_data as  ( (
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = t.sub_source_id::varchar
         where date >= '2022-12-01'
         and advertising_channel_type = 'PERFORMANCE_MAX'
-        order by date, sub_source_id, campaign_name )),
+        order by date, sub_source_id, campaign_name )
+    
+        union all
+
+        (SELECT  ad_final_urls,
+                sub_source_id,
+                NULL as keyword_id,
+                NULL as keyword_text,
+                NULL as keyword_match_type,
+                ad_id::VARCHAR,
+                ad_group_id::VARCHAR,
+                ad_group_name,
+                campaign_name,
+                date, 
+                campaign_id,
+                campaign_type_default,
+                advertising_channel_type,
+                date_granularity, 
+                erie_type, 
+                market, 
+                sub_source,
+                office,
+                office_location,
+                spend, 
+                clicks, 
+                impressions,
+                leads, 
+                video_views,
+                account_id, 
+                campaign_status
+        FROM {{ source('reporting','googleads_ad_performance') }}
+        left join campaign_types USING(campaign_id)
+        left join subsource_id_cte using(ad_final_urls)
+        left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
+        where date >= '2022-12-01'
+        and advertising_channel_type NOT IN ('PERFORMANCE_MAX','SEARCH')
+        order by date, sub_source_id, campaign_name,ad_final_urls)
+        
+        
+    ),
         
     
 final_data as (
@@ -175,8 +214,8 @@ SELECT
         NULL as zip, 
         erie_type, 
         market, 
-        CASE WHEN campaign_name ~* 'Discovery' or campaign_name ~* 'Demand Gen' THEN 'Discovery'
-            WHEN campaign_name ~* 'Performance Max' OR campaign_name ~* 'PMAX' THEN 'Performance Max'
+        CASE WHEN advertising_channel_type = 'DISCOVERY' THEN 'Discovery'
+            WHEN advertising_channel_type = 'PERFORMANCE_MAX' THEN 'Performance Max'
             WHEN advertising_channel_type = 'SEARCH' THEN 'Search'
         END as campaign_type,
         NULL as dispo,
