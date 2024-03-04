@@ -234,7 +234,8 @@ SELECT
         market, 
         CASE WHEN advertising_channel_type = 'DISCOVERY' THEN 'Discovery'
             WHEN advertising_channel_type = 'PERFORMANCE_MAX' THEN 'Performance Max'
-            WHEN advertising_channel_type = 'SEARCH' THEN 'Search'
+            WHEN campaign_name ~* 'Branded' OR campaign_name ~* 'metal roofing keywords' OR campaign_name ~* 'NBS evergreen' OR campaign_name ~* 'basements keywords' 
+                OR campaign_name ~* 'priority markets' OR campaign_name ~* 'worse cpl locations' OR advertising_channel_type = 'SEARCH' THEN 'Search'
         END as campaign_type,
         NULL as dispo,
         NULL as call_disposition,
