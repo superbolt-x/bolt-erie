@@ -36,7 +36,8 @@ CASE WHEN campaign_name ~* 'discovery' THEN 'Campaign Type: Discovery'
     WHEN advertising_channel_type = 'PERFORMANCE_MAX' THEN 'Campaign Type: Performance Max'
     WHEN advertising_channel_type = 'VIDEO' THEN 'Campaign Type: Youtube'
     WHEN campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
-    WHEN campaign_name ~* 'metal roofing keywords' OR campaign_name ~* 'NBS evergreen keywords' or campaign_name ~* 'basements keywords' THEN 'Campaign Type: Non Branded'
+    WHEN campaign_name ~* 'metal roofing keywords' OR campaign_name ~* 'NBS evergreen' or campaign_name ~* 'basements keywords' or campaign_name ~* 'priority markets'
+        or campaign_name ~* 'worse cpl locations' THEN 'Campaign Type: Non Branded'
     ELSE 'Campaign Type: Other'
 END as campaign_type_default,
 date,
