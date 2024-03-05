@@ -49,7 +49,7 @@ campaign_types as (
  ON campaign_max_updated_date.id = campaign_history.id 
  AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at),
 
-joined_data as  ( (  
+joined_data as  ( /*(  
     
     
         SELECT  ad_final_urls,
@@ -88,7 +88,7 @@ joined_data as  ( (
         
         )
         
-        Union all 
+        Union all */
         
         (SELECT  '(not set)' as ad_final_urls,
                 sub_source_id, 
@@ -180,7 +180,7 @@ joined_data as  ( (
         left join subsource_id_cte using(ad_final_urls)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
         where date >= '2022-12-01'
-        and advertising_channel_type NOT IN ('PERFORMANCE_MAX','SEARCH')
+        and advertising_channel_type != 'PERFORMANCE_MAX'
         order by date, sub_source_id, campaign_name,ad_final_urls)
         
         
@@ -190,9 +190,9 @@ joined_data as  ( (
 final_data as (
 select 
     account_id,
-    keyword_id,
-    keyword_text,
-    keyword_match_type,
+    NULL as keyword_id,
+    NULL as keyword_text,
+    NULL as keyword_match_type,
     ad_id,
     ad_group_id,
     ad_group_name,
@@ -244,8 +244,8 @@ SELECT
         campaign_name as utm_campaign,
         ad_group_name as utm_term,
         ad_id::VARCHAR as utm_content,
-        keyword_id as utm_keyword,
-        keyword_match_type as utm_match_type,
+        NULL as utm_keyword,
+        NULL as utm_match_type,
         NULL as utm_placement,
         NULL as utm_discount,
         COALESCE(SUM(spend),0) AS spend,
