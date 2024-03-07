@@ -49,46 +49,7 @@ campaign_types as (
  ON campaign_max_updated_date.id = campaign_history.id 
  AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at),
 
-joined_data as  ( /*(  
-    
-    
-        SELECT  ad_final_urls,
-                sub_source_id,
-                keyword_id::VARCHAR,
-                keyword_text,
-                keyword_match_type,
-                ad_id::VARCHAR,
-                ad_group_id::VARCHAR,
-                ad_group_name,
-                campaign_name,
-                date, 
-                campaign_id,
-                campaign_type_default,
-                advertising_channel_type,
-                date_granularity, 
-                erie_type, 
-                market, 
-                sub_source,
-                office,
-                office_location,
-                spend, 
-                clicks, 
-                impressions,
-                leads, 
-                video_views,
-                account_id, 
-                campaign_status
-        FROM {{ source('reporting','googleads_keyword_ad_performance') }}
-        left join campaign_types USING(campaign_id)
-        left join subsource_id_cte using(ad_final_urls)
-        left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = subsource_id_cte.sub_source_id::varchar
-        where date >= '2022-12-01'
-        and advertising_channel_type = 'SEARCH'
-        order by date, sub_source_id, campaign_name,ad_final_urls
-        
-        )
-        
-        Union all */
+joined_data as  (
         
         (SELECT  '(not set)' as ad_final_urls,
                 sub_source_id, 
