@@ -98,7 +98,7 @@ SELECT
         NULL as sf_locations, 
         NULL as source, 
         sub_source_id, 
-        sub_source,
+        NULL sub_source,
         NULL as zip, 
         erie_type, 
         market, 
