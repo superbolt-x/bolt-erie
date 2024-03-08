@@ -22,7 +22,11 @@ joined_data as  (
                 NULL as sub_source_id,
                 keyword_id,
                 keyword_text,
-                keyword_match_type,
+                case 
+                    when keyword_match_type = 'BROAD' then 'b'
+                    when keyword_match_type = 'PHRASE' then 'p'
+                    when keyword_match_type = 'EXACT' then 'e'
+                end as keyword_match_type,
                 NULL as ad_id,
                 ad_group_id::VARCHAR,
                 ad_group_name,
@@ -110,7 +114,7 @@ SELECT
         campaign_name as utm_campaign,
         ad_group_name as utm_term,
         NULL as utm_content,
-        keyword_text as utm_keyword,
+        keyword_id as utm_keyword,
         keyword_match_type as utm_match_type,
         NULL as utm_placement,
         NULL as utm_discount,
