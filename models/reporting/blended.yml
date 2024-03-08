@@ -52,6 +52,9 @@ sources:
       - name: googleads_ad_performance
         identifier: erie_googleads_ad_performance
 
+      - name: googleads_keyword_performance
+        identifier: erie_googleads_keyword_performance
+
       - name: salesforce_performance
         identifier: erie_salesforce_performance
 
