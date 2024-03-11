@@ -85,8 +85,7 @@ select
     leads,
     video_views
 from joined_data
-where ((sub_source !~* 'CallRail' and sub_source !~* 'Link Extension') or sub_source is null or sub_source = '')
-and advertising_channel_type != 'VIDEO'
+where advertising_channel_type != 'VIDEO'
 )
 
 SELECT 
