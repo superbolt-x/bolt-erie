@@ -111,11 +111,11 @@ joined_data as  (
                 sub_source,
                 office,
                 office_location,
-                spend, 
-                clicks, 
-                impressions,
-                leads, 
-                video_views,
+                spends as spend, 
+                click as clicks, 
+                impression as impressions,
+                lead as leads, 
+                video_view as video_views,
                 account_id, 
                 campaign_status
         FROM {{ source('reporting','googleads_ad_performance') }}
@@ -128,7 +128,11 @@ joined_data as  (
                     '{{date_granularity}}' as date_granularity,
                     {{date_granularity}} as date,
                     advertising_channel_type,
-                    sum(cost_micros::FLOAT/1000000::FLOAT) as spends
+                    sum(cost_micros::FLOAT/1000000::FLOAT) as spends,
+                    sum(clicks::FLOAT) as click,
+                    sum(impressions::FLOAT) as impression,
+                    sum(leads::FLOAT) as lead,
+                    sum(video_views::FLOAT) as video_view
                     from (select *, {{ get_date_parts('date') }} from {{ source('googleads_raw', 'ad_performance_report') }})
                     left join campaign_types
                     USING(campaign_id)
