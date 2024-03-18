@@ -17,14 +17,14 @@ WITH filtered_data as
         {{date_granularity}} as date,
         office_name, ad_source,
         COALESCE(SUM(spend),0) as spend,
-        COALESCE(SUM(sum_impressions_),0) as impressions,
-        COALESCE(SUM(sum_clicks_),0) as clicks,
+        COALESCE(SUM(impressions),0) as impressions,
+        COALESCE(SUM(clicks),0) as clicks,
         COALESCE(SUM(leads),0) as leads,
-        COALESCE(SUM(sum_sets_),0) as appointments,
-        COALESCE(SUM(sum_hits_),0) as hits,
-        COALESCE(SUM(sum_issues_),0) as issues,
-        COALESCE(SUM(sum_net_sales_),0) as net,
-        COALESCE(SUM(sum_workable_leads_),0) as workable_leads
+        COALESCE(SUM(sets),0) as appointments,
+        COALESCE(SUM(hits),0) as hits,
+        COALESCE(SUM(issues),0) as issues,
+        COALESCE(SUM(netsales),0) as net,
+        COALESCE(SUM(workable_leads),0) as workable_leads
         FROM filtered_data
         GROUP BY 1,2,3,4
         {% if not loop.last %}UNION ALL
