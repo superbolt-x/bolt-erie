@@ -78,3 +78,6 @@ sources:
     tables:
       - name: spend_files
         identifier: spend_files
+
+      - name: nextdoor_daily_performance
+        identifier: nextdoor_daily_performance
