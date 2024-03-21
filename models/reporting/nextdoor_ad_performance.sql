@@ -10,8 +10,8 @@ WITH initial_data as
   WHERE _modified IN (SELECT MAX(_modified) FROM {{ source('s3_raw','nextdoor_daily_performance') }} )),
 
   final_data as
-  {%- for date_granularity in date_granularity_list %}    
-  (SELECT 
+  ({%- for date_granularity in date_granularity_list %}    
+  SELECT 
       '{{date_granularity}}' as date_granularity,
       {{date_granularity}} as date,
       ad_id,
