@@ -5,7 +5,7 @@
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
 
 WITH initial_data as
-  (SELECT *, {{ get_date_parts('start_time'::date) }} 
+  (SELECT *, start_time::date as date, {{ get_date_parts('date') }} 
   FROM {{ source('s3_raw','nextdoor_daily_performance') }} 
   WHERE _modified IN (SELECT MAX(_modified) FROM {{ source('s3_raw','nextdoor_daily_performance') }} )),
 
