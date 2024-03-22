@@ -20,12 +20,15 @@ WITH initial_data as
       ad_group_name,
       campaign_id,
       campaign_name,
+      CASE WHEN campaign_name !~* 'warm' THEN 'Campaign Type: Prospecting' 
+        WHEN campaign_name ~* 'warm' THEN 'Campaign Type: Retargeting' 
+      END as campaign_type_default,
       COALESCE(SUM(spend),0) as spend,
       COALESCE(SUM(clicks),0) as clicks,
       COALESCE(SUM(impressions),0) as impressions,
       COALESCE(SUM(conversions),0) as conversions
   FROM initial_data
-  GROUP BY 1,2,3,4,5,6,7,8
+  GROUP BY 1,2,3,4,5,6,7,8,9
   {% if not loop.last %}UNION ALL
   {% endif %}
 {% endfor %})
