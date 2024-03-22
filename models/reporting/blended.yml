@@ -61,6 +61,9 @@ sources:
       - name: googleads_campaign_performance
         identifier: erie_googleads_campaign_performance
 
+      - name: googleads_asset_group_performance
+        identifier: erie_googleads_asset_group_performance
+
       - name: tiktok_ad_performance
         identifier: erie_tiktok_ad_performance
 
