@@ -192,7 +192,7 @@ SELECT
         NULL as dispo,
         NULL as call_disposition,
         NULL as status_detail,
-        NULL as utm_medium,
+        NULL::VARCHAR as utm_medium,
         campaign_id::VARCHAR as utm_campaign,
         ad_group_id::VARCHAR as utm_term,
         TRIM(REPLACE(LOWER(ad_name),' - ',' '))::VARCHAR as utm_content,
