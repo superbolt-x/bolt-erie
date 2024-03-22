@@ -18,6 +18,7 @@ SELECT
 account_id,
 campaign_name,
 campaign_id,
+campaign_status,
 asset_group_name as ad_group_name,
 asset_group_id as ad_group_id,
 asset_group_status as ad_group_status,
