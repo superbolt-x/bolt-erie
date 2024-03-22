@@ -15,3 +15,5 @@ UNION ALL
 (SELECT * FROM {{ ref('salesforce_sub_sources') }})
 UNION ALL
 (SELECT * FROM {{ ref('outbrain_sub_sources') }})
+UNION ALL
+(SELECT * FROM {{ ref('nextdoor_sub_sources') }})
