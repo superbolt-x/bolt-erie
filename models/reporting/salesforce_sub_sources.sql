@@ -23,7 +23,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         CASE WHEN source ~* 'B' THEN 'Basement'
             WHEN source !~* 'B' THEN 'Roofing' 
         END as erie_type,
-        CASE WHEN source IN ('SMR','SM1','SM4','BSM4','IL3','BIL3','SM3','BSMR','BSM1') THEN 'National'
+        CASE WHEN source IN ('SMR','SM1','SM4','BSM4','IL3','BIL3','SM3','BSMR','BSM1','SM5','BSM5') THEN 'National'
             WHEN source IN ('SM','SMO','SM2','BSM','BSM2') THEN 'Local'
             WHEN source = 'RYT' THEN 'Retargeting'
             ELSE 'Other'
