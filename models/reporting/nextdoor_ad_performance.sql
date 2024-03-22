@@ -42,6 +42,7 @@ SELECT
     ad_group_name,
     campaign_id,
     campaign_name,
+    campaign_type_default,
     spend,
     impressions,
     clicks,
