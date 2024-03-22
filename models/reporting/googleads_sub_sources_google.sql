@@ -57,8 +57,8 @@ joined_data as  (
                 NULL as keyword_text,
                 NULL as keyword_match_type,
                 NULL as ad_id,
-                NULL as ad_group_id,
-                NULL as ad_group_name,
+                ad_group_id,
+                ad_group_name,
                 campaign_name,
                 date, 
                 campaign_id,
@@ -83,12 +83,11 @@ joined_data as  (
             when campaign_name !~* '0000' then right(split_part(campaign_name,' Warm',1),3)
             else '797'
         end as sub_source_id
-        from {{ source('reporting','googleads_campaign_performance') }}) t 
+        from {{ source('reporting','googleads_asset_group_performance') }}) t 
         left join campaign_types USING(campaign_id)
         left join subsource_cte on subsource_cte.sf_sub_source_id::varchar = t.sub_source_id::varchar
         where date >= '2022-12-01'
-        and advertising_channel_type = 'PERFORMANCE_MAX'
-        order by date, sub_source_id, campaign_name )
+        order by date, sub_source_id, campaign_name, ad_group_name )
     
         union all
 
@@ -204,8 +203,8 @@ SELECT
         NULL as call_disposition,
         NULL as status_detail,
         NULL as utm_medium,
-        campaign_name::VARCHAR as utm_campaign,
-        ad_group_name::VARCHAR as utm_term,
+        campaign_name as utm_campaign,
+        ad_group_name as utm_term,
         ad_id::VARCHAR as utm_content,
         NULL as utm_keyword,
         NULL as utm_match_type,
