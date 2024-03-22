@@ -75,7 +75,7 @@ joined_data as  (
                 impressions,
                 leads, 
                 video_views,
-                account_id, 
+                account_id::VARCHAR, 
                 campaign_status
         FROM 
         (select *,
@@ -115,7 +115,7 @@ joined_data as  (
                 impression as impressions,
                 leads, 
                 video_views,
-                account_id, 
+                account_id::VARCHAR, 
                 campaign_status
         FROM {{ source('reporting','googleads_ad_performance') }}
         left join (
