@@ -82,6 +82,9 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             UNION ALL
             SELECT ad_group_id::VARCHAR as ad_group_id, ad_group_name as gb_ad_group_name
             FROM {{ ref('bingads_ad_groups') }}
+            UNION ALL
+            SELECT asset_group_id::VARCHAR as ad_group_id, asset_group_name as gb_ad_group_name
+            FROM {{ ref('googleads_asset_groups') }}
             ) gb ON s.utm_term = gb.ad_group_id
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
