@@ -40,14 +40,14 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         call_disposition,
         status_detail,
         utm_medium,
-        CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN bg_campaign_name
-            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN bg_campaign_name
-            ELSE utm_campaign
-        END as utm_campaign::VARCHAR,
-        CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN gb_ad_group_name
-            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN gb_ad_group_name
-            ELSE utm_term
-        END as utm_term::VARCHAR,
+        CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN bg_campaign_name::VARCHAR
+            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN bg_campaign_name::VARCHAR
+            ELSE utm_campaign::VARCHAR
+        END as utm_campaign,
+        CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN gb_ad_group_name::VARCHAR
+            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN gb_ad_group_name::VARCHAR
+            ELSE utm_term::VARCHAR
+        END as utm_term,
         utm_content::VARCHAR,
         utm_keyword,
         utm_match_type,
