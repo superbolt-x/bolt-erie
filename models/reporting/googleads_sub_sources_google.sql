@@ -56,7 +56,7 @@ joined_data as  (
                 NULL as keyword_id,
                 NULL as keyword_text,
                 NULL as keyword_match_type,
-                NULL as ad_id::VARCHAR,
+                NULL as ad_id,
                 ad_group_id::VARCHAR,
                 ad_group_name,
                 campaign_name,
