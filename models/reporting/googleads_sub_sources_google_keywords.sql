@@ -113,7 +113,7 @@ SELECT
         campaign_name as utm_campaign,
         ad_group_name as utm_term,
         NULL as utm_content,
-        keyword_id::VARCHAR as utm_keyword,
+        keyword_text::VARCHAR as utm_keyword,
         keyword_match_type as utm_match_type,
         NULL as utm_placement,
         NULL as utm_discount,
