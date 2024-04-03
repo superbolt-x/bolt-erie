@@ -23,7 +23,7 @@ SELECT 'Nextdoor' AS channel,
         ad_group_name::VARCHAR as utm_term,
         CASE WHEN TRIM(REPLACE(REPLACE(REPLACE(ad_name,'Copy of ',''),'-',' '),' ','_'))::VARCHAR ~* 'Old_Damaged_Roofs' THEN 'Old_Damaged_Roof' 
             ELSE TRIM(REPLACE(REPLACE(REPLACE(ad_name,'Copy of ',''),'-',' '),' ','_'))::VARCHAR
-        END as utm_content as utm_content,
+        END as utm_content,
         NULL as utm_keyword,
         NULL as utm_match_type,
         NULL as utm_placement,
