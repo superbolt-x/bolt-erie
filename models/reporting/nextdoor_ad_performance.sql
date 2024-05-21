@@ -16,8 +16,8 @@ WITH initial_data as
       {{date_granularity}} as date,
       ad_id,
       ad_name,
-      ad_group_id,
-      ad_group_name,
+      adgroup_id as ad_group_id,
+      adgroup_name as ad_group_name,
       campaign_id,
       campaign_name,
       CASE WHEN campaign_name !~* 'warm' THEN 'Campaign Type: Prospecting' 
