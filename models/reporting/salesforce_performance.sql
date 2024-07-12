@@ -27,7 +27,11 @@ WITH office_data as
         '{{date_granularity}}' as date_granularity,
         {{date_granularity}} as date,
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
-        utm_source, utm_medium, utm_campaign, utm_term, 
+        utm_source, utm_medium, 
+        CASE WHEN utm_campaign::varchar ~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'))
+            WHEN utm_campaign::varchar !~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'),'+',' '),'Adv ','Adv+ '),'%2B','+'))
+        END as utm_campaign_adj, 
+        utm_term, 
         CASE WHEN utm_content ~* 'shorts_stay_off_the_ladder_gutter_guard_4000_value_banner_split_gg_lp' THEN 'shorts stay off the ladder gutter guards 4000 value banner split gg lp'
             WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(lower(utm_content),'lps','lp'),'__',' '),'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
         utm_keyword, utm_match_type, utm_placement, utm_discount,
@@ -56,7 +60,7 @@ SELECT
     market, state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail, 
     location as office, 
     sf_office as office_location,
-    utm_source, utm_medium, utm_campaign, utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
+    utm_source, utm_medium, utm_campaign_adj as utm_campaign, utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
     leads,
     calls,
     appointments,
