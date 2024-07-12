@@ -60,7 +60,16 @@ SELECT
     market, state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail, 
     location as office, 
     sf_office as office_location,
-    utm_source, utm_medium, utm_campaign_adj as utm_campaign, utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
+    utm_source, utm_medium, 
+    CASE WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - National - Adv All Areas 0000 - Lead - CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - National - Adv All Areas 0000 - Lead - CBO (Lifetime) Campaign' 
+        WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - Local - Charlotte 0049- Lead CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - Local - Charlotte 0049- Lead CBO (Lifetime) Cost Cap'
+        WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - Local - Nashville 0004 - Lead CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - Local - Nashville 0025 - Lead CBO (Lifetime)'
+        WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - Local - Orlando R086- Lead CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - Local - Orlando R086- Lead CBO (Lifetime) Cost Cap'
+        WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - Local - Rochester 0010 - Lead CBO (Lifetime) - Copy' OR utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - Local - Rochester, NY 0010 - Lead CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - Local - Rochester NY 0010 - Lead CBO (Lifetime)'
+        WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - National - VBLAL Test All Areas 0000 - Lead - Copy' THEN 'Soc - Meta - Roofing - Prospecting - National - VBLAL Test All Areas 0000 - Lead - 1DC'
+        ELSE utm_content_adj 
+    END as utm_campaign, 
+    utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
     leads,
     calls,
     appointments,
