@@ -43,7 +43,7 @@ sf_office as office_location,
 spend,
 impressions,
 link_clicks,
-revenue,
+purchases,
 website_leads+onfacebook_leads as leads
 FROM 
     (SELECT *, SPLIT_PART(landing_page,'/',4) as base_url FROM {{ ref('facebook_performance_by_ad') }} r
