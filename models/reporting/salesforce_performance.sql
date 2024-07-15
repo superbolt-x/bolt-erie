@@ -28,8 +28,9 @@ WITH office_data as
         {{date_granularity}} as date,
         market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, 
-        CASE WHEN utm_campaign::varchar ~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'))
-            WHEN utm_campaign::varchar !~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'),'+',' '),'%2B','+'))
+        CASE WHEN utm_source ~* 'facebook' AND utm_campaign::varchar ~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'))
+            WHEN utm_source ~* 'facebook' AND utm_campaign::varchar !~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'),'+',' '),'%2B','+'))
+            ELSE utm_campaign
         END as utm_campaign_adj, 
         utm_term, 
         CASE WHEN utm_content ~* 'shorts_stay_off_the_ladder_gutter_guard_4000_value_banner_split_gg_lp' THEN 'shorts stay off the ladder gutter guards 4000 value banner split gg lp'
