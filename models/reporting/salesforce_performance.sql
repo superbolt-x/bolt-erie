@@ -70,7 +70,7 @@ SELECT
         WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - National - VBLAL Test All Areas 0000 - Lead - Copy' THEN 'Soc - Meta - Roofing - Prospecting - National - VBLAL Test All Areas 0000 - Lead - 1DC'
         WHEN utm_campaign_adj ~* 'Meta' AND utm_campaign_adj ~* 'Roofing' AND utm_campaign_adj ~* 'Retargeting' AND utm_campaign_adj ~* 'National' AND utm_campaign_adj ~* 'All Areas Warm' AND utm_campaign_adj ~* 'CBO' THEN 'Soc - Meta - Roofing - Retargeting - National - All Areas Warm - Lead - CBO (Lifetime) Cost Cap' 
         WHEN utm_campaign_adj ~* 'Meta' AND utm_campaign_adj ~* 'Roofing' AND utm_campaign_adj ~* 'Retargeting' AND utm_campaign_adj ~* 'National' AND utm_campaign_adj ~* 'Structure' AND utm_campaign_adj ~* 'CBO' THEN 'Soc - Meta - Roofing - Retargeting - National - Old Structure All Areas Warm - Lead - CBO (Lifetime) Cost Cap'
-        ELSE utm_content_adj 
+        ELSE utm_campaign_adj 
     END as utm_campaign, 
     utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
     leads,
