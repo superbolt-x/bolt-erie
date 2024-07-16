@@ -32,7 +32,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
                 OR (utm_source = 'facebook' AND utm_campaign !~* 'warm') THEN 'Prospecting'
             WHEN source IN ('SMR','SMO','BSMR')
                 OR (utm_source = 'facebook' AND utm_campaign ~* 'warm') THEN 'Retargeting'
-            WHEN source IN ('SMD','BSMD') OR (utm_source = 'google' AND utm_campaign ~* 'discovery') OR (utm_source = 'google' AND utm_campaign ~* 'demand gen') THEN 'Discovery'
+            WHEN source IN ('SMD','BSMD') OR (utm_source = 'google' AND utm_campaign ~* 'discovery') OR (utm_source = 'google' AND utm_campaign ~* 'demand gen') THEN 'Demand Gen'
             WHEN source IN ('PMX','BPMX') OR (utm_source = 'google' AND advertising_channel_type = 'PERFORMANCE_MAX') THEN 'Performance Max'
             WHEN source IN ('IL2','BIL2','IL3','BIL3') OR (utm_source = 'google' AND advertising_channel_type = 'SEARCH')THEN 'Search'
         END as campaign_type,
