@@ -25,6 +25,15 @@ sources:
       - name: facebook_lp_urls
         identifier: facebook_lp_urls 
 
+      - name: campaign_hourly_convtype_report
+        identifier: campaign_hourly_convtype_report
+      
+      - name: campaign_hourly_basement_report
+        identifier: campaign_hourly_basement_report
+
+      - name: campaign_hourly_roof_report
+        identifier: campaign_hourly_roof_report 
+
   - name: googleads_raw
     schema: googleads_raw
     tables:
