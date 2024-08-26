@@ -19,7 +19,7 @@ WITH initial_data as
     0 as spend, COALESCE(SUM(CASE WHEN conversion_action_name ~* '(Kashurba) Get Pricing' THEN all_conversions END),0) as leads,
     MAX(_fivetran_synced) OVER (PARTITION by date, hour, campaign_name, campaign_id) as last_updated_date
   FROM {{ source('gsheet_raw','campaign_hourly_roof_report') }}
-  GROUP BY 1,2,3,4,5,_fivetran_synced)
+  GROUP BY 1,2,3,4,5,_fivetran_synced),
   
   final_data as 
   (SELECT * FROM initial_data WHERE _fivetran_synced = last_updated_date)
