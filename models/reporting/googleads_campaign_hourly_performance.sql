@@ -18,7 +18,7 @@ WITH initial_data as
   SELECT date, hour, campaign_name, campaign_id, CASE WHEN customer_id = 4560674777 THEN 'Roofing' WHEN customer_id = 2819798401 THEN 'Basement' END as erie_type, _fivetran_synced,
     0 as spend, COALESCE(SUM(CASE WHEN conversion_action_name ~* '(Kashurba) Get Pricing' THEN all_conversions END),0) as leads,
     MAX(_fivetran_synced) OVER (PARTITION by date, hour, campaign_name, campaign_id) as last_updated_date
-  FROM {{ source('gsheet_raw','campaign_hourly_roof_report') }}
+  FROM {{ source('gsheet_raw','campaign_hourly_convtype_report') }}
   GROUP BY 1,2,3,4,5,_fivetran_synced),
   
   final_data as 
