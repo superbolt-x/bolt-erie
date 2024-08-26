@@ -1,8 +1,6 @@
 {{ config (
-    alias = target.database + '_outbrain_campaign_performance'
+    alias = target.database + '_googleads_campaign_hourly_performance'
 )}}
-    
-{% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
 
 WITH initial_data as
 (SELECT date, hour, campaign_name, campaign_id, 'Basement' as erie_type, _fivetran_synced,
