@@ -47,7 +47,7 @@ impressions,
 clicks,
 conversions as purchases,
 conversions_value as revenue,
-0 as leads,
+conversions as leads,
 0 as video_views
 FROM {{ ref ('googleads_performance_by_asset_group') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
