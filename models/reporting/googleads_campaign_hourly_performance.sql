@@ -31,7 +31,7 @@ WITH initial_data as
     END as campaign_type,
     CASE WHEN date = current_date THEN 'Today'
         WHEN date != current_date THEN 'Yesterday'
-    END as period
+    END as period,
     COALESCE(SUM(spend),0) as spend,
     COALESCE(SUM(leads),0) as leads
   FROM initial_data
