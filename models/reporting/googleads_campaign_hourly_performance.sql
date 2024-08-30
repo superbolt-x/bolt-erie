@@ -24,7 +24,15 @@ WITH initial_data as
     campaign_id,
     campaign_name,
     erie_type,
+    CASE WHEN campaign_name ~* 'demand gen' OR campaign_name ~* 'discovery' THEN 'Campaign Type: Demand Gen'
+        WHEN campaign_name ~* 'pmax' OR campaign_name ~* 'Performance Max' THEN 'Campaign Type: Performance Max'
+        WHEN campaign_name ~* 'Youtube' THEN 'Campaign Type: Youtube'
+        ELSE 'Campaign Type: Search'
+    END as campaign_type,
+    CASE WHEN date = current_date THEN 'Today'
+        WHEN date != current_date THEN 'Yesterday'
+    END as period
     COALESCE(SUM(spend),0) as spend,
     COALESCE(SUM(leads),0) as leads
   FROM initial_data
-  GROUP BY 1,2,3,4,5
+  GROUP BY 1,2,3,4,5,6,7
