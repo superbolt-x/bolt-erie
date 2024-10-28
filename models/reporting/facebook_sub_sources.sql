@@ -25,7 +25,7 @@ SELECT
             WHEN campaign_name ~* 'Group' THEN 'Group' 
             WHEN campaign_name ~* 'National' THEN 'National' 
             ELSE 'Other'
-        END as region_buckets,
+        END as region_bucket,
         CASE WHEN campaign_name ~* 'Roof Replacement' THEN 'Roof Replacement' 
             WHEN campaign_name ~* 'General Roofing' THEN 'General Roofing' 
             WHEN campaign_name ~* 'Residential Roofing' THEN 'Residential Roofing'
