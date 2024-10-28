@@ -90,6 +90,20 @@ SELECT
         CASE WHEN campaign_name ~* 'Branded' OR campaign_name ~* 'Metal Roofing Keywords' THEN 'Search'
             ELSE 'Other' 
         END as campaign_type,
+        CASE WHEN campaign_name ~* 'All areas' THEN 'All areas' 
+            WHEN campaign_name ~* 'Group' THEN 'Group' 
+            WHEN campaign_name ~* 'National' THEN 'National' 
+            ELSE 'Other'
+        END as region_bucket,
+        CASE WHEN ad_group_name ~* 'Roof Replacement' THEN 'Roof Replacement' 
+            WHEN ad_group_name ~* 'General Roofing' THEN 'General Roofing' 
+            WHEN ad_group_name ~* 'Residential Roofing' THEN 'Residential Roofing'
+            WHEN ad_group_name ~* 'Metal Roofing' THEN 'Metal Roofing' 
+            WHEN ad_group_name ~* 'Steel Roofing' THEN 'Steel Roofing'
+            WHEN ad_group_name ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
+            WHEN ad_group_name ~* 'Spanish Tiles' THEN 'Spanish Tiles'
+            ELSE 'Other'
+        END as service_type,
         NULL as dispo,
         NULL as call_disposition,
         NULL as status_detail,
@@ -120,4 +134,4 @@ SELECT
         0 as ooa_leads
     FROM joined_data LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
