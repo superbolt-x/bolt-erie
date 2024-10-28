@@ -15,6 +15,20 @@ SELECT 'Nextdoor' AS channel,
         CASE WHEN campaign_name ~* 'Basement' THEN 'Basement' ELSE 'Roofing' END as erie_type,
         'National' as market,
         campaign_type_default as campaign_type,
+        CASE WHEN campaign_name ~* 'All areas' THEN 'All areas' 
+            WHEN campaign_name ~* 'Group' THEN 'Group' 
+            WHEN campaign_name ~* 'National' THEN 'National' 
+            ELSE 'Other'
+        END as region_bucket,
+        CASE WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Roof_Replacement' THEN 'Roof Replacement' 
+            WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'General_Roofing' THEN 'General Roofing' 
+            WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Residential_Roofing' THEN 'Residential Roofing'
+            WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Metal_Roofing' THEN 'Metal Roofing' 
+            WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Steel_Roofing' THEN 'Steel Roofing'
+            WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Fiberglass_Roofing' THEN 'Fiberglass Roofing'
+            WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Spanish_Tiles' THEN 'Spanish Tiles'
+            ELSE 'Other'
+        END as service_type,
         NULL::VARCHAR(256) as dispo,
         NULL::VARCHAR(256) as call_disposition,
         NULL::VARCHAR(256) as status_detail,
@@ -48,4 +62,4 @@ SELECT 'Nextdoor' AS channel,
         0 as issues,
         0 as ooa_leads
     FROM {{ source('reporting','nextdoor_ad_performance') }}
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
