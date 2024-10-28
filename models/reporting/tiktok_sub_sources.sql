@@ -53,6 +53,20 @@ SELECT 'TikTok' AS channel,
         CASE WHEN campaign_name ~* 'Prospecting' THEN 'Prospecting' 
             WHEN campaign_name ~* 'Retargeting' THEN 'Retargeting'
         END as campaign_type,
+        CASE WHEN campaign_name ~* 'All areas' THEN 'All areas' 
+            WHEN campaign_name ~* 'Group' THEN 'Group' 
+            WHEN campaign_name ~* 'National' THEN 'National' 
+            ELSE 'Other'
+        END as region_bucket,
+        CASE WHEN adgroup_name ~* 'Roof Replacement' THEN 'Roof Replacement' 
+            WHEN adgroup_name ~* 'General Roofing' THEN 'General Roofing' 
+            WHEN adgroup_name ~* 'Residential Roofing' THEN 'Residential Roofing'
+            WHEN adgroup_name ~* 'Metal Roofing' THEN 'Metal Roofing' 
+            WHEN adgroup_name ~* 'Steel Roofing' THEN 'Steel Roofing'
+            WHEN adgroup_name ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
+            WHEN adgroup_name ~* 'Spanish Tiles' THEN 'Spanish Tiles'
+            ELSE 'Other'
+        END as service_type,
         NULL::VARCHAR(256) as dispo,
         NULL::VARCHAR(256) as call_disposition,
         NULL::VARCHAR(256) as status_detail,
@@ -84,6 +98,6 @@ SELECT 'TikTok' AS channel,
     FROM {{ source('reporting','tiktok_ad_performance') }}
     LEFT JOIN source using(ad_id, date, date_granularity)
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26)
     
 select * from joined_data
