@@ -36,6 +36,20 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             WHEN source IN ('PMX','BPMX') OR (utm_source = 'google' AND advertising_channel_type = 'PERFORMANCE_MAX') THEN 'Performance Max'
             WHEN source IN ('IL2','BIL2','IL3','BIL3') OR (utm_source = 'google' AND advertising_channel_type = 'SEARCH')THEN 'Search'
         END as campaign_type,
+        CASE WHEN utm_campaign ~* 'All areas' THEN 'All areas' 
+            WHEN utm_campaign ~* 'Group' THEN 'Group' 
+            WHEN utm_campaign ~* 'National' THEN 'National' 
+            ELSE 'Other'
+        END as region_bucket,
+        CASE WHEN utm_term ~* 'Roof Replacement' THEN 'Roof Replacement' 
+            WHEN utm_term ~* 'General Roofing' THEN 'General Roofing' 
+            WHEN utm_term ~* 'Residential Roofing' THEN 'Residential Roofing'
+            WHEN utm_term ~* 'Metal Roofing' THEN 'Metal Roofing' 
+            WHEN utm_term ~* 'Steel Roofing' THEN 'Steel Roofing'
+            WHEN utm_term ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
+            WHEN utm_term ~* 'Spanish Tiles' THEN 'Spanish Tiles'
+            ELSE 'Other'
+        END as service_type,
         dispo,
         call_disposition,
         status_detail,
@@ -87,4 +101,4 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             FROM {{ ref('googleads_asset_groups') }}
             ) gb ON s.utm_term = gb.ad_group_id
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
