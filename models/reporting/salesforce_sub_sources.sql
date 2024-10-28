@@ -36,18 +36,18 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             WHEN source IN ('PMX','BPMX') OR (utm_source = 'google' AND advertising_channel_type = 'PERFORMANCE_MAX') THEN 'Performance Max'
             WHEN source IN ('IL2','BIL2','IL3','BIL3') OR (utm_source = 'google' AND advertising_channel_type = 'SEARCH')THEN 'Search'
         END as campaign_type,
-        CASE WHEN utm_campaign ~* 'All areas' THEN 'All areas' 
-            WHEN utm_campaign ~* 'Group' THEN 'Group' 
-            WHEN utm_campaign ~* 'National' THEN 'National' 
+        CASE WHEN bg_campaign_name::VARCHAR ~* 'All areas' OR utm_campaign ~* 'All areas' THEN 'All areas' 
+            WHEN bg_campaign_name::VARCHAR ~* 'Group' OR utm_campaign ~* 'Group' THEN 'Group' 
+            WHEN bg_campaign_name::VARCHAR ~* 'National' OR utm_campaign ~* 'National' THEN 'National' 
             ELSE 'Other'
         END as region_bucket,
-        CASE WHEN utm_term ~* 'Roof Replacement' THEN 'Roof Replacement' 
-            WHEN utm_term ~* 'General Roofing' THEN 'General Roofing' 
-            WHEN utm_term ~* 'Residential Roofing' THEN 'Residential Roofing'
-            WHEN utm_term ~* 'Metal Roofing' THEN 'Metal Roofing' 
-            WHEN utm_term ~* 'Steel Roofing' THEN 'Steel Roofing'
-            WHEN utm_term ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
-            WHEN utm_term ~* 'Spanish Tiles' THEN 'Spanish Tiles'
+        CASE WHEN gb_ad_group_name::VARCHAR ~* 'Roof Replacement' OR utm_term ~* 'Roof Replacement' THEN 'Roof Replacement' 
+            WHEN gb_ad_group_name::VARCHAR ~* 'General Roofing' OR utm_term ~* 'General Roofing' THEN 'General Roofing' 
+            WHEN gb_ad_group_name::VARCHAR ~* 'Residential Roofing' OR utm_term ~* 'Residential Roofing' THEN 'Residential Roofing'
+            WHEN gb_ad_group_name::VARCHAR ~* 'Metal Roofing' OR utm_term ~* 'Metal Roofing' THEN 'Metal Roofing' 
+            WHEN gb_ad_group_name::VARCHAR ~* 'Steel Roofing' OR utm_term ~* 'Steel Roofing' THEN 'Steel Roofing'
+            WHEN gb_ad_group_name::VARCHAR ~* 'Fiberglass Roofing' OR utm_term ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
+            WHEN gb_ad_group_name::VARCHAR ~* 'Spanish Tiles' OR utm_term ~* 'Spanish Tiles' THEN 'Spanish Tiles'
             ELSE 'Other'
         END as service_type,
         dispo,
