@@ -194,15 +194,7 @@ SELECT
             WHEN campaign_name ~* 'National' THEN 'National' 
             ELSE 'Other'
         END as region_bucket,
-        CASE WHEN ad_group_name ~* 'Roof Replacement' THEN 'Roof Replacement' 
-            WHEN ad_group_name ~* 'General Roofing' THEN 'General Roofing' 
-            WHEN ad_group_name ~* 'Residential Roofing' THEN 'Residential Roofing'
-            WHEN ad_group_name ~* 'Metal Roofing' THEN 'Metal Roofing' 
-            WHEN ad_group_name ~* 'Steel Roofing' THEN 'Steel Roofing'
-            WHEN ad_group_name ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
-            WHEN ad_group_name ~* 'Spanish Tiles' THEN 'Spanish Tiles'
-            ELSE 'Other'
-        END as service_type,
+        NULL as service_type,
         NULL as dispo,
         NULL as call_disposition,
         NULL as status_detail,
