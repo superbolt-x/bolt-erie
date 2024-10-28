@@ -15,6 +15,8 @@ SELECT 'Outbrain' AS channel,
         'Roofing' as erie_type,
         'National' as market,
         NULL::VARCHAR(256) as campaign_type,
+        NULL::VARCHAR(256) as region_bucket,
+        NULL::VARCHAR(256) as service_type,
         NULL::VARCHAR(256) as dispo,
         NULL::VARCHAR(256) as call_disposition,
         NULL::VARCHAR(256) as status_detail,
@@ -44,4 +46,4 @@ SELECT 'Outbrain' AS channel,
         0 as issues,
         0 as ooa_leads
     FROM {{ source('reporting','outbrain_campaign_performance') }}
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
