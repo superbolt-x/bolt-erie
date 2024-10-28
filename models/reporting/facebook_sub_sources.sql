@@ -21,6 +21,20 @@ SELECT
             WHEN campaign_name ~* 'LP Clicks Traffic' THEN 'Traffic' 
             WHEN campaign_name ~* 'LP Views Leads' THEN 'View Content' 
         END as campaign_type,
+        CASE WHEN campaign_name ~* 'All areas' THEN 'All areas' 
+            WHEN campaign_name ~* 'Group' THEN 'Group' 
+            WHEN campaign_name ~* 'National' THEN 'National' 
+            ELSE 'Other'
+        END as region_buckets,
+        CASE WHEN campaign_name ~* 'Roof Replacement' THEN 'Roof Replacement' 
+            WHEN campaign_name ~* 'General Roofing' THEN 'General Roofing' 
+            WHEN campaign_name ~* 'Residential Roofing' THEN 'Residential Roofing'
+            WHEN campaign_name ~* 'Metal Roofing' THEN 'Metal Roofing' 
+            WHEN campaign_name ~* 'Steel Roofing' THEN 'Steel Roofing'
+            WHEN campaign_name ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
+            WHEN campaign_name ~* 'Spanish Tiles' THEN 'Spanish Tiles'
+            ELSE 'Other'
+        END as service_type,
         NULL as dispo,
         NULL as call_disposition,
         NULL as status_detail,
@@ -51,4 +65,4 @@ SELECT
         0 as ooa_leads
     FROM {{ source('reporting','facebook_ad_performance') }}
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
