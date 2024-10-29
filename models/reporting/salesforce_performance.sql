@@ -59,7 +59,7 @@ WITH office_data as
 SELECT 
     date,
     date_granularity,
-    market, 
+    CASE WHEN market ~* 'R062 South Atlanta-GA' OR market ~* 'R062 West Atlanta-GA' THEN 'R062 West Atlanta-GA' ELSE market END as market, 
     state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail, 
     location as office, 
     sf_office as office_location,
