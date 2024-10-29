@@ -27,7 +27,8 @@ WITH office_data as
     SELECT  
         '{{date_granularity}}' as date_granularity,
         {{date_granularity}} as date,
-        market, state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+        CASE WHEN market ~* 'R062 South Atlanta-GA' OR market ~* 'R062 West Atlanta-GA' THEN 'R062 West Atlanta-GA' ELSE market END as market_adj, 
+        state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, 
         CASE WHEN utm_source ~* 'facebook' AND utm_campaign::varchar ~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'))
             WHEN utm_source ~* 'facebook' AND utm_campaign::varchar !~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'),'+',' '),'%2B','+'))
@@ -59,7 +60,7 @@ WITH office_data as
 SELECT 
     date,
     date_granularity,
-    CASE WHEN market ~* 'R062 South Atlanta-GA' OR market ~* 'R062 West Atlanta-GA' THEN 'R062 West Atlanta-GA' ELSE market END as market, 
+    market_adj as market,
     state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail, 
     location as office, 
     sf_office as office_location,
@@ -90,4 +91,4 @@ SELECT
     workable_leads,
     ooa_leads
 FROM final_data
-LEFT JOIN office_data ON final_data.market = office_data.sf_office 
+LEFT JOIN office_data ON final_data.market_adj = office_data.sf_office 
