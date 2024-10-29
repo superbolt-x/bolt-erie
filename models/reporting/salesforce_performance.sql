@@ -5,14 +5,15 @@
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
     
 WITH office_data as
-    (SELECT office as sf_office, 
+    (SELECT CASE WHEN office ~* 'R062 South Atlanta-GA' THEN 'R062 West Atlanta-GA' ELSE office END as office_adj,
+        office_adj as sf_office, 
         case 
-            WHEN LEFT(office,1)='R' THEN SPLIT_PART(SPLIT_PART(office,' ',1),'R',2) 
-            WHEN LEFT(office,1)='B'THEN SPLIT_PART(office,' ',1)
+            WHEN LEFT(office_adj,1)='R' THEN SPLIT_PART(SPLIT_PART(office_adj,' ',1),'R',2) 
+            WHEN LEFT(office_adj,1)='B'THEN SPLIT_PART(office_adj,' ',1)
         end as code, 
-        SPLIT_PART(office,' ',2) + SPLIT_PART(office,' ',3) + SPLIT_PART(office,' ',4) as location
+        SPLIT_PART(office_adj,' ',2) + SPLIT_PART(office_adj,' ',3) + SPLIT_PART(office_adj,' ',4) as location
     FROM {{ source('gsheet_raw', 'office_locations') }}
-    GROUP BY office
+    GROUP BY office_adj
     ORDER BY code ASC),
     
     filetered_data as
@@ -58,10 +59,10 @@ WITH office_data as
 SELECT 
     date,
     date_granularity,
-    CASE WHEN market ~* 'R062' THEN 'R062 West Atlanta-GA' ELSE market END as market, 
+    market, 
     state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail, 
-    CASE WHEN location ~* 'South Atlanta-GA' OR location ~* 'West Atlanta-GA' THEN 'West Atlanta-GA' ELSE location as office, 
-    CASE WHEN location ~* 'South Atlanta-GA' OR location ~* 'West Atlanta-GA' THEN 'R062 West Atlanta-GA' ELSE sf_office as office_location,
+    location as office, 
+    sf_office as office_location,
     utm_source, utm_medium, 
     CASE WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - National - Adv All Areas 0000 - Lead - CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - National - Adv All Areas 0000 - Lead - CBO (Lifetime) Campaign' 
         WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - Local - Charlotte 0049- Lead CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - Local - Charlotte 0049- Lead CBO (Lifetime) Cost Cap'
