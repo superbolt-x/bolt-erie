@@ -5,7 +5,8 @@
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
     
 WITH office_data as
-    (SELECT CASE WHEN office ~* 'R062 South Atlanta-GA' THEN 'R062 West Atlanta-GA' ELSE office END as office_adj,
+    (SELECT COUNT(*),
+        CASE WHEN office ~* 'R062' THEN 'R062 West Atlanta-GA' ELSE office END as office_adj,
         office_adj as sf_office, 
         case 
             WHEN LEFT(office_adj,1)='R' THEN SPLIT_PART(SPLIT_PART(office_adj,' ',1),'R',2) 
@@ -13,7 +14,7 @@ WITH office_data as
         end as code, 
         SPLIT_PART(office_adj,' ',2) + SPLIT_PART(office_adj,' ',3) + SPLIT_PART(office_adj,' ',4) as location
     FROM {{ source('gsheet_raw', 'office_locations') }}
-    GROUP BY office_adj
+    GROUP BY 2,3,4,5
     ORDER BY code ASC),
     
     filetered_data as
@@ -27,7 +28,7 @@ WITH office_data as
     SELECT  
         '{{date_granularity}}' as date_granularity,
         {{date_granularity}} as date,
-        CASE WHEN market ~* 'R062 South Atlanta-GA' THEN 'R062 West Atlanta-GA' ELSE market END as market_adj, 
+        CASE WHEN market ~* 'R062' THEN 'R062 West Atlanta-GA' ELSE market END as market_adj, 
         state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, 
         CASE WHEN utm_source ~* 'facebook' AND utm_campaign::varchar ~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'))
