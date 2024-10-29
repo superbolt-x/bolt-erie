@@ -3,9 +3,13 @@
 )}}
 
 WITH office_data as
-    (SELECT office as sf_office, SPLIT_PART(SPLIT_PART(office,' ',1),'R',2) as code, SPLIT_PART(office,' ',2) as location
+    (SELECT COUNT(*),
+        CASE WHEN office ~* 'R062' THEN 'R062 West Atlanta-GA' ELSE office END as office_adj,
+        office_adj as sf_office,
+        SPLIT_PART(SPLIT_PART(office_adj,' ',1),'R',2) as code, 
+        SPLIT_PART(office_adj,' ',2) as location
     FROM {{ source('gsheet_raw', 'office_locations') }}
-    GROUP BY office
+    GROUP BY 2,3,4,5
     ORDER BY code ASC)
 
 SELECT 
