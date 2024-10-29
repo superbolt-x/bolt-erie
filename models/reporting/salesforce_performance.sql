@@ -58,9 +58,10 @@ WITH office_data as
 SELECT 
     date,
     date_granularity,
-    market, state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail, 
-    location as office, 
-    sf_office as office_location,
+    CASE WHEN market ~* 'R062' THEN 'R062 West Atlanta-GA' ELSE market END as market, 
+    state, source,zip, sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+    CASE WHEN location ~* 'South Atlanta-GA' OR location ~* 'West Atlanta-GA' THEN 'West Atlanta-GA' ELSE location as office, 
+    CASE WHEN location ~* 'South Atlanta-GA' OR location ~* 'West Atlanta-GA' THEN 'R062 West Atlanta-GA' ELSE sf_office as office_location,
     utm_source, utm_medium, 
     CASE WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - National - Adv All Areas 0000 - Lead - CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - National - Adv All Areas 0000 - Lead - CBO (Lifetime) Campaign' 
         WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - Local - Charlotte 0049- Lead CBO (Lifetime)' THEN 'Soc - Meta - Roofing - Prospecting - Local - Charlotte 0049- Lead CBO (Lifetime) Cost Cap'
