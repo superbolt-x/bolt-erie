@@ -5,7 +5,7 @@
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
     
 WITH filtered_data as
-    (SELECT *, {{ get_date_parts('date') }}
+    (SELECT *,
     FROM {{ source('s3_raw','spend_files') }}
     WHERE _file IN (SELECT MAX(_file) FROM {{ source('s3_raw','spend_files') }})),
 
@@ -14,7 +14,7 @@ WITH filtered_data as
     ({%- for date_granularity in date_granularity_list %}
     SELECT  
         '{{date_granularity}}' as date_granularity,
-        {{date_granularity}} as date,
+        DATE_TRUNC('{{date_granularity}}', TO_TIMESTAMP(date, 'MM/DD/YYYY HH:MI:SS AM')) as date,
         office_name, ad_source,
         COALESCE(SUM(spend),0) as spend,
         COALESCE(SUM(impressions),0) as impressions,
