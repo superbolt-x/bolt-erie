@@ -5,7 +5,7 @@
 {% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
     
 WITH filtered_data as
-    (SELECT *,
+    (SELECT *
     FROM {{ source('s3_raw','spend_files') }}
     WHERE _file IN (SELECT MAX(_file) FROM {{ source('s3_raw','spend_files') }})),
 
