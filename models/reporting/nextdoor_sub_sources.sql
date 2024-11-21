@@ -33,7 +33,7 @@ SELECT 'Nextdoor' AS channel,
         NULL::VARCHAR(256) as call_disposition,
         NULL::VARCHAR(256) as status_detail,
         NULL as utm_medium,
-        campaign_name::VARCHAR as utm_campaign,
+        CASE WHEN campaign_name::VARCHAR ~* ':' THEN TRIM(REPLACE(campaign_name,':','')) ELSE campaign_name::VARCHAR END as utm_campaign,
         CASE WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Broad_Newsfeed' THEN 'Broad_Newsfeed' 
             ELSE TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR
         END as utm_term,
