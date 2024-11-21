@@ -33,6 +33,7 @@ WITH office_data as
         utm_source, utm_medium, 
         CASE WHEN utm_source ~* 'facebook' AND utm_campaign::varchar ~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'))
             WHEN utm_source ~* 'facebook' AND utm_campaign::varchar !~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'),'+',' '),'%2B','+'))
+            WHEN utm_source ~* 'nextdoor' THEN REPLACE(utm_campaign,'_',' ')
             ELSE utm_campaign
         END as utm_campaign_adj, 
         utm_term, 
