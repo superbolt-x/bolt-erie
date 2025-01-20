@@ -51,7 +51,9 @@ clicks,
 conversions as purchases,
 conversions_value as revenue,
 kashurbagetpricing as leads,
-video_views
+video_views,
+"[roofing]workablelead"+"[basement]workablelead" as workable_leads,
+"[roofing]appointmentset"+"[basement]appointmentset" as appointments
 FROM {{ ref('googleads_performance_by_ad') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
             case 
