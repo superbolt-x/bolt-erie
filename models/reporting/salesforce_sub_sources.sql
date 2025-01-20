@@ -83,7 +83,9 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         COALESCE(SUM(workable_leads),0) as workable_leads,
         COALESCE(SUM(hits),0) as hits,
         COALESCE(SUM(issues),0) as issues,
-        COALESCE(SUM(ooa_leads),0) as ooa_leads
+        COALESCE(SUM(ooa_leads),0) as ooa_leads,
+        0 AS inplatform_workable_leads,
+        0 AS inplatform_appointments
     FROM {{ source('reporting','salesforce_performance') }} s
     LEFT JOIN (SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, advertising_channel_type
             FROM {{ ref('googleads_campaigns') }}
