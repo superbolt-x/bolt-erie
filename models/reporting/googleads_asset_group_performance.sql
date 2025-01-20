@@ -50,7 +50,9 @@ clicks,
 conversions as purchases,
 conversions_value as revenue,
 conversions as leads,
-0 as video_views
+0 as video_views,
+"[roofing]workablelead"+"[basement]workablelead" as workable_leads,
+"[roofing]appointmentset"+"[basement]appointmentset" as appointments
 FROM {{ ref ('googleads_performance_by_asset_group') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
             case 
