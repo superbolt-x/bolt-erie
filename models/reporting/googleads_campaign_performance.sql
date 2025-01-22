@@ -47,8 +47,8 @@ conversions as purchases,
 conversions_value as revenue,
 kashurbagetpricing as leads,
 video_views,
-coalesce("[roofing]workablelead",0)+coalesce("[basement]workablelead",0) as workable_leads,
-coalesce("[roofing]appointmentset",0)+coalesce("[basement]appointmentset",0) as appointments
+"roofing]workablelead"+"[basement]workablelead" as workable_leads,
+"[roofing]appointmentset"+"[basement]appointmentset" as appointments
 FROM {{ ref ('googleads_performance_by_campaign') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
             case 
