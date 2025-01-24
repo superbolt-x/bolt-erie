@@ -53,8 +53,15 @@ conversions as purchases,
 conversions_value as revenue,
 kashurbagetpricing as leads,
 video_views,
-"[roofing]workablelead"+"[basement]workablelead" as workable_leads,
-"[roofing]appointmentset"+"[basement]appointmentset" as appointments
+CASE 
+    WHEN account_id  = '4560674777' THEN "[roofing]workablelead" 
+    WHEN account_id = '2819798401' THEN "[basement]workablelead" 
+END as workable_leads,
+CASE 
+    WHEN account_id  = '4560674777' THEN "[roofing]appointmentset" 
+    WHEN account_id = '2819798401' THEN "[basement]appointmentset" 
+END as appointments
+    
 FROM {{ ref('googleads_performance_by_keyword') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
             case 
