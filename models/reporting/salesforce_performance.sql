@@ -77,6 +77,7 @@ SELECT
         WHEN utm_campaign_adj ~* 'Meta' AND utm_campaign_adj ~* 'Roofing' AND utm_campaign_adj ~* 'Retargeting' AND utm_campaign_adj ~* 'National' AND utm_campaign_adj ~* 'All Areas Warm' AND utm_campaign_adj !~* 'Old Structure' AND utm_campaign_adj ~* 'CBO' THEN 'Soc - Meta - Roofing - Retargeting - National - All Areas Warm - Lead - CBO (Lifetime) Cost Cap' 
         WHEN utm_campaign_adj ~* 'Meta' AND utm_campaign_adj ~* 'Roofing' AND utm_campaign_adj ~* 'Retargeting' AND utm_campaign_adj ~* 'National' AND utm_campaign_adj ~* 'All Areas Warm Test' AND utm_campaign_adj ~* 'Old Structure' AND utm_campaign_adj ~* 'CBO' THEN 'Soc - Meta - Roofing - Retargeting - National - Old Structure All Areas Warm Test - Lead - CBO (Lifetime) Cost Cap'
         WHEN utm_campaign_adj ~* 'Meta' AND utm_campaign_adj ~* 'Roofing' AND utm_campaign_adj ~* 'Retargeting' AND utm_campaign_adj ~* 'National' AND utm_campaign_adj ~* 'All Areas Warm' AND utm_campaign_adj ~* 'Old Structure' AND utm_campaign_adj ~* 'CBO' THEN 'Soc - Meta - Roofing - Retargeting - National - Old Structure All Areas Warm - Lead - CBO (Lifetime) Cost Cap'
+        WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - National - Region 1 - Instant Form' THEN 'Soc - Meta - Roofing - Prospecting - National - All Areas - Region 1 - Instant Form'     
         ELSE utm_campaign_adj 
     END as utm_campaign, 
     utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount,
