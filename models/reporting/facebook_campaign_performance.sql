@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_facebook_ad_performance'
+    alias = target.database + '_facebook_campaign_performance'
 )}}
 
 WITH office_data as
@@ -35,7 +35,8 @@ link_clicks,
 purchases,
 website_leads+onfacebook_leads as leads
 FROM 
-(SELECT campaign_id, campaign_name, account_id, campaign_effective_status, 
+   {{ ref('facebook_performance_by_campaign') }} 
+LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_effective_status, 
         case
             when (account_id = '813620678687014' OR account_id = '306770030564777') AND campaign_name !~* 'soc -' then RIGHT(LEFT(campaign_name,4),3) 
             when account_id = '1349056908916556' AND LEFT(campaign_name,4) = 'B071' AND campaign_name !~* 'soc -' THEN 'B001'
