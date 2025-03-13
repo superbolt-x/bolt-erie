@@ -47,6 +47,9 @@ conversions as purchases,
 conversions_value as revenue,
 kashurbagetpricing as leads,
 video_views,
+search_impression_share,
+search_budget_lost_impression_share,
+search_rank_lost_impression_share,
 CASE 
     WHEN account_id  = '4560674777' THEN "[roofing]workablelead" 
     WHEN account_id = '2819798401' THEN "[basement]workablelead" 
