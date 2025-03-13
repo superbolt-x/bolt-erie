@@ -32,7 +32,7 @@ sf_office as office_location,
 spend,
 impressions,
 link_clicks,
-purchases,
+0 as purchases,
 website_leads+onfacebook_leads as leads
 FROM 
    {{ ref('facebook_performance_by_campaign') }} 
