@@ -39,7 +39,7 @@ WITH office_data as
         utm_term, 
         CASE WHEN utm_content ~* 'shorts_stay_off_the_ladder_gutter_guard_4000_value_banner_split_gg_lp' THEN 'shorts stay off the ladder gutter guards 4000 value banner split gg lp'
             WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(lower(utm_content),'lps','lp'),'__',' '),'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
-        utm_keyword, utm_match_type, utm_placement, utm_discount,
+        utm_keyword, utm_match_type, utm_placement, utm_discount, utm_lp_variant,
         COUNT(DISTINCT lead_id) as leads,
         COALESCE(SUM(number_of_calls),0) as calls,
         COALESCE(SUM("set"),0) as appointments,
