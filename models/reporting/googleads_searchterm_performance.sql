@@ -52,7 +52,6 @@ clicks,
 conversions as purchases,
 conversions_value as revenue,
 kashurbagetpricing as leads,
-video_views,
 CASE 
     WHEN account_id  = '4560674777' THEN "[roofing]workablelead" 
     WHEN account_id = '2819798401' THEN "[basement]workablelead" 
