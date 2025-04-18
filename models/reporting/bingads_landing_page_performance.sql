@@ -33,13 +33,14 @@ final_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_i'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_l'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_e'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'we-need-old-roofs_a'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(spend),0) as spend,
         COALESCE(SUM(impressions),0) as impressions,
         COALESCE(SUM(clicks),0) as clicks 
     FROM lp_data
-    GROUP BY 1,2,3,4,5,6,7,8,9
+    GROUP BY 1,2,3,4,5,6,7,8,9,10
         {% if not loop.last %}UNION ALL
         {% endif %}
     {% endfor %})
@@ -55,6 +56,7 @@ END as campaign_type_default,
 ad_group_id,
 ad_group_name,
 landing_page,
+lp_variant,
 date,
 date_granularity,
 CASE WHEN account_id = '149506166' THEN 'Basement'
