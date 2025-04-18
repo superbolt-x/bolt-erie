@@ -18,6 +18,9 @@ sources:
     tables:
       - name: office_locations
         identifier: office_locations
+
+      - name: lp_variant_list
+        identifier: lp_variant_list
       
       - name: outbrain_campaign_insights
         identifier: outbrain_campaign_insights
@@ -42,6 +45,9 @@ sources:
 
       - name: campaign_history
         identifier: campaign_history
+
+      - name: landing_page_stats
+        identifier: landing_page_stats
 
   - name: outbrain_raw
     schema: outbrain_raw
@@ -96,3 +102,9 @@ sources:
 
       - name: nextdoor_daily_performance
         identifier: nextdoor_daily_performance
+
+  - name: bingads_raw
+    schema: bingads_raw
+    tables:
+      - name: destination_url_performance_daily_report
+        identifier: destination_url_performance_daily_report
