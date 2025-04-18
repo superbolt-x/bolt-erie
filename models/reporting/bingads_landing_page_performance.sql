@@ -34,7 +34,10 @@ final_data as
         COALESCE(SUM(impressions),0) as impressions,
         COALESCE(SUM(clicks),0) as clicks 
     FROM lp_data
-    GROUP BY 1,2,3,4,5,6,7,8,9)
+    GROUP BY 1,2,3,4,5,6,7,8,9
+        {% if not loop.last %}UNION ALL
+        {% endif %}
+    {% endfor %})
 
 SELECT 
 account_id,
