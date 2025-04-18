@@ -18,7 +18,7 @@ WITH office_data as
     ORDER BY code ASC),
 
 lp_data as 
-    (SELECT customer_id as account_id, campaign_id, unexpanded_final_url as landing_page,
+    (SELECT customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
       impressions, clicks, cost_micros::float/1000000::float as spend, 
       {{ get_date_parts('date') }}
     FROM {{ source('googleads_raw', 'landing_page_stats') }})
@@ -30,12 +30,13 @@ final_data as
         {{date_granularity}} as date,
         account_id,
         campaign_id,
+        ad_group_id,
         landing_page,
         COALESCE(SUM(spend),0) as spend,
         COALESCE(SUM(impressions),0) as impressions,
         COALESCE(SUM(clicks),0) as clicks 
     FROM lp_data
-    GROUP BY 1,2,3,4,5)
+    GROUP BY 1,2,3,4,5,6)
 
 SELECT 
 account_id,
@@ -50,6 +51,8 @@ CASE WHEN campaign_name ~* 'discovery' THEN 'Campaign Type: Discovery'
         or campaign_name ~* 'worse cpl locations' THEN 'Campaign Type: Non Branded'
     ELSE 'Campaign Type: Other'
 END as campaign_type_default,
+ad_group_id,
+ad_group_name,
 landing_page,
 date,
 date_granularity,
@@ -67,6 +70,14 @@ impressions,
 clicks  
 FROM final_data
 LEFT JOIN 
+    (SELECT ad_group_id, ad_group_name, campaign_id, account_id, advertising_channel_type,
+            case 
+                when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
+                when account_id = '2819798401' AND LEFT(campaign_name,4) = '0071' THEN 'B001'
+                when account_id = '2819798401' AND LEFT(campaign_name,4) = '0078' THEN 'B002'
+                when account_id = '2819798401' THEN LEFT(campaign_name,4)
+            end as code 
+    FROM {{ ref('googleads_ad_groups') }}) USING(ad_group_id, campaign_id, account_id)
     (SELECT campaign_id, campaign_name, account_id, advertising_channel_type,
             case 
                 when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
