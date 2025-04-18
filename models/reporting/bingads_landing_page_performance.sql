@@ -49,8 +49,8 @@ SELECT
 account_id,
 campaign_id,
 campaign_name,
-CASE WHEN c.campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
-    WHEN c.campaign_name ~* 'Metal Roofing Keywords' THEN 'Campaign Type: Non Branded'
+CASE WHEN campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
+    WHEN campaign_name ~* 'Metal Roofing Keywords' THEN 'Campaign Type: Non Branded'
     ELSE 'Campaign Type: Other'
 END as campaign_type_default,
 ad_group_id,
