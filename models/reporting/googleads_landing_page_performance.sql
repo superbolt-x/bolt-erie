@@ -7,9 +7,12 @@
 WITH office_data as
     (SELECT COUNT(*),
         CASE WHEN office ~* 'R062' THEN 'R062 West Atlanta-GA' ELSE office END as office_adj,
-        office_adj as sf_office,
-        SPLIT_PART(SPLIT_PART(office_adj,' ',1),'R',2) as code, 
-        SPLIT_PART(office_adj,' ',2) as location
+        office_adj as sf_office, 
+        case 
+            WHEN LEFT(office_adj,1)='R' THEN SPLIT_PART(SPLIT_PART(office_adj,' ',1),'R',2) 
+            WHEN LEFT(office_adj,1)='B'THEN SPLIT_PART(office_adj,' ',1)
+        end as code, 
+        SPLIT_PART(office_adj,' ',2) + SPLIT_PART(office_adj,' ',3) + SPLIT_PART(office_adj,' ',4) as location
     FROM {{ source('gsheet_raw', 'office_locations') }}
     GROUP BY 2,3,4,5
     ORDER BY code ASC),
