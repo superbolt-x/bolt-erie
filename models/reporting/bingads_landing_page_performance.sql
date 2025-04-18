@@ -33,7 +33,6 @@ final_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_i'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_l'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_e'
-            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'we-need-old-roofs_a'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(spend),0) as spend,
