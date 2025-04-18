@@ -70,6 +70,9 @@ sources:
       - name: googleads_keyword_performance
         identifier: erie_googleads_keyword_performance
 
+      - name: googleads_landing_page_performance
+        identifier: erie_googleads_landing_page_performance
+
       - name: salesforce_performance
         identifier: erie_salesforce_performance
 
@@ -90,6 +93,9 @@ sources:
 
       - name: bingads_keyword_performance
         identifier: erie_bingads_keyword_performance
+
+      - name: bingads_landing_page_performance
+        identifier: erie_bingads_landing_page_performance
 
       - name: nextdoor_ad_performance
         identifier: erie_nextdoor_ad_performance
