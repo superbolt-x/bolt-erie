@@ -35,6 +35,7 @@ final_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_d'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'we-need-old-roofs_a'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'we-need-old-roofs_c'
             ELSE 'Other'
         END as lp_variant,
