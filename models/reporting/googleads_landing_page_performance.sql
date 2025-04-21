@@ -81,14 +81,9 @@ impressions,
 clicks  
 FROM final_data
 LEFT JOIN 
-    (SELECT ad_group_id, ad_group_name, campaign_id, account_id, advertising_channel_type,
-            case 
-                when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
-                when account_id = '2819798401' AND LEFT(campaign_name,4) = '0071' THEN 'B001'
-                when account_id = '2819798401' AND LEFT(campaign_name,4) = '0078' THEN 'B002'
-                when account_id = '2819798401' THEN LEFT(campaign_name,4)
-            end as code 
+    (SELECT ad_group_id, ad_group_name, campaign_id, account_id
     FROM {{ ref('googleads_ad_groups') }}) USING(ad_group_id, campaign_id, account_id)
+LEFT JOIN
     (SELECT campaign_id, campaign_name, account_id, advertising_channel_type,
             case 
                 when account_id = '4560674777' THEN RIGHT(LEFT(campaign_name,4),3) 
