@@ -79,10 +79,12 @@ sf_office as office_location,
 spend,
 impressions,
 clicks  
-FROM final_data
-LEFT JOIN 
-    (SELECT ad_group_id, ad_group_name, campaign_id, account_id
-    FROM {{ ref('googleads_ad_groups') }}) USING(ad_group_id, campaign_id, account_id)
+FROM 
+    (SELECT * FROM final_data
+    LEFT JOIN 
+        (SELECT ad_group_id, ad_group_name, campaign_id
+        FROM {{ ref('googleads_ad_groups') }}) USING(ad_group_id, campaign_id)
+    )
 LEFT JOIN
     (SELECT campaign_id, campaign_name, account_id, advertising_channel_type,
             case 
