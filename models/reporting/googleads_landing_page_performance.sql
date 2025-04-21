@@ -21,7 +21,7 @@ lp_data as
     (SELECT customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
       impressions, clicks, cost_micros::float/1000000::float as spend, 
       {{ get_date_parts('date') }}
-    FROM {{ source('googleads_raw', 'landing_page_stats') }})
+    FROM {{ source('googleads_raw', 'landing_page_stats') }}),
   
 final_data as
     ({%- for date_granularity in date_granularity_list %}
