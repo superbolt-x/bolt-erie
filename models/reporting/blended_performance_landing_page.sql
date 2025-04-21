@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_blended_performance_keywords'
+    alias = target.database + '_blended_performance_landing_page'
 )}}
 
 (SELECT * FROM {{ ref('googleads_sub_sources_landing_page') }})
