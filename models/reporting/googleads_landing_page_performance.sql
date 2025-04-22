@@ -85,9 +85,9 @@ CASE WHEN campaign_name ~* 'all areas' THEN 'National'
 END as market,
 CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
 sf_office as office_location, 
-CASE WHEN lp_variant ~* 'affordable-metal-roofing' THEN (spend/2)::float ELSE spend END as spend,
-CASE WHEN lp_variant ~* 'affordable-metal-roofing' THEN (impressions/2)::float ELSE spend END as impressions,
-CASE WHEN lp_variant ~* 'affordable-metal-roofing' THEN (clicks/2)::float ELSE spend END as clicks  
+CASE WHEN lp_variant ~* 'we-need-old-roofs' THEN (spend/2)::float ELSE spend END as spend,
+CASE WHEN lp_variant ~* 'we-need-old-roofs' THEN (impressions/2)::float ELSE spend END as impressions,
+CASE WHEN lp_variant ~* 'we-need-old-roofs' THEN (clicks/2)::float ELSE spend END as clicks  
 FROM 
     (SELECT * FROM final_data
     LEFT JOIN 
