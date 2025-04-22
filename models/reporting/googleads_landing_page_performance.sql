@@ -19,6 +19,15 @@ WITH office_data as
 
 lp_data as 
     (SELECT customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
+            WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_d'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
+            WHEN landing_page ~* 'https://get.eriehome.com/we-need-old-roofs/' THEN 'we-need-old-roofs_a'
+            ELSE 'Other'
+        END as lp_variant,
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/we-need-old-roofs/' THEN 'we-need-old-roofs_c'
+            ELSE 'Other'
+        END as lp_variant_adj,
       impressions, clicks, cost_micros::float/1000000::float as spend, 
       {{ get_date_parts('date') }}
     FROM {{ source('googleads_raw', 'landing_page_stats') }}),
@@ -32,13 +41,13 @@ final_data as
         campaign_id,
         ad_group_id,
         landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
-            WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_d'
-            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
-            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'we-need-old-roofs_a'
-            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'we-need-old-roofs_c'
+        CASE WHEN lp_variant = 'affordable-metal-roofing_a' THEN 'affordable-metal-roofing_a'
+            WHEN lp_variant = 'nations-number-one-roofing-contractor_d' THEN 'nations-number-one-roofing-contractor_d'
+            WHEN lp_variant = 'nations-number-one-roofing_a' THEN 'nations-number-one-roofing_a'
+            WHEN lp_variant = 'we-need-old-roofs_a' THEN 'affordable-metal-roofing_a'
+            WHEN lp_variant_adj = 'we-need-old-roofs_c' THEN 'affordable-metal-roofing_c'
             ELSE 'Other'
-        END as lp_variant,
+        END as lp_variant_comb,
         COALESCE(SUM(spend),0) as spend,
         COALESCE(SUM(impressions),0) as impressions,
         COALESCE(SUM(clicks),0) as clicks 
@@ -64,7 +73,7 @@ END as campaign_type_default,
 ad_group_id,
 ad_group_name,
 landing_page,
-lp_variant,
+lp_variant_comb as lp_variant,
 date,
 date_granularity,
 CASE WHEN account_id  = '4560674777' THEN 'Roofing'
@@ -76,9 +85,9 @@ CASE WHEN campaign_name ~* 'all areas' THEN 'National'
 END as market,
 CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
 sf_office as office_location, 
-spend,
-impressions,
-clicks  
+CASE WHEN lp_variant ~* 'affordable-metal-roofing' THEN (spend/2)::float ELSE spend END as spend,
+CASE WHEN lp_variant ~* 'affordable-metal-roofing' THEN (impressions/2)::float ELSE spend END as impressions,
+CASE WHEN lp_variant ~* 'affordable-metal-roofing' THEN (clicks/2)::float ELSE spend END as clicks  
 FROM 
     (SELECT * FROM final_data
     LEFT JOIN 
