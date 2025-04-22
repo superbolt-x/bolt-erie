@@ -2,6 +2,8 @@
     alias = target.database + '_bingads_landing_page_performance'
 )}}
 
+{% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
+    
 WITH office_data as
     (SELECT COUNT(*),
         CASE WHEN office ~* 'R062' THEN 'R062 West Atlanta-GA' ELSE office END as office_adj,
@@ -16,7 +18,8 @@ lp_data as
     (SELECT account_id::varchar as account_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
       impressions, clicks, spend, 
       {{ get_date_parts('date') }}
-    FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }}),
+    FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
+    ),
   
 final_data as
     ({%- for date_granularity in date_granularity_list %}
