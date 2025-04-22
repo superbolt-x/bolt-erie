@@ -4,7 +4,7 @@
 
 (SELECT * FROM {{ ref('googleads_sub_sources_landing_page') }})
 UNION ALL
-SELECT * FROM {{ ref('bingads_sub_sources_landing_page') }})
+(SELECT * FROM {{ ref('bingads_sub_sources_landing_page') }})
 UNION ALL 
 (SELECT channel, 
         date, 
@@ -28,4 +28,4 @@ UNION ALL
         appointments,
         workable_leads
 FROM {{ ref('salesforce_sub_sources') }} 
-WHERE (channel = 'Bing' OR channel = 'Google'))
+WHERE (channel = 'Bing' OR channel = 'Google') )
