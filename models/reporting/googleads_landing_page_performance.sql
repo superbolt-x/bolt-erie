@@ -22,7 +22,6 @@ lp_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_d'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
-            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs'
             ELSE 'Other'
         END as lp_variant,
       impressions, clicks, cost_micros::float/1000000::float as spend, 
