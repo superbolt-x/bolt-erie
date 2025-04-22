@@ -44,8 +44,8 @@ final_data as
         CASE WHEN lp_variant = 'affordable-metal-roofing_a' THEN 'affordable-metal-roofing_a'
             WHEN lp_variant = 'nations-number-one-roofing-contractor_d' THEN 'nations-number-one-roofing-contractor_d'
             WHEN lp_variant = 'nations-number-one-roofing_a' THEN 'nations-number-one-roofing_a'
-            WHEN lp_variant = 'we-need-old-roofs_a' THEN 'affordable-metal-roofing_a'
-            WHEN lp_variant_adj = 'we-need-old-roofs_c' THEN 'affordable-metal-roofing_c'
+            WHEN lp_variant = 'we-need-old-roofs_a' THEN 'we-need-old-roofs_a'
+            WHEN lp_variant_adj = 'we-need-old-roofs_c' THEN 'we-need-old-roofs_c'
             ELSE 'Other'
         END as lp_variant_comb,
         COALESCE(SUM(spend),0) as spend,
