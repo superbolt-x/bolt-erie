@@ -53,7 +53,7 @@ FROM
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_effective_status, 
         case
             --when campaign_name = 'Soc - Meta - Basement - Prospecting - Local - Cold Traffic Sandbox - Lead ABO' and split_part(adset_name,' ',1) = 'Broad' then RIGHT(trim(split_part(adset_name,'-',1)),3)
-    
+            when campaign_name = 'Soc - Meta - Roofing - Prospecting - Local - Corpus Christi 0082 Residential Rep - Instant Form' THEN '082'
             when (account_id = '813620678687014' OR account_id = '306770030564777') AND campaign_name !~* 'soc -' then RIGHT(LEFT(campaign_name,4),3) 
             when account_id = '1349056908916556' AND LEFT(campaign_name,4) = 'B071' AND campaign_name !~* 'soc -' THEN 'B001'
             when account_id = '1349056908916556' AND LEFT(campaign_name,4) = 'B078' AND campaign_name !~* 'soc -' THEN 'B002'
