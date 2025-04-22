@@ -58,6 +58,6 @@ SELECT
         0 as sf_leads,
         0 as appointments,
         0 as workable_leads
-    FROM joined_data 
+    FROM bingads_data 
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
