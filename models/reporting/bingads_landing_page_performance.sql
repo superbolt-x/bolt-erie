@@ -15,7 +15,7 @@ WITH office_data as
     ORDER BY code ASC),
 
 lp_data as
-    (SELECT date, account_id::varchar as account_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
+    (SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_d'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
@@ -25,9 +25,9 @@ lp_data as
         COALESCE(SUM(CASE WHEN lp_variant != 'Other' OR lp_variant = 'Other' THEN clicks::float/2::float ELSE clicks END),0) AS clicks, 
         COALESCE(SUM(CASE WHEN lp_variant != 'Other' OR lp_variant = 'Other' THEN spend::float/2::float ELSE spend END),0) AS spend
     FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
-    GROUP BY 1,2,3,4,5,6,7,8
+    GROUP BY 1,2,3,4,5,6,7,8,9
     UNION ALL
-    SELECT date, account_id::varchar as account_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
+    SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_i'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_l'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_e'
@@ -37,7 +37,7 @@ lp_data as
         COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN clicks::float/2::float ELSE clicks END),0) AS clicks, 
         COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN spend::float/2::float ELSE spend END),0) AS spend
     FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
-    GROUP BY 1,2,3,4,5,6,7,8),
+    GROUP BY 1,2,3,4,5,6,7,8,9),
     
 initial_data as 
     (SELECT account_id, ad_group_id, ad_group_name, campaign_id, campaign_name, landing_page, lp_variant, impressions, clicks, spend, 
