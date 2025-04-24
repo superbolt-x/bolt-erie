@@ -17,16 +17,35 @@ WITH office_data as
     GROUP BY 2,3,4,5
     ORDER BY code ASC),
 
-lp_data as 
-    (SELECT customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
+lp_data as
+    (SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_d'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
             ELSE 'Other'
         END as lp_variant,
-      impressions, clicks, cost_micros::float/1000000::float as spend, 
-      {{ get_date_parts('date') }}
-    FROM {{ source('googleads_raw', 'landing_page_stats') }}),
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN impressions::float/2::float ELSE impressions END),0) AS impressions, 
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN clicks::float/2::float ELSE clicks END),0) AS clicks, 
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN (cost_micros::float/1000000::float)::float/2::float ELSE cost_micros::float/1000000::float END),0) AS spend
+    FROM {{ source('googleads_raw', 'landing_page_stats') }}
+    GROUP BY 1,2,3,4,5,6
+    UNION ALL
+    SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_i'
+            WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_l'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_e'
+            ELSE 'Other'
+        END as lp_variant,
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN impressions::float/2::float ELSE impressions END),0) AS impressions, 
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN clicks::float/2::float ELSE clicks END),0) AS clicks, 
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN (cost_micros::float/1000000::float)::float/2::float ELSE cost_micros::float/1000000::float END),0) AS spend
+    FROM {{ source('googleads_raw', 'landing_page_stats') }}
+    GROUP BY 1,2,3,4,5,6),
+    
+initial_data as 
+    (SELECT account_id, campaign_id, ad_group_id, landing_page, lp_variant, impressions, clicks, spend, 
+        {{ get_date_parts('date') }}
+    FROM lp_data),
   
 final_data as
     ({%- for date_granularity in date_granularity_list %}
@@ -41,7 +60,7 @@ final_data as
         COALESCE(SUM(spend),0) as spend,
         COALESCE(SUM(impressions),0) as impressions,
         COALESCE(SUM(clicks),0) as clicks 
-    FROM lp_data
+    FROM initial_data
     GROUP BY 1,2,3,4,5,6,7
         {% if not loop.last %}UNION ALL
         {% endif %}
