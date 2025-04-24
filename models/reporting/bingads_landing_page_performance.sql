@@ -21,9 +21,9 @@ lp_data as
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
             ELSE 'Other'
         END as lp_variant,
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN impressions::float/2::float ELSE impressions END),0) AS impressions, 
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN clicks::float/2::float ELSE clicks END),0) AS clicks, 
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN spend::float/2::float ELSE spend END),0) AS spend
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' OR lp_variant = 'Other' THEN impressions::float/2::float ELSE impressions END),0) AS impressions, 
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' OR lp_variant = 'Other' THEN clicks::float/2::float ELSE clicks END),0) AS clicks, 
+        COALESCE(SUM(CASE WHEN lp_variant != 'Other' OR lp_variant = 'Other' THEN spend::float/2::float ELSE spend END),0) AS spend
     FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
     GROUP BY 1,2,3,4,5,6,7,8
     UNION ALL
