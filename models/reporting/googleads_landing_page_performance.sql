@@ -24,9 +24,9 @@ lp_data as
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
             ELSE 'Other'
         END as lp_variant,
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' OR lp_variant = 'Other' THEN impressions::float/2::float ELSE impressions END),0) AS impressions, 
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' OR lp_variant = 'Other' THEN clicks::float/2::float ELSE clicks END),0) AS clicks, 
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' OR lp_variant = 'Other' THEN (cost_micros::float/1000000::float)::float/2::float ELSE cost_micros::float/1000000::float END),0) AS spend
+        COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
+        COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
+        COALESCE(SUM((cost_micros::float/1000000::float)::float/2::float),0) AS spend
     FROM {{ source('googleads_raw', 'landing_page_stats') }}
     GROUP BY 1,2,3,4,5,6
     UNION ALL
@@ -36,9 +36,9 @@ lp_data as
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_e'
             ELSE 'Other'
         END as lp_variant,
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN impressions::float/2::float ELSE impressions END),0) AS impressions, 
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN clicks::float/2::float ELSE clicks END),0) AS clicks, 
-        COALESCE(SUM(CASE WHEN lp_variant != 'Other' THEN (cost_micros::float/1000000::float)::float/2::float ELSE cost_micros::float/1000000::float END),0) AS spend
+        COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
+        COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
+        COALESCE(SUM((cost_micros::float/1000000::float)::float/2::float),0) AS spend
     FROM {{ source('googleads_raw', 'landing_page_stats') }}
     GROUP BY 1,2,3,4,5,6),
     
