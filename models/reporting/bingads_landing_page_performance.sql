@@ -91,3 +91,4 @@ impressions,
 clicks  
 FROM final_data
 LEFT JOIN office_data USING(code)
+WHERE landing_page !~* 'regionalization'
