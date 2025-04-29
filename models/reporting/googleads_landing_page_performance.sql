@@ -113,3 +113,4 @@ LEFT JOIN
             end as code 
     FROM {{ ref('googleads_campaigns') }}) USING(campaign_id, account_id)
 LEFT JOIN office_data USING(code)
+WHERE landing_page !~* 'regionalization'
