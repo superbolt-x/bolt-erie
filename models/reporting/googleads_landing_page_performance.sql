@@ -22,7 +22,7 @@ lp_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_d'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
-            WHEN landing_page ~* 'https://get.eriehome.com/we-need-old-roofs/' THEN 'we-need-old-roofs_a'
+            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_a'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
@@ -35,7 +35,7 @@ lp_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_i'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_n'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_e'
-            WHEN landing_page ~* 'https://get.eriehome.com/we-need-old-roofs/' THEN 'we-need-old-roofs_c'
+            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_c'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
