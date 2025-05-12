@@ -18,7 +18,7 @@ lp_data as
     (SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_d'
-            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_a'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_g'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_a'
             ELSE 'Other'
         END as lp_variant,
