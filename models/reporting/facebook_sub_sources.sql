@@ -13,8 +13,13 @@ SELECT
         CASE WHEN (account_id = '813620678687014' OR account_id = '306770030564777') THEN 'Roofing' 
              WHEN account_id = '1349056908916556' THEN 'Basement'
         END as erie_type,
-        CASE WHEN (campaign_name ~* 'All Area' and (account_id = '813620678687014' OR account_id = '306770030564777') ) or ((campaign_name ~* 'sandbox' or campaign_name ~* 'All Area') and account_id = '1349056908916556') THEN 'National'
-             WHEN ((campaign_name !~* 'All Area' and (account_id = '813620678687014' OR account_id = '306770030564777') ) or ((campaign_name !~* 'sandbox' or campaign_name !~* 'All Area') and account_id = '1349056908916556')) AND campaign_name ~* 'Local' THEN 'Local'
+        CASE WHEN campaign_name = 'Soc - Meta - Roofing - Prospecting - National - Paused Local Campaigns - Lead - Instant Form'
+                or (campaign_name ~* 'All Area' and (account_id = '813620678687014' OR account_id = '306770030564777') ) 
+                or ((campaign_name ~* 'sandbox' or campaign_name ~* 'All Area') and account_id = '1349056908916556') 
+             THEN 'National'
+             WHEN ((campaign_name !~* 'All Area' and (account_id = '813620678687014' OR account_id = '306770030564777') ) 
+                or ((campaign_name !~* 'sandbox' or campaign_name !~* 'All Area') and account_id = '1349056908916556')) AND campaign_name ~* 'Local' 
+             THEN 'Local'
         END as market,
         CASE WHEN campaign_name !~* 'warm' THEN 'Prospecting' 
             WHEN campaign_name ~* 'warm' THEN 'Retargeting' 
