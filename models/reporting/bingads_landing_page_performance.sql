@@ -30,7 +30,7 @@ lp_data as
     SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_l'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_p'
-            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_e'
+            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_f'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
