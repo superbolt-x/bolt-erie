@@ -87,13 +87,14 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         COALESCE(SUM(ooa_leads),0) as ooa_leads,
         0 AS inplatform_workable_leads,
         0 AS inplatform_appointments
-    FROM {{ source('reporting','salesforce_performance') }} s
+    FROM (SELECT *, COALESCE(utm_campaign_id::VARCHAR,utm_campaign) as utm_campaign_id_adj
+            FROM {{ source('reporting','salesforce_performance') }}) s
     LEFT JOIN (SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, advertising_channel_type
             FROM {{ ref('googleads_campaigns') }}
             UNION ALL
             SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, NULL as advertising_channel_type
             FROM {{ ref('bingads_campaigns') }}
-            ) bg ON s.utm_campaign = bg.campaign_id
+            ) bg ON s.utm_campaign_id_adj = bg.campaign_id
     LEFT JOIN (SELECT ad_group_id::VARCHAR as ad_group_id, ad_group_name as gb_ad_group_name
             FROM {{ ref('googleads_ad_groups') }}
             UNION ALL
