@@ -45,7 +45,6 @@ SELECT 'Nextdoor' AS channel,
         NULL as utm_placement,
         NULL as utm_discount,
         NULL as utm_lp_variant,
-        NULL as utm_campaign_id,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
@@ -66,4 +65,4 @@ SELECT 'Nextdoor' AS channel,
         0 AS inplatform_workable_leads,
         0 AS inplatform_appointments
     FROM {{ source('reporting','nextdoor_ad_performance') }}
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
