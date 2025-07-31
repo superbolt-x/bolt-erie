@@ -63,7 +63,6 @@ SELECT
         campaign_name::VARCHAR as utm_campaign,
         ad_group_name::VARCHAR as utm_term,
         lp_variant as utm_lp_variant,
-        campaign_id::VARCHAR as utm_campaign_id,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
@@ -72,4 +71,4 @@ SELECT
         0 as workable_leads
     FROM googleads_data 
     LEFT JOIN campaign_types USING(campaign_id)
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
