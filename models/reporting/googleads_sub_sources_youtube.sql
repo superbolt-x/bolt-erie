@@ -205,7 +205,7 @@ SELECT
         NULL as call_disposition,
         NULL as status_detail,
         NULL as utm_medium,
-        campaign_id::VARCHAR as utm_campaign,
+        campaign_name::VARCHAR as utm_campaign,
         ad_group_id::VARCHAR as utm_term,
         TRIM(REPLACE(LOWER(ad_name),' - ',' '))::VARCHAR as utm_content,
         NULL as utm_keyword,
@@ -213,6 +213,7 @@ SELECT
         NULL as utm_placement,
         NULL as utm_discount,
         NULL as utm_lp_variant,
+        campaign_id::VARCHAR as utm_campaign_id,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
@@ -234,4 +235,4 @@ SELECT
         COALESCE(SUM(appointments),0) AS inplatform_appointments
     FROM (SELECT * FROM final_data)
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
