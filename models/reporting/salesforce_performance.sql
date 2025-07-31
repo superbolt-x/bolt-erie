@@ -80,7 +80,7 @@ SELECT
         WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - National - Region 1 - Instant Form' THEN 'Soc - Meta - Roofing - Prospecting - National - All Areas - Region 1 - Instant Form'     
         ELSE utm_campaign_adj 
     END as utm_campaign, 
-    utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount, utm_lp_variant,
+    utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount, utm_lp_variant,utm_campaign_id,
     leads,
     calls,
     appointments,
