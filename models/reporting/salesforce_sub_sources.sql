@@ -68,6 +68,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         utm_placement,
         utm_discount,
         utm_lp_variant,
+        utm_campaign_id,
         0 AS spend,
         0 AS clicks,
         0 AS impressions,
@@ -104,4 +105,4 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             FROM {{ ref('googleads_asset_groups') }}
             ) gb ON s.utm_term = gb.ad_group_id
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
