@@ -100,6 +100,9 @@ sources:
       - name: nextdoor_ad_performance
         identifier: erie_nextdoor_ad_performance
 
+      - name: bingads_campaign_performance
+        identifier: erie_bingads_campaign_performance
+
   - name: s3_raw
     schema: s3_raw
     tables:
