@@ -30,6 +30,28 @@ SELECT ad_group_id,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(leads),0) AS inplatform_leads
     FROM {{ source('reporting','bingads_keyword_performance') }}
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
+    UNION ALL
+    SELECT 
+        date, 
+        date_granularity, 
+        office, 
+        office_location, 
+        erie_type,
+        campaign_name,
+        campaign_id, 
+        null as ad_id,
+        null as ad_group_id,
+        null as ad_group_name,
+        null as keyword_id,
+        null as keyword_name,
+        null as keyword_match_type,
+        COALESCE(SUM(spend),0) AS spend,
+        COALESCE(SUM(clicks),0) AS clicks,
+        COALESCE(SUM(impressions),0) AS impressions,
+        COALESCE(SUM(leads),0) AS inplatform_leads
+    FROM {{ source('reporting','bingads_campaign_performance') }}
+    WHERE campaign_name ~* 'PMX'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13)
 
 , joined_data as 
