@@ -3,7 +3,7 @@
 )}}
 
 WITH sub_source_data as (
-SELECT ad_group_id,
+SELECT ad_group_id::varchar,
         right(ad_group_name,3)::varchar as sub_source_id,
         count(*)
     FROM {{ source('reporting','bingads_keyword_performance') }}
@@ -19,12 +19,12 @@ SELECT ad_group_id,
         erie_type,
         campaign_name,
         campaign_id, 
-        ad_id,
-        ad_group_id,
-        ad_group_name,
-        keyword_id,
-        keyword_name,
-        keyword_match_type,
+        ad_id::varchar,
+        ad_group_id::varchar,
+        ad_group_name::varchar,
+        keyword_id::varchar,
+        keyword_name::varchar,
+        keyword_match_type::varchar,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
