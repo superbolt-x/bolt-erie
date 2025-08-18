@@ -33,7 +33,7 @@ lp_data as
     SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_l'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_r'
-            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_f'
+            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_g'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
@@ -72,6 +72,27 @@ lp_data_three as
         COALESCE(SUM((cost_micros::float/1000000::float)*0.33),0) AS spend
     FROM {{ source('googleads_raw', 'landing_page_stats') }}
     GROUP BY 1,2,3,4,5,6),
+
+lp_data_four as
+    (SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted/' THEN 'homes-with-old-roofs-wanted_e'
+            ELSE 'Other'
+        END as lp_variant,
+        COALESCE(SUM(impressions*0.75),0) AS impressions, 
+        COALESCE(SUM(clicks*0.75),0) AS clicks, 
+        COALESCE(SUM((cost_micros::float/1000000::float)*0.75),0) AS spend
+    FROM {{ source('googleads_raw', 'landing_page_stats') }}
+    GROUP BY 1,2,3,4,5,6
+    UNION ALL
+    SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted/' THEN 'homes-with-old-roofs-wanted_f'
+            ELSE 'Other'
+        END as lp_variant,
+        COALESCE(SUM(impressions*0.25),0) AS impressions, 
+        COALESCE(SUM(clicks*0.25),0) AS clicks, 
+        COALESCE(SUM((cost_micros::float/1000000::float)*0.25),0) AS spend
+    FROM {{ source('googleads_raw', 'landing_page_stats') }}
+    GROUP BY 1,2,3,4,5,6),
     
 initial_data as 
     (SELECT account_id, campaign_id, ad_group_id, landing_page, lp_variant, impressions, clicks, spend, 
@@ -79,7 +100,9 @@ initial_data as
     FROM 
         (SELECT * FROM lp_data
         UNION ALL
-        SELECT * FROM lp_data_three)
+        SELECT * FROM lp_data_three
+        UNION ALL
+        SELECT * FROM lp_data_four)
     ),
   
 final_data as
