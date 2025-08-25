@@ -16,7 +16,7 @@ WITH office_data as
 
 lp_data as
     (SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_a'
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_m'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_n'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_a'
             ELSE 'Other'
@@ -51,7 +51,7 @@ lp_data_three as
     GROUP BY 1,2,3,4,5,6,7,8,9
     UNION ALL
     SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_i'
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_k'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions*0.33),0) AS impressions, 
@@ -61,7 +61,7 @@ lp_data_three as
     GROUP BY 1,2,3,4,5,6,7,8,9
     UNION ALL
     SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_j'
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_l'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions*0.33),0) AS impressions, 
