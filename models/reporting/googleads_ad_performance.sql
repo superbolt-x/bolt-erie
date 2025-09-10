@@ -72,7 +72,6 @@ CASE
     WHEN account_id  = '4560674777' THEN "[roofing]netsale" 
     WHEN account_id = '2819798401' THEN "[basement]netsale" 
 END as net_sales,
-
 CASE 
     WHEN account_id  = '4560674777' THEN "[roofing]netsale_value" 
     WHEN account_id = '2819798401' THEN "[basement]netsale_value" 
