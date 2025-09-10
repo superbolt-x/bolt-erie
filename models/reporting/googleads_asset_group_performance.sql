@@ -52,13 +52,29 @@ conversions_value as revenue,
 kashurbagetpricing as leads,
 0 as video_views,
 CASE 
+    WHEN account_id  = '4560674777' THEN "[roofing]lead" 
+    WHEN account_id = '2819798401' THEN "[basement]lead" 
+END as regular_leads,
+CASE 
     WHEN account_id  = '4560674777' THEN "[roofing]workablelead" 
     WHEN account_id = '2819798401' THEN "[basement]workablelead" 
 END as workable_leads,
 CASE 
     WHEN account_id  = '4560674777' THEN "[roofing]appointmentset" 
     WHEN account_id = '2819798401' THEN "[basement]appointmentset" 
-END as appointments
+END as appointments,
+CASE 
+    WHEN account_id  = '4560674777' THEN "[roofing]issues" 
+    WHEN account_id = '2819798401' THEN 0
+END as issues,
+CASE 
+    WHEN account_id  = '4560674777' THEN "[roofing]netsale" 
+    WHEN account_id = '2819798401' THEN "[basement]netsale" 
+END as net_sales,
+CASE 
+    WHEN account_id  = '4560674777' THEN "[roofing]netsale_value" 
+    WHEN account_id = '2819798401' THEN "[basement]netsale_value" 
+END as net_sales_value
 FROM {{ ref ('googleads_performance_by_asset_group') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
             case 
