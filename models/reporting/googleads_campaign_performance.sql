@@ -55,6 +55,10 @@ CASE
     WHEN account_id = '2819798401' THEN "[basement]workablelead" 
 END as workable_leads,
 CASE 
+    WHEN account_id  = '4560674777' THEN "[roofing]lead" 
+    WHEN account_id = '2819798401' THEN "[basement]lead" 
+END as regular_leads,
+CASE 
     WHEN account_id  = '4560674777' THEN "[roofing]appointmentset" 
     WHEN account_id = '2819798401' THEN "[basement]appointmentset" 
 END as appointments
