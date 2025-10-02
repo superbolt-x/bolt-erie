@@ -16,10 +16,11 @@ WITH office_data as
 
 lp_data as
     (SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_o'
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_o'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_n'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_a'
-            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_h'
+            WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted' THEN 'homes-with-old-roofs-wanted_e'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing' THEN 'nations-number-one-roofing_h'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
@@ -29,36 +30,16 @@ lp_data as
     GROUP BY 1,2,3,4,5,6,7,8,9
     UNION ALL
     SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_l'
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_l'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_r'
-            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_f'
-            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_n'
+            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_g'
+            WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted' THEN 'homes-with-old-roofs-wanted_g'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing' THEN 'nations-number-one-roofing_n'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
         COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
         COALESCE(SUM(spend::float/2::float),0) AS spend
-    FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
-    GROUP BY 1,2,3,4,5,6,7,8,9),
-
-lp_data_four as
-    (SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted/' THEN 'homes-with-old-roofs-wanted_e'
-            ELSE 'Other'
-        END as lp_variant,
-        COALESCE(SUM(impressions*0.5),0) AS impressions, 
-        COALESCE(SUM(clicks*0.5),0) AS clicks, 
-        COALESCE(SUM(spend*0.5),0) AS spend
-    FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
-    GROUP BY 1,2,3,4,5,6,7,8,9
-    UNION ALL
-    SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted/' THEN 'homes-with-old-roofs-wanted_g'
-            ELSE 'Other'
-        END as lp_variant,
-        COALESCE(SUM(impressions*0.5),0) AS impressions, 
-        COALESCE(SUM(clicks*0.5),0) AS clicks, 
-        COALESCE(SUM(spend*0.5),0) AS spend
     FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
     GROUP BY 1,2,3,4,5,6,7,8,9),
     
@@ -67,9 +48,6 @@ initial_data as
         {{ get_date_parts('date') }}
     FROM 
         (SELECT * FROM lp_data
-        WHERE lp_variant != 'Other'
-        UNION ALL
-        SELECT * FROM lp_data_four
         WHERE lp_variant != 'Other')
     ),
   
