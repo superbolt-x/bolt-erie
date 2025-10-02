@@ -22,6 +22,8 @@ lp_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_o'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_n'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_a'
+            WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted/' THEN 'homes-with-old-roofs-wanted_e'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_h'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
@@ -34,63 +36,13 @@ lp_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing/' THEN 'affordable-metal-roofing_l'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_r'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_g'
+            WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted/' THEN 'homes-with-old-roofs-wanted_g'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_n'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
         COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
         COALESCE(SUM((cost_micros::float/1000000::float)::float/2::float),0) AS spend
-    FROM {{ source('googleads_raw', 'landing_page_stats') }}
-    GROUP BY 1,2,3,4,5,6),
-
-lp_data_three as
-    (SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_h'
-            ELSE 'Other'
-        END as lp_variant,
-        COALESCE(SUM(impressions::float/3::float),0) AS impressions, 
-        COALESCE(SUM(clicks::float/3::float),0) AS clicks, 
-        COALESCE(SUM((cost_micros::float/1000000::float)::float/3::float),0) AS spend
-    FROM {{ source('googleads_raw', 'landing_page_stats') }}
-    GROUP BY 1,2,3,4,5,6
-    UNION ALL
-    SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_k'
-            ELSE 'Other'
-        END as lp_variant,
-        COALESCE(SUM(impressions::float/3::float),0) AS impressions, 
-        COALESCE(SUM(clicks::float/3::float),0) AS clicks, 
-        COALESCE(SUM((cost_micros::float/1000000::float)::float/3::float),0) AS spend
-    FROM {{ source('googleads_raw', 'landing_page_stats') }}
-    GROUP BY 1,2,3,4,5,6
-    UNION ALL
-    SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing/' THEN 'nations-number-one-roofing_l'
-            ELSE 'Other'
-        END as lp_variant,
-        COALESCE(SUM(impressions::float/3::float),0) AS impressions, 
-        COALESCE(SUM(clicks::float/3::float),0) AS clicks, 
-        COALESCE(SUM((cost_micros::float/1000000::float)::float/3::float),0) AS spend
-    FROM {{ source('googleads_raw', 'landing_page_stats') }}
-    GROUP BY 1,2,3,4,5,6),
-
-lp_data_four as
-    (SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted/' THEN 'homes-with-old-roofs-wanted_e'
-            ELSE 'Other'
-        END as lp_variant,
-        COALESCE(SUM(impressions*0.5),0) AS impressions, 
-        COALESCE(SUM(clicks*0.5),0) AS clicks, 
-        COALESCE(SUM((cost_micros::float/1000000::float)*0.5),0) AS spend
-    FROM {{ source('googleads_raw', 'landing_page_stats') }}
-    GROUP BY 1,2,3,4,5,6
-    UNION ALL
-    SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted/' THEN 'homes-with-old-roofs-wanted_g'
-            ELSE 'Other'
-        END as lp_variant,
-        COALESCE(SUM(impressions*0.5),0) AS impressions, 
-        COALESCE(SUM(clicks*0.5),0) AS clicks, 
-        COALESCE(SUM((cost_micros::float/1000000::float)*0.5),0) AS spend
     FROM {{ source('googleads_raw', 'landing_page_stats') }}
     GROUP BY 1,2,3,4,5,6),
     
@@ -99,10 +51,7 @@ initial_data as
         {{ get_date_parts('date') }}
     FROM 
         (SELECT * FROM lp_data
-        UNION ALL
-        SELECT * FROM lp_data_three
-        UNION ALL
-        SELECT * FROM lp_data_four)
+        WHERE lp_variant != 'Other')
     ),
   
 final_data as
