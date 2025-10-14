@@ -16,6 +16,7 @@ SELECT
         CASE WHEN campaign_name = 'Soc - Meta - Roofing - Prospecting - National - Paused Local Campaigns - Lead - Instant Form'
                 or (campaign_name ~* 'All Area' and (account_id = '813620678687014' OR account_id = '306770030564777') ) 
                 or ((campaign_name ~* 'sandbox' or campaign_name ~* 'All Area') and account_id = '1349056908916556') 
+				or (campaign_name ~* 'national') 
              THEN 'National'
              WHEN ((campaign_name !~* 'All Area' and (account_id = '813620678687014' OR account_id = '306770030564777') ) 
                 or ((campaign_name !~* 'sandbox' or campaign_name !~* 'All Area') and account_id = '1349056908916556')) AND campaign_name ~* 'Local' 
