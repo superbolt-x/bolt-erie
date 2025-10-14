@@ -56,9 +56,9 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         utm_medium,
         CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN bg_campaign_name::VARCHAR
             WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN bg_campaign_name::VARCHAR
-            WHEN utm_campaign ~* 'Soc - Meta - Roofing - Prospecting - National - Florida Regional - Lead - CBO (Lifetime) Campaign' THEN 'Soc - Meta - Roofing - Prospecting - National - Florida Regional - Lead - CBO (Lifetime) Campaign'
-	        WHEN utm_campaign ~* 'Soc - Meta - Roofing - Prospecting - National - Great Lakes and East Great Lakes Regional - Instant Form - Lifetime' THEN 'Soc - Meta - Roofing - Prospecting - National - Great Lakes and East Great Lakes Regional - Instant Form - Lifetime'
-	        WHEN utm_campaign ~* 'Soc - Meta - Roofing - Prospecting - National - Northeast Regional - Lead - CBO (Lifetime) Campaign' THEN 'Soc - Meta - Roofing - Prospecting - National - Northeast Regional - Lead - CBO (Lifetime) Campaign'
+            WHEN utm_campaign_id = 6930690664241 THEN 'Soc - Meta - Roofing - Prospecting - National - Florida Regional - Lead - CBO (Lifetime) Campaign'
+	  		WHEN utm_campaign_id = 6931185343441 THEN 'Soc - Meta - Roofing - Prospecting - National - Great Lakes and East Great Lakes Regional - Instant Form - Lifetime'
+	  	  	WHEN utm_campaign_id = 6930683609841 THEN 'Soc - Meta - Roofing - Prospecting - National - Northeast Regional - Lead - CBO (Lifetime) Campaign'
             ELSE utm_campaign::VARCHAR
         END as utm_campaign,
         CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN gb_ad_group_name::VARCHAR
