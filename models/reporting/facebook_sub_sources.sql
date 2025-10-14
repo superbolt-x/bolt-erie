@@ -45,9 +45,9 @@ SELECT
         NULL as status_detail,
         NULL as utm_medium,
         CASE
-          WHEN campaign_name ~* 'Soc - Meta - Roofing - Prospecting - National - Florida Regional - Lead - CBO (Lifetime) Campaign' THEN 'Soc - Meta - Roofing - Prospecting - National - Florida Regional - Lead - CBO (Lifetime) Campaign'
-	  WHEN campaign_name ~* 'Soc - Meta - Roofing - Prospecting - National - Great Lakes and East Great Lakes Regional - Instant Form - Lifetime' THEN 'Soc - Meta - Roofing - Prospecting - National - Great Lakes and East Great Lakes Regional - Instant Form - Lifetime'
-	  WHEN campaign_name ~* 'Soc - Meta - Roofing - Prospecting - National - Northeast Regional - Lead - CBO (Lifetime) Campaign' THEN 'Soc - Meta - Roofing - Prospecting - National - Northeast Regional - Lead - CBO (Lifetime) Campaign'
+          WHEN campaign_id = 6930690664241 THEN 'Soc - Meta - Roofing - Prospecting - National - Florida Regional - Lead - CBO (Lifetime) Campaign'
+	  	  WHEN campaign_id = 6931185343441 THEN 'Soc - Meta - Roofing - Prospecting - National - Great Lakes and East Great Lakes Regional - Instant Form - Lifetime'
+	  	  WHEN campaign_id = 6930683609841 THEN 'Soc - Meta - Roofing - Prospecting - National - Northeast Regional - Lead - CBO (Lifetime) Campaign'
         ELSE campaign_name::VARCHAR END as utm_campaign,
         adset_name::VARCHAR as utm_term,
         ad_name::VARCHAR as utm_content,
