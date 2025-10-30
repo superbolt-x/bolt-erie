@@ -62,6 +62,7 @@ SELECT 'Nextdoor' AS channel,
         0 as hits,
         0 as issues,
         0 as ooa_leads,
+        0 as net_sale_count,
         0 AS inplatform_workable_leads,
         0 AS inplatform_appointments
     FROM {{ source('reporting','nextdoor_ad_performance') }}
