@@ -88,6 +88,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         COALESCE(SUM(hits),0) as hits,
         COALESCE(SUM(issues),0) as issues,
         COALESCE(SUM(ooa_leads),0) as ooa_leads,
+		COALESCE(SUM(net_sale_count),0) as net_sale_count,
         0 AS inplatform_workable_leads,
         0 AS inplatform_appointments
     FROM (SELECT *, COALESCE(utm_campaign_id::VARCHAR,utm_campaign) as utm_campaign_id_adj
