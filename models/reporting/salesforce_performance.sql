@@ -51,7 +51,8 @@ WITH office_data as
         SUM(COALESCE("gross__",0)) as gross,
         SUM(COALESCE("net__",0)) as net,
         SUM(COALESCE(workable_leads,0)) as workable_leads,
-        COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads
+        COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads,
+        SUM(COALESCE(net_sale_count,0)) as net_sale_count,
         FROM filetered_data
         GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
         {% if not loop.last %}UNION ALL
@@ -92,6 +93,7 @@ SELECT
     gross,
     net,
     workable_leads,
-    ooa_leads
+    ooa_leads,
+    net_sale_count
 FROM final_data
 LEFT JOIN office_data ON final_data.market_adj = office_data.sf_office 
