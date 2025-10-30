@@ -155,6 +155,7 @@ SELECT
         0 as hits,
         0 as issues,
         0 as ooa_leads,
+        0 as net_sale_count,
         0 AS inplatform_workable_leads,
         0 AS inplatform_appointments
     FROM joined_data LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
