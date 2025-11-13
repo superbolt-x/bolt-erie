@@ -33,7 +33,8 @@ spend,
 impressions,
 link_clicks,
 0 as purchases,
-website_leads+onfacebook_leads as leads
+website_leads+onfacebook_leads as leads,
+"offsite_conversion.fb_pixel_custom.Set" as appointment_set    
 FROM 
    {{ ref('facebook_performance_by_campaign') }} 
 LEFT JOIN (SELECT campaign_id::VARCHAR as campaign_id, campaign_name, campaign_effective_status, 
