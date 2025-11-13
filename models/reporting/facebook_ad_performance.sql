@@ -46,7 +46,8 @@ spend,
 impressions,
 link_clicks,
 purchases,
-website_leads+onfacebook_leads as leads
+website_leads+onfacebook_leads as leads,
+"offsite_conversion.fb_pixel_custom.Set" as appointment_set    
 FROM 
     (SELECT *, SPLIT_PART(landing_page,'/',4) as base_url FROM {{ ref('facebook_performance_by_ad') }} r
     LEFT JOIN {{ source('gsheet_raw','facebook_lp_urls') }} g ON r.ad_name = g.name)
