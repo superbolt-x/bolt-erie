@@ -22,8 +22,9 @@ lp_data as
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_o'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_s'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_a'
+            WHEN landing_page ~* 'cost-of-roof-replacement' THEN 'cost-of-roof-replacement_h'
             WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted' THEN 'homes-with-old-roofs-wanted_e'
-            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing' THEN 'nations-number-one-roofing_h'
+            WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing' THEN 'nations-number-one-roofing_o'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
@@ -33,9 +34,10 @@ lp_data as
     GROUP BY 1,2,3,4,5,6
     UNION ALL
     SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
-        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_l'
+        CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_q'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_r'
-            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_h'
+            WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_i'
+            WHEN landing_page ~* 'cost-of-roof-replacement' THEN 'cost-of-roof-replacement_j'
             WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted' THEN 'homes-with-old-roofs-wanted_g'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing' THEN 'nations-number-one-roofing_n'
             ELSE 'Other'
