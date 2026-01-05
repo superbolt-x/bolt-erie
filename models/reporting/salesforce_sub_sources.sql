@@ -67,7 +67,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
         END as utm_term,
         utm_content::VARCHAR,
         utm_keyword,
-        utm_match_type,
+        '' as utm_match_type,
         utm_placement,
         utm_discount,
         utm_lp_variant,
