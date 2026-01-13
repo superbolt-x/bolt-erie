@@ -58,4 +58,4 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             FROM {{ ref('bingads_campaigns') }}
             ) bg ON s.utm_campaign_id_adj = bg.campaign_id
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
