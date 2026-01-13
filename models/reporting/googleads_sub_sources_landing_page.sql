@@ -21,15 +21,13 @@ googleads_data as
         market,
         campaign_name,
         campaign_id, 
-        ad_group_id,
-        ad_group_name,
         landing_page,
         lp_variant,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions
     FROM {{ source('reporting','googleads_landing_page_performance') }}
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12)
+    GROUP BY 1,2,3,4,5,6,7,8,9,10)
 
 SELECT 
         'Google' AS channel, 
@@ -50,18 +48,8 @@ SELECT
             WHEN campaign_name ~* 'National' THEN 'National' 
             ELSE 'Other'
         END as region_bucket,
-        CASE WHEN ad_group_name ~* 'Roof Replacement' THEN 'Roof Replacement' 
-            WHEN ad_group_name ~* 'General Roofing' THEN 'General Roofing' 
-            WHEN ad_group_name ~* 'Residential Roofing' THEN 'Residential Roofing'
-            WHEN ad_group_name ~* 'Metal Roofing' THEN 'Metal Roofing' 
-            WHEN ad_group_name ~* 'Steel Roofing' THEN 'Steel Roofing'
-            WHEN ad_group_name ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
-            WHEN ad_group_name ~* 'Spanish Tiles' THEN 'Spanish Tiles'
-            ELSE 'Other'
-        END as service_type,
         NULL as utm_medium,
         campaign_name::VARCHAR as utm_campaign,
-        ad_group_name::VARCHAR as utm_term,
         lp_variant as utm_lp_variant,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
@@ -71,4 +59,4 @@ SELECT
         0 as workable_leads
     FROM googleads_data 
     LEFT JOIN campaign_types USING(campaign_id)
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
