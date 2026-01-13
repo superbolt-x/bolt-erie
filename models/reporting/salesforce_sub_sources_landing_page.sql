@@ -37,24 +37,11 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             WHEN bg_campaign_name::VARCHAR ~* 'National' OR utm_campaign ~* 'National' THEN 'National' 
             ELSE 'Other'
         END as region_bucket,
-        CASE WHEN gb_ad_group_name::VARCHAR ~* 'Roof Replacement' OR utm_term ~* 'Roof Replacement' THEN 'Roof Replacement' 
-            WHEN gb_ad_group_name::VARCHAR ~* 'General Roofing' OR utm_term ~* 'General Roofing' THEN 'General Roofing' 
-            WHEN gb_ad_group_name::VARCHAR ~* 'Residential Roofing' OR utm_term ~* 'Residential Roofing' THEN 'Residential Roofing'
-            WHEN gb_ad_group_name::VARCHAR ~* 'Metal Roofing' OR utm_term ~* 'Metal Roofing' THEN 'Metal Roofing' 
-            WHEN gb_ad_group_name::VARCHAR ~* 'Steel Roofing' OR utm_term ~* 'Steel Roofing' THEN 'Steel Roofing'
-            WHEN gb_ad_group_name::VARCHAR ~* 'Fiberglass Roofing' OR utm_term ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
-            WHEN gb_ad_group_name::VARCHAR ~* 'Spanish Tiles' OR utm_term ~* 'Spanish Tiles' THEN 'Spanish Tiles'
-            ELSE 'Other'
-        END as service_type,
         utm_medium,
         CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN bg_campaign_name::VARCHAR
             WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN bg_campaign_name::VARCHAR
             ELSE utm_campaign::VARCHAR
         END as utm_campaign,
-        CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN gb_ad_group_name::VARCHAR
-            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN gb_ad_group_name::VARCHAR
-            ELSE utm_term::VARCHAR
-        END as utm_term,
         utm_lp_variant,
         0 AS spend,
         0 AS clicks,
@@ -70,14 +57,5 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, NULL as advertising_channel_type
             FROM {{ ref('bingads_campaigns') }}
             ) bg ON s.utm_campaign_id_adj = bg.campaign_id
-    LEFT JOIN (SELECT ad_group_id::VARCHAR as ad_group_id, ad_group_name as gb_ad_group_name
-            FROM {{ ref('googleads_ad_groups') }}
-            UNION ALL
-            SELECT ad_group_id::VARCHAR as ad_group_id, ad_group_name as gb_ad_group_name
-            FROM {{ ref('bingads_ad_groups') }}
-            UNION ALL
-            SELECT asset_group_id::VARCHAR as ad_group_id, asset_group_name as gb_ad_group_name
-            FROM {{ ref('googleads_asset_groups') }}
-            ) gb ON s.utm_term = gb.ad_group_id
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
