@@ -25,12 +25,14 @@ lp_data as
             WHEN landing_page ~* 'cost-of-roof-replacement' THEN 'cost-of-roof-replacement_h'
             WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted' THEN 'homes-with-old-roofs-wanted_e'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing' THEN 'nations-number-one-roofing_o'
+            WHEN landing_page ~* 'https://get.eriehome.com/discover-erie-home-roof-adw' THEN 'discover-erie-home-roof-adw_b'
+            WHEN landing_page ~* 'https://get.eriehome.com/attention-homeowners-next-gen-roof' THEN 'attention-homeowners-next-gen-roof_g'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
         COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
         COALESCE(SUM((cost_micros::float/1000000::float)::float/2::float),0) AS spend
-    FROM {{ source('googleads_raw', 'landing_page_stats') }}
+    FROM {{ source('googleads_raw', 'landing_page_performance_report') }}
     GROUP BY 1,2,3,4,5,6
     UNION ALL
     SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
@@ -38,14 +40,16 @@ lp_data as
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_r'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_i'
             WHEN landing_page ~* 'cost-of-roof-replacement' THEN 'cost-of-roof-replacement_j'
-            WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted' THEN 'homes-with-old-roofs-wanted_g'
+            WHEN landing_page ~* 'https://get.eriehome.com/homes-with-old-roofs-wanted' THEN 'homes-with-old-roofs-wanted_i'
             WHEN landing_page ~* 'https://get.eriehome.com/nations-number-one-roofing' THEN 'nations-number-one-roofing_n'
+            WHEN landing_page ~* 'https://get.eriehome.com/discover-erie-home-roof-adw' THEN 'discover-erie-home-roof-adw_c'
+            WHEN landing_page ~* 'https://get.eriehome.com/attention-homeowners-next-gen-roof' THEN 'attention-homeowners-next-gen-roof_h'
             ELSE 'Other'
         END as lp_variant,
         COALESCE(SUM(impressions::float/2::float),0) AS impressions, 
         COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
         COALESCE(SUM((cost_micros::float/1000000::float)::float/2::float),0) AS spend
-    FROM {{ source('googleads_raw', 'landing_page_stats') }}
+    FROM {{ source('googleads_raw', 'landing_page_performance_report') }}
     GROUP BY 1,2,3,4,5,6),
     
 initial_data as 
