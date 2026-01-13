@@ -49,6 +49,9 @@ sources:
       - name: landing_page_stats
         identifier: landing_page_stats
 
+      - name: landing_page_performance_report
+        identifier: landing_page_performance_report
+
   - name: outbrain_raw
     schema: outbrain_raw
     tables:
