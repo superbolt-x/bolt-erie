@@ -18,7 +18,7 @@ WITH office_data as
     ORDER BY code ASC),
 
 lp_data as
-    (SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
+    (SELECT date, customer_id as account_id, campaign_id, unexpanded_final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_o'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_s'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_a'
@@ -33,9 +33,9 @@ lp_data as
         COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
         COALESCE(SUM((cost_micros::float/1000000::float)::float/2::float),0) AS spend
     FROM {{ source('googleads_raw', 'landing_page_performance_report') }}
-    GROUP BY 1,2,3,4,5,6
+    GROUP BY 1,2,3,4,5
     UNION ALL
-    SELECT date, customer_id as account_id, campaign_id, ad_group_id, unexpanded_final_url as landing_page,
+    SELECT date, customer_id as account_id, campaign_id, unexpanded_final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_q'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_r'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_i'
@@ -50,10 +50,10 @@ lp_data as
         COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
         COALESCE(SUM((cost_micros::float/1000000::float)::float/2::float),0) AS spend
     FROM {{ source('googleads_raw', 'landing_page_performance_report') }}
-    GROUP BY 1,2,3,4,5,6),
+    GROUP BY 1,2,3,4,5),
     
 initial_data as 
-    (SELECT account_id, campaign_id, ad_group_id, landing_page, lp_variant, impressions, clicks, spend, 
+    (SELECT account_id, campaign_id, landing_page, lp_variant, impressions, clicks, spend, 
         {{ get_date_parts('date') }}
     FROM 
         (SELECT * FROM lp_data
@@ -67,14 +67,13 @@ final_data as
         {{date_granularity}} as date,
         account_id,
         campaign_id,
-        ad_group_id,
         landing_page,
         lp_variant,
         COALESCE(SUM(spend),0) as spend,
         COALESCE(SUM(impressions),0) as impressions,
         COALESCE(SUM(clicks),0) as clicks 
     FROM initial_data
-    GROUP BY 1,2,3,4,5,6,7
+    GROUP BY 1,2,3,4,5,6
         {% if not loop.last %}UNION ALL
         {% endif %}
     {% endfor %})
@@ -92,8 +91,6 @@ CASE WHEN campaign_name ~* 'discovery' THEN 'Campaign Type: Discovery'
         or campaign_name ~* 'worse cpl locations' THEN 'Campaign Type: Non Branded'
     ELSE 'Campaign Type: Other'
 END as campaign_type_default,
-ad_group_id,
-ad_group_name,
 landing_page,
 lp_variant,
 date,
@@ -111,11 +108,7 @@ spend,
 impressions,
 clicks  
 FROM 
-    (SELECT * FROM final_data
-    LEFT JOIN 
-        (SELECT ad_group_id, ad_group_name, campaign_id
-        FROM {{ ref('googleads_ad_groups') }}) USING(ad_group_id, campaign_id)
-    )
+    (SELECT * FROM final_data)
 LEFT JOIN
     (SELECT campaign_id, campaign_name, account_id, advertising_channel_type,
             case 
