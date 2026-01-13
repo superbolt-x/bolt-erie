@@ -15,7 +15,7 @@ WITH office_data as
     ORDER BY code ASC),
 
 lp_data as
-    (SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
+    (SELECT date, account_id::varchar as account_id, campaign_id, campaign_name, final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_o'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_s'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_a'
@@ -30,9 +30,9 @@ lp_data as
         COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
         COALESCE(SUM(spend::float/2::float),0) AS spend
     FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
-    GROUP BY 1,2,3,4,5,6,7,8,9
+    GROUP BY 1,2,3,4,5,6
     UNION ALL
-    SELECT date, account_id::varchar as account_id, ad_id, ad_group_id, ad_group_name, campaign_id, campaign_name, final_url as landing_page,
+    SELECT date, account_id::varchar as account_id, campaign_id, campaign_name, final_url as landing_page,
         CASE WHEN landing_page ~* 'https://get.eriehome.com/affordable-metal-roofing' THEN 'affordable-metal-roofing_q'
             WHEN landing_page ~* 'nations-number-one-roofing-contractor' THEN 'nations-number-one-roofing-contractor_r'
             WHEN landing_page ~* 'we-need-old-roofs' THEN 'we-need-old-roofs_i'
@@ -47,10 +47,10 @@ lp_data as
         COALESCE(SUM(clicks::float/2::float),0) AS clicks, 
         COALESCE(SUM(spend::float/2::float),0) AS spend
     FROM {{ source('bingads_raw', 'destination_url_performance_daily_report') }} 
-    GROUP BY 1,2,3,4,5,6,7,8,9),
+    GROUP BY 1,2,3,4,5,6),
     
 initial_data as 
-    (SELECT account_id, ad_group_id, ad_group_name, campaign_id, campaign_name, landing_page, lp_variant, impressions, clicks, spend, 
+    (SELECT account_id, campaign_id, campaign_name, landing_page, lp_variant, impressions, clicks, spend, 
         {{ get_date_parts('date') }}
     FROM 
         (SELECT * FROM lp_data
@@ -63,8 +63,6 @@ final_data as
         '{{date_granularity}}' as date_granularity,
         {{date_granularity}} as date,
         account_id,
-        ad_group_id, 
-        ad_group_name,
         campaign_id,
         campaign_name,
         RIGHT(LEFT(campaign_name,4),3) as code,
@@ -87,8 +85,6 @@ CASE WHEN campaign_name ~* 'Branded' THEN 'Campaign Type: Branded'
     WHEN campaign_name ~* 'Metal Roofing Keywords' THEN 'Campaign Type: Non Branded'
     ELSE 'Campaign Type: Other'
 END as campaign_type_default,
-ad_group_id,
-ad_group_name,
 landing_page,
 lp_variant,
 date,
