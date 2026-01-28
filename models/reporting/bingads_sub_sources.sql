@@ -92,7 +92,7 @@ SELECT ad_group_id::varchar,
         COALESCE(SUM(issues),0) issues,
         COALESCE(SUM(ooa_leads),0) ooa_leads
     FROM {{ source('reporting','salesforce_performance') }}
-    WHERE source IN ('IL3','BIL3')
+    WHERE source IN ('IL3','BIL3','BNA')
     GROUP BY 1,2,3,4)
     
 
