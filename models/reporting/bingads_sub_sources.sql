@@ -51,7 +51,7 @@ SELECT ad_group_id::varchar,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(leads),0) AS inplatform_leads
     FROM {{ source('reporting','bingads_campaign_performance') }}
-    WHERE campaign_name ~* 'PMX'
+    WHERE campaign_name ~* 'PMX' or campaign_name ~* 'Native Ads'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13)
 
 , joined_data as 
