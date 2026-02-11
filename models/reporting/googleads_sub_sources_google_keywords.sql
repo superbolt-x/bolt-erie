@@ -153,6 +153,7 @@ SELECT
         0 as hits,
         0 as issues,
         0 as ooa_leads,
+        0 as net_sale_count,
         COALESCE(SUM(workable_leads),0) AS inplatform_workable_leads,
         COALESCE(SUM(appointments),0) AS inplatform_appointments,
         0 as set_value
