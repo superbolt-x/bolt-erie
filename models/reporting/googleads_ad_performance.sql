@@ -75,7 +75,11 @@ END as net_sales,
 CASE 
     WHEN account_id  = '4560674777' THEN "[roofing]netsale_value" 
     WHEN account_id = '2819798401' THEN "[basement]netsale_value" 
-END as net_sales_value
+END as net_sales_value,
+CASE 
+    WHEN account_id  = '4560674777' THEN "[roofing]appointmentset_value" 
+    WHEN account_id = '2819798401' THEN "[basement]appointmentset_value" 
+END as appointments_value
 FROM {{ ref('googleads_performance_by_ad') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status,  
             case 
