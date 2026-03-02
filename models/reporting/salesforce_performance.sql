@@ -43,7 +43,7 @@ WITH office_data as
         SUM(COALESCE(number_of_calls,0)) as calls,
         SUM(COALESCE("set",0)) as appointments,
         SUM(COALESCE(demo,0)) as demos,
-        SUM(COALESCE(hits,0)) as hits,
+        SUM(0) as hits,
         SUM(COALESCE(issued,0)) as issues,
         COALESCE(SUM(CASE WHEN paid_out_date IS NOT NULL THEN 1 ELSE 0 END),0) as down_payments,
         SUM(COALESCE(sold,0)) as closed_deals,
