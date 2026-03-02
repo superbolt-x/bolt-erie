@@ -7,6 +7,12 @@ sources:
       - name: superbolt_daily_file
         identifier: superbolt_daily_file
 
+  - name: s3_raw
+    schema: s3_raw
+    tables:
+      - name: superbolt_daily_file
+        identifier: superbolt_daily_file
+
   - name: supermetrics_raw
     schema: supermetrics_raw
     tables:
