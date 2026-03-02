@@ -28,7 +28,7 @@ WITH office_data as
         '{{date_granularity}}' as date_granularity,
         {{date_granularity}} as date,
         CASE WHEN market ~* 'R062' THEN 'R062 West Atlanta-GA' ELSE market END as market_adj, 
-        state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
+        'not set' as state, source, zip,sub_source_id, sub_source, dispo, call_disposition, status_detail, 
         utm_source, utm_medium, 
         CASE WHEN utm_source ~* 'facebook' AND utm_campaign::varchar ~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'))
             WHEN utm_source ~* 'facebook' AND utm_campaign::varchar !~* 'Adv\\+' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(utm_campaign,'%28','('),'%29',')'),'%3A',':'),'+',' '),'%2B','+'))
