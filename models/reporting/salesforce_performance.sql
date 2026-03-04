@@ -38,7 +38,7 @@ WITH office_data as
         utm_term, 
         CASE WHEN utm_content ~* 'shorts_stay_off_the_ladder_gutter_guard_4000_value_banner_split_gg_lp' THEN 'shorts stay off the ladder gutter guards 4000 value banner split gg lp'
             WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(lower(utm_content),'lps','lp'),'__',' '),'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
-        utm_keyword, utm_match_type, utm_placement, utm_discount, utm_lp_variant,utm_campaign_id,
+        utm_keyword, utm_match_type, utm_placement, utm_discount, utm_lp_variant,utm_campaign_id,utm_msclk_id,
         COUNT(DISTINCT lead_id) as leads,
         SUM(COALESCE(number_of_calls,0)) as calls,
         SUM(COALESCE("set",0)) as appointments,
@@ -54,7 +54,7 @@ WITH office_data as
         SUM(COALESCE(net_sale_count,0)) as net_sale_count,
         SUM(COALESCE(median_value_per_set::float,0)) as set_value
         FROM filetered_data
-        GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
+        GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
         {% if not loop.last %}UNION ALL
         {% endif %}
     {% endfor %})
@@ -81,7 +81,8 @@ SELECT
         WHEN utm_campaign_adj ~* 'Soc - Meta - Roofing - Prospecting - National - Region 1 - Instant Form' THEN 'Soc - Meta - Roofing - Prospecting - National - All Areas - Region 1 - Instant Form'     
         ELSE utm_campaign_adj 
     END as utm_campaign, 
-    utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, utm_placement, utm_discount, utm_lp_variant,utm_campaign_id,
+    utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, 
+    utm_placement, utm_discount, utm_lp_variant,utm_campaign_id, utm_msclk_id,
     leads,
     calls,
     appointments,
