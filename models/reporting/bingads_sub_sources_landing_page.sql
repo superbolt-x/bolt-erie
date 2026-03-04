@@ -40,6 +40,7 @@ SELECT
         NULL as utm_medium,
         campaign_name::VARCHAR as utm_campaign,
         lp_variant as utm_lp_variant,
+        NULL as utm_msclk_id,
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
@@ -48,4 +49,4 @@ SELECT
         0 as workable_leads
     FROM bingads_data 
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14
