@@ -79,6 +79,7 @@ SELECT 'TikTok' AS channel,
         NULL as utm_placement,
         NULL as utm_discount,
         NULL as utm_lp_variant,
+        NULL as utm_msclk_id,
         COALESCE(SUM(spends),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
@@ -103,6 +104,6 @@ SELECT 'TikTok' AS channel,
     FROM {{ source('reporting','tiktok_ad_performance') }}
     LEFT JOIN source using(ad_id, date, date_granularity)
     WHERE date >= '2022-12-01'
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27)
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28)
     
 select * from joined_data
