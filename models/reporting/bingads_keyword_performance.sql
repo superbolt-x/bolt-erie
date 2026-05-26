@@ -22,7 +22,6 @@ case
   when match_type = 'Exact' then 'e'
 end as keyword_match_type,
 ad_group_name,
-ad_status,
 ad_group_id,
 ad_group_status,
 c.campaign_name,
