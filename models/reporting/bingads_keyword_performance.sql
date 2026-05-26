@@ -14,7 +14,6 @@ WITH office_data as
 
 SELECT 
 account_id,
-ad_id,
 keyword_id,
 name as keyword_name,
 case 
