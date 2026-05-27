@@ -84,11 +84,11 @@ SELECT ad_group_id::varchar,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
         COALESCE(SUM(inplatform_leads),0) AS inplatform_leads,
-        COALESCE(SUM(workable_leads),0) AS inplatform_workable_leads,
-        COALESCE(SUM(appointments),0) AS inplatform_appointments,
-        COALESCE(SUM(issues),0) AS inplatform_issues,
-        COALESCE(SUM(net_sales_value),0) AS inplatform_net,
-        COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count
+        COALESCE(SUM(inplatform_workable_leads),0) AS inplatform_workable_leads,
+        COALESCE(SUM(inplatform_appointments),0) AS inplatform_appointments,
+        COALESCE(SUM(inplatform_issues),0) AS inplatform_issues,
+        COALESCE(SUM(inplatform_net),0) AS inplatform_net,
+        COALESCE(SUM(inplatform_net_sale_count),0) AS inplatform_net_sale_count
     FROM bingads_data left join sub_source_data USING(ad_group_id)
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14)
 
@@ -172,14 +172,14 @@ SELECT
         0 as issues,
         0 as ooa_leads,
         0 as net_sale_count,
-        COALESCE(SUM(workable_leads),0) AS inplatform_workable_leads,
-        COALESCE(SUM(appointments),0) AS inplatform_appointments,
+        COALESCE(SUM(inplatform_workable_leads),0) AS inplatform_workable_leads,
+        COALESCE(SUM(inplatform_appointments),0) AS inplatform_appointments,
         0 AS inplatform_workable_leads,
         0 AS inplatform_appointments,
         0 as set_value,
-        COALESCE(SUM(issues),0) AS inplatform_issues,
-        COALESCE(SUM(net_sales_value),0) AS inplatform_net,
-        COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count
+        COALESCE(SUM(inplatform_issues),0) AS inplatform_issues,
+        COALESCE(SUM(inplatform_net),0) AS inplatform_net,
+        COALESCE(SUM(inplatform_net_sale_count),0) AS inplatform_net_sale_count
     FROM joined_data LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
