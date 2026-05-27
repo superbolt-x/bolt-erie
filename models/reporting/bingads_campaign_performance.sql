@@ -32,7 +32,14 @@ spend,
 impressions,
 clicks,
 conversions as leads,
-revenue as revenue
+revenue as revenue,
+"[roofing]lead" as regular_leads,
+"[roofing]workablelead" as workable_leads,
+"[roofing]appointmentset" as appointments,
+"[roofing]issues" as issues,
+"[roofing]netsale" as net_sales,
+"[roofing]netsale_value" as net_sales_value,
+"[roofing]appointmentset_value" as appointments_value
 FROM {{ ref('bingads_performance_by_campaign') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, RIGHT(LEFT(campaign_name,4),3) as code 
             FROM {{ ref('bingads_campaigns') }}) c 
