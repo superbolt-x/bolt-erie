@@ -174,8 +174,6 @@ SELECT
         0 as net_sale_count,
         COALESCE(SUM(inplatform_workable_leads),0) AS inplatform_workable_leads,
         COALESCE(SUM(inplatform_appointments),0) AS inplatform_appointments,
-        0 AS inplatform_workable_leads,
-        0 AS inplatform_appointments,
         0 as set_value,
         COALESCE(SUM(inplatform_issues),0) AS inplatform_issues,
         COALESCE(SUM(inplatform_net),0) AS inplatform_net,
