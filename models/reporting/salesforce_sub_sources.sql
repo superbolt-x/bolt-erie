@@ -67,7 +67,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             ELSE utm_term::VARCHAR
         END as utm_term,
         utm_content::VARCHAR,
-        CASE WHEN (utm_source = 'bing' AND source NOT IN ('BNA','PMX2')) THEN NULL ELSE utm_keyword END AS utm_keyword,
+        CASE WHEN (utm_source = 'bing' AND source NOT IN ('BNA','PMX2')) THEN utm_keyword ELSE NULL END AS utm_keyword,
         '' as utm_match_type,
         utm_placement,
         utm_discount,
