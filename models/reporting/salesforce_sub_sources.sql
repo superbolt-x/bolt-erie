@@ -6,7 +6,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN 'YouTube'
             WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN 'Google'
             WHEN source = 'SM6' OR utm_source = 'tiktok' THEN 'TikTok'
-            WHEN source IN ('IL3','BIL3','BNA') OR utm_source = 'bing' THEN 'Bing'
+            WHEN source IN ('IL3','BIL3','BNA','PMX2') OR utm_source = 'bing' THEN 'Bing'
             WHEN source IN ('SM5','BSM5') OR utm_source = 'nextdoor' THEN 'Nextdoor'
             WHEN source = 'SM3' OR utm_source = 'outbrain' THEN 'Outbrain'
             ELSE 'Other'
