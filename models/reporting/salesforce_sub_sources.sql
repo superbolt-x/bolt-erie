@@ -6,7 +6,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN 'YouTube'
             WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN 'Google'
             WHEN source = 'SM6' OR utm_source = 'tiktok' THEN 'TikTok'
-            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN 'Bing'
+            WHEN source IN ('IL3','BIL3','BNA') OR utm_source = 'bing' THEN 'Bing'
             WHEN source IN ('SM5','BSM5') OR utm_source = 'nextdoor' THEN 'Nextdoor'
             WHEN source = 'SM3' OR utm_source = 'outbrain' THEN 'Outbrain'
             ELSE 'Other'
@@ -33,8 +33,9 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             WHEN source IN ('SMR','SMO','BSMR')
                 OR (utm_source = 'facebook' AND utm_campaign ~* 'warm') THEN 'Retargeting'
             WHEN source IN ('SMD','BSMD') OR (utm_source = 'google' AND utm_campaign ~* 'discovery') OR (utm_source = 'google' AND utm_campaign ~* 'demand gen') THEN 'Demand Gen'
-            WHEN source IN ('PMX','BPMX') OR (utm_source = 'google' AND advertising_channel_type = 'PERFORMANCE_MAX') THEN 'Performance Max'
+            WHEN source IN ('PMX','BPMX','PMX2') OR (utm_source = 'google' AND advertising_channel_type = 'PERFORMANCE_MAX') THEN 'Performance Max'
             WHEN source IN ('IL2','BIL2','IL3','BIL3') OR (utm_source = 'google' AND advertising_channel_type = 'SEARCH')THEN 'Search'
+			WHEN source IN ('BNA') THEN 'Audience'
         END as campaign_type,
         CASE WHEN bg_campaign_name::VARCHAR ~* 'All areas' OR utm_campaign ~* 'All areas' THEN 'All areas' 
             WHEN bg_campaign_name::VARCHAR ~* 'Group' OR utm_campaign ~* 'Group' THEN 'Group' 
