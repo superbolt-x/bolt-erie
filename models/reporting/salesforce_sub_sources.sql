@@ -63,7 +63,7 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
             ELSE utm_campaign::VARCHAR
         END as utm_campaign,
         CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN gb_ad_group_name::VARCHAR
-            WHEN source IN ('IL3','BIL3') OR utm_source = 'bing' THEN gb_ad_group_name::VARCHAR
+            WHEN source IN ('IL3','BIL3','BNA') OR utm_source = 'bing' THEN gb_ad_group_name::VARCHAR
             ELSE utm_term::VARCHAR
         END as utm_term,
         utm_content::VARCHAR,
