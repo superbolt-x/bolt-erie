@@ -124,8 +124,10 @@ SELECT
         NULL as zip,
         erie_type,
         'National' as market,
-        CASE WHEN campaign_name ~* 'Branded' OR campaign_name ~* 'Metal Roofing Keywords' THEN 'Search'
-            ELSE 'Other' 
+        CASE 
+            WHEN campaign_name ~* 'pmx2' THEN 'Performance Max'
+            WHEN campaign_name ~* 'native' THEN 'Audience'
+            ELSE 'Search' 
         END as campaign_type,
         CASE WHEN campaign_name ~* 'All areas' THEN 'All areas' 
             WHEN campaign_name ~* 'Group' THEN 'Group' 
