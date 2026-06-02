@@ -80,6 +80,7 @@ joined_data as  (
                 issues,
                 net_sales,
                 net_sales_value,
+                appointmets_value,
                 account_id::VARCHAR, 
                 campaign_status
         FROM 
@@ -125,6 +126,7 @@ joined_data as  (
                 issues,
                 net_sales,
                 net_sales_value,
+                appointmets_value,
                 account_id::VARCHAR, 
                 campaign_status
         FROM {{ source('reporting','googleads_ad_performance') }}
@@ -190,7 +192,8 @@ select
     appointments,
     issues,
     net_sales,
-    net_sales_value
+    net_sales_value,
+    appointmets_value
 from joined_data
 where ((sub_source !~* 'CallRail' and sub_source !~* 'Link Extension') or sub_source is null or sub_source = '')
 and advertising_channel_type != 'VIDEO'
@@ -264,7 +267,8 @@ SELECT
         0 as set_value,
         COALESCE(SUM(issues),0) AS inplatform_issues,
         COALESCE(SUM(net_sales_value),0) AS inplatform_net,
-        COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count
+        COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count,
+        COALESCE(SUM(appointments_value),0) AS inplatform_set_value
     FROM (SELECT * FROM final_data)
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
