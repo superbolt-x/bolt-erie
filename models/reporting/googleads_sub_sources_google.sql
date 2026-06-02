@@ -80,7 +80,7 @@ joined_data as  (
                 issues,
                 net_sales,
                 net_sales_value,
-                appointmets_value,
+                appointments_value,
                 account_id::VARCHAR, 
                 campaign_status
         FROM 
@@ -126,7 +126,7 @@ joined_data as  (
                 issues,
                 net_sales,
                 net_sales_value,
-                appointmets_value,
+                appointments_value,
                 account_id::VARCHAR, 
                 campaign_status
         FROM {{ source('reporting','googleads_ad_performance') }}
@@ -193,7 +193,7 @@ select
     issues,
     net_sales,
     net_sales_value,
-    appointmets_value
+    appointments_value
 from joined_data
 where ((sub_source !~* 'CallRail' and sub_source !~* 'Link Extension') or sub_source is null or sub_source = '')
 and advertising_channel_type != 'VIDEO'
