@@ -34,7 +34,8 @@ SELECT ad_group_id::varchar,
         COALESCE(SUM(issues),0) AS inplatform_issues,
         COALESCE(SUM(net_sales_value),0) AS inplatform_net,
         COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count,
-        COALESCE(SUM(appointments_value),0) AS inplatform_set_value
+        COALESCE(SUM(appointments_value),0) AS inplatform_set_value,
+        COALESCE(SUM(leads),0) AS inplatform_kashurba_leads
     FROM {{ source('reporting','bingads_keyword_performance') }}
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
     UNION ALL
@@ -61,7 +62,8 @@ SELECT ad_group_id::varchar,
         COALESCE(SUM(issues),0) AS inplatform_issues,
         COALESCE(SUM(net_sales_value),0) AS inplatform_net,
         COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count,
-        COALESCE(SUM(appointments_value),0) AS inplatform_set_value
+        COALESCE(SUM(appointments_value),0) AS inplatform_set_value,
+        COALESCE(SUM(leads),0) AS inplatform_kashurba_leads
     FROM {{ source('reporting','bingads_campaign_performance') }}
     WHERE campaign_name ~* 'PMX' or campaign_name ~* 'Native'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13)
@@ -91,7 +93,8 @@ SELECT ad_group_id::varchar,
         COALESCE(SUM(inplatform_issues),0) AS inplatform_issues,
         COALESCE(SUM(inplatform_net),0) AS inplatform_net,
         COALESCE(SUM(inplatform_net_sale_count),0) AS inplatform_net_sale_count,
-        COALESCE(SUM(inplatform_set_value),0) AS inplatform_set_value
+        COALESCE(SUM(inplatform_set_value),0) AS inplatform_set_value,
+        COALESCE(SUM(inplatform_kashurba_leads),0) AS inplatform_kashurba_leads
     FROM bingads_data left join sub_source_data USING(ad_group_id)
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14)
 
@@ -183,7 +186,8 @@ SELECT
         COALESCE(SUM(inplatform_issues),0) AS inplatform_issues,
         COALESCE(SUM(inplatform_net),0) AS inplatform_net,
         COALESCE(SUM(inplatform_net_sale_count),0) AS inplatform_net_sale_count,
-        COALESCE(SUM(inplatform_set_value),0) AS inplatform_set_value
+        COALESCE(SUM(inplatform_set_value),0) AS inplatform_set_value,
+        COALESCE(SUM(inplatform_kashurba_leads),0) AS inplatform_kashurba_leads
     FROM joined_data LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
