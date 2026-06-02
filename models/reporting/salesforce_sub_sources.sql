@@ -97,7 +97,8 @@ SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') O
 		COALESCE(SUM(set_value),0) as set_value,
 		0 AS inplatform_issues,
         0 AS inplatform_net,
-        0 AS inplatform_net_sale_count
+        0 AS inplatform_net_sale_count,
+		0 AS inplatform_set_value
     FROM (SELECT *, COALESCE(utm_campaign_id::VARCHAR,utm_campaign) as utm_campaign_id_adj
             FROM {{ source('reporting','salesforce_performance') }}) s
     LEFT JOIN (SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, advertising_channel_type
