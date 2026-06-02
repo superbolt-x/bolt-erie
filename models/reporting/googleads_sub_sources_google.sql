@@ -127,8 +127,8 @@ joined_data as  (
                 issues,
                 net_sales,
                 net_sales_value,
-                leads,
                 appointments_value,
+                leads,
                 account_id::VARCHAR, 
                 campaign_status
         FROM {{ source('reporting','googleads_ad_performance') }}
