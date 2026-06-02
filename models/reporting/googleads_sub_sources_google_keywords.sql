@@ -44,7 +44,7 @@ joined_data as  (
                 spend, 
                 clicks, 
                 impressions,
-                leads, 
+                regular_leads, 
                 video_views,
                 workable_leads,
                 appointments,
@@ -52,6 +52,7 @@ joined_data as  (
                 net_sales,
                 net_sales_value,
                 appointments_value,
+                leads,
                 account_id, 
                 campaign_status
         FROM {{ source('reporting','googleads_keyword_performance') }}
@@ -88,14 +89,15 @@ select
     spend,
     clicks,
     impressions,
-    leads,
+    regular_leads,
     video_views,
     workable_leads,
     appointments,
     issues,
     net_sales,
     net_sales_value,
-    appointments_value
+    appointments_value,
+    leads
 from joined_data
 where advertising_channel_type != 'VIDEO'
 )
@@ -148,7 +150,7 @@ SELECT
         COALESCE(SUM(spend),0) AS spend,
         COALESCE(SUM(clicks),0) AS clicks,
         COALESCE(SUM(impressions),0) AS impressions,
-        COALESCE(SUM(leads),0) AS inplatform_leads,
+        COALESCE(SUM(regular_leads),0) AS inplatform_leads,
         COALESCE(SUM(video_views),0) as video_views,
         0 as sf_leads,
         0 as calls,
@@ -169,7 +171,8 @@ SELECT
         COALESCE(SUM(issues),0) AS inplatform_issues,
         COALESCE(SUM(net_sales_value),0) AS inplatform_net,
         COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count,
-        COALESCE(SUM(appointments_value),0) AS inplatform_set_value
+        COALESCE(SUM(appointments_value),0) AS inplatform_set_value,
+        COALESCE(SUM(leads),0) AS inplatform_kashurba_leads
     FROM (SELECT * FROM final_data)
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
