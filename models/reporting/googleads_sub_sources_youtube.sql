@@ -254,7 +254,8 @@ SELECT
         COALESCE(SUM(net_sales_value),0) AS inplatform_net,
         COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count,
         COALESCE(SUM(appointments_value),0) AS inplatform_set_value,
-        COALESCE(SUM(leads),0) AS inplatform_kashurba_leads
+        COALESCE(SUM(leads),0) AS inplatform_kashurba_leads,
+        0 AS gross_sale_count
     FROM (SELECT * FROM final_data)
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
