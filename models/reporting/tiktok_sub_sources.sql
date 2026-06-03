@@ -105,7 +105,8 @@ SELECT 'TikTok' AS channel,
         0 AS inplatform_net,
         0 AS inplatform_net_sale_count,
         0 AS inplatform_set_value,
-        0 AS inplatform_kashurba_leads
+        0 AS inplatform_kashurba_leads,
+        0 AS gross_sale_count
     FROM {{ source('reporting','tiktok_ad_performance') }}
     LEFT JOIN source using(ad_id, date, date_granularity)
     WHERE date >= '2022-12-01'
