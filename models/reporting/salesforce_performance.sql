@@ -96,6 +96,7 @@ SELECT
     workable_leads,
     ooa_leads,
     net_sale_count,
-    set_value
+    set_value,
+    gross_sale_count
 FROM final_data
 LEFT JOIN office_data ON final_data.market_adj = office_data.sf_office 
