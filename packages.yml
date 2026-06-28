@@ -30,7 +30,7 @@ packages:
     revision: main
     
   - git: "https://github.com/superbolt-x/bolt-dbt-bingads-package.git"
-    revision: main
+    revision: bingads-perf-cost-optimization
     
   - git: "https://github.com/superbolt-x/bolt-dbt-recharge-package.git"
     revision: main
