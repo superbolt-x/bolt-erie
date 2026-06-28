@@ -6,7 +6,7 @@ packages:
     revision: facebook-perf-cost-optimization
 
   - git: "https://github.com/superbolt-x/bolt-dbt-googleads-package.git"
-    revision: main
+    revision: googleads-perf-cost-optimization
 
   - git: "https://github.com/superbolt-x/bolt-dbt-shopify-package.git"
     revision: main
