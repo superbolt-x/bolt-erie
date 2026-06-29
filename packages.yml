@@ -3,10 +3,10 @@ packages:
     revision: main
     
   - git: "https://github.com/superbolt-x/bolt-dbt-facebook-package.git"
-    revision: facebook-perf-cost-optimization
+    revision: main
 
   - git: "https://github.com/superbolt-x/bolt-dbt-googleads-package.git"
-    revision: googleads-perf-cost-optimization
+    revision: main
 
   - git: "https://github.com/superbolt-x/bolt-dbt-shopify-package.git"
     revision: main
@@ -30,7 +30,7 @@ packages:
     revision: main
     
   - git: "https://github.com/superbolt-x/bolt-dbt-bingads-package.git"
-    revision: bingads-perf-cost-optimization
+    revision: main
     
   - git: "https://github.com/superbolt-x/bolt-dbt-recharge-package.git"
     revision: main
