@@ -2,12 +2,7 @@
     alias = target.database + '_salesforce_sub_sources'
 )}}
 
-SELECT CASE
-            -- Leads from Leaf Home's own media (their Meta campaigns share our SM* source codes in Salesforce).
-            -- Identified by LH campaign naming convention (a:LF|p:M|...) or LH tracking codes (utm_source 41PF*).
-            -- Must be evaluated BEFORE the Facebook mapping to avoid inflating our lead counts with $0-spend leads.
-            WHEN utm_campaign ~ '^a:' OR utm_source ~* '^41P' THEN 'Leaf Home Media'
-            WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') OR utm_source = 'facebook' THEN 'Facebook'
+SELECT CASE WHEN source IN ('SM','SMR','SMO','SM1','SM13','BSM','BSMR','BSM1') OR utm_source = 'facebook' THEN 'Facebook'
             WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN 'YouTube'
             WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source = 'google' THEN 'Google'
             WHEN source = 'SM6' OR utm_source = 'tiktok' THEN 'TikTok'
