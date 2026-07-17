@@ -19,7 +19,8 @@ WITH office_data as
     
     filetered_data as
     (SELECT *, {{ get_date_parts('lead_entry_date') }}
-    FROM {{ source('s3_raw','superbolt_daily_file') }}),
+    FROM {{ source('s3_raw','superbolt_daily_file') }}
+    WHERE market !~ '^F[0-9]+'),
 
     
     final_data as 
