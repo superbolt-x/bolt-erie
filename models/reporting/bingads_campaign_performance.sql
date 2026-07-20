@@ -25,7 +25,7 @@ date,
 date_granularity,
 CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office,
 sf_office as office_location,
-CASE WHEN account_id = '149506166' THEN 'Basement'
+CASE WHEN (account_id = '149506166' or account_id = '141944908') THEN 'Basement'
     WHEN account_id = '149034657' THEN 'Roofing'
 END as erie_type,
 spend,
