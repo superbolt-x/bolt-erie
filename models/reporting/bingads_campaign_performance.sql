@@ -33,13 +33,34 @@ impressions,
 clicks,
 kashurbagetpricing as leads,
 revenue as revenue,
-"[roofing]lead" as regular_leads,
-"[roofing]workablelead" as workable_leads,
-"[roofing]appointmentset" as appointments,
-"[roofing]issues" as issues,
-"[roofing]netsale" as net_sales,
-"[roofing]netsale_value" as net_sales_value,
-"[roofing]appointmentset_value" as appointments_value
+CASE 
+    WHEN account_id = '149034657' THEN "[roofing]lead"
+    WHEN (account_id = '149506166' or account_id = '141944908') THEN "[basement]lead" 
+END as regular_leads,
+CASE 
+    WHEN account_id = '149034657' THEN "[roofing]workablelead"
+    WHEN (account_id = '149506166' or account_id = '141944908') THEN "[basement]workablelead"
+END as workable_leads,
+CASE 
+    WHEN account_id = '149034657' THEN "[roofing]appointmentset"
+    WHEN (account_id = '149506166' or account_id = '141944908') THEN "[basement]appointmentset"
+END as appointments,   
+CASE 
+    WHEN account_id = '149034657' THEN "[roofing]issues"
+    WHEN (account_id = '149506166' or account_id = '141944908') THEN "[basement]issues"
+END as issues,   
+CASE 
+    WHEN account_id = '149034657' THEN "[roofing]netsale"
+    WHEN (account_id = '149506166' or account_id = '141944908') THEN "[basement]netsale"
+END as net_sales, 
+CASE 
+    WHEN account_id = '149034657' THEN "[roofing]netsale_value"
+    WHEN (account_id = '149506166' or account_id = '141944908') THEN "[basement]netsale_value"
+END as net_sales_value, 
+CASE 
+    WHEN account_id = '149034657' THEN "[roofing]appointmentset_value"
+    WHEN (account_id = '149506166' or account_id = '141944908') THEN "[basement]appointmentset_value"
+END as appointments_value
 FROM {{ ref('bingads_performance_by_campaign') }}
 LEFT JOIN (SELECT campaign_id, campaign_name, account_id, campaign_status, RIGHT(LEFT(campaign_name,4),3) as code 
             FROM {{ ref('bingads_campaigns') }}) c 
