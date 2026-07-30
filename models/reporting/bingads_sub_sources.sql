@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_bingads_sub_sources'
+    materialized = 'ephemeral'
 )}}
 
 WITH sub_source_data as (
@@ -135,20 +135,8 @@ SELECT
             WHEN campaign_name ~* 'native' THEN 'Audience'
             ELSE 'Search' 
         END as campaign_type,
-        CASE WHEN campaign_name ~* 'All areas' THEN 'All areas' 
-            WHEN campaign_name ~* 'Group' THEN 'Group' 
-            WHEN campaign_name ~* 'National' THEN 'National' 
-            ELSE 'Other'
-        END as region_bucket,
-        CASE WHEN ad_group_name ~* 'Roof Replacement' THEN 'Roof Replacement' 
-            WHEN ad_group_name ~* 'General Roofing' THEN 'General Roofing' 
-            WHEN ad_group_name ~* 'Residential Roofing' THEN 'Residential Roofing'
-            WHEN ad_group_name ~* 'Metal Roofing' THEN 'Metal Roofing' 
-            WHEN ad_group_name ~* 'Steel Roofing' THEN 'Steel Roofing'
-            WHEN ad_group_name ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
-            WHEN ad_group_name ~* 'Spanish Tiles' THEN 'Spanish Tiles'
-            ELSE 'Other'
-        END as service_type,
+        {{ region_bucket('campaign_name') }} as region_bucket,
+        {{ service_type_bucket('ad_group_name') }} as service_type,
         NULL as dispo,
         NULL as call_disposition,
         NULL as status_detail,
@@ -162,33 +150,19 @@ SELECT
         NULL as utm_discount,
         NULL as utm_lp_variant,
         NULL as utm_msclk_id,
-        COALESCE(SUM(spend),0) AS spend,
-        COALESCE(SUM(clicks),0) AS clicks,
-        COALESCE(SUM(impressions),0) AS impressions,
-        COALESCE(SUM(inplatform_leads),0) AS inplatform_leads,
-        0 as video_views,
-        0 as sf_leads,
-        0 as calls,
-        0 as appointments,
-        0 as demos,
-        0 as down_payments,
-        0 as closed_deals,
-        0 as gross,
-        0 as net,
-        0 as workable_leads,
-        0 as hits,
-        0 as issues,
-        0 as ooa_leads,
-        0 as net_sale_count,
-        COALESCE(SUM(inplatform_workable_leads),0) AS inplatform_workable_leads,
-        COALESCE(SUM(inplatform_appointments),0) AS inplatform_appointments,
-        0 as set_value,
-        COALESCE(SUM(inplatform_issues),0) AS inplatform_issues,
-        COALESCE(SUM(inplatform_net),0) AS inplatform_net,
-        COALESCE(SUM(inplatform_net_sale_count),0) AS inplatform_net_sale_count,
-        COALESCE(SUM(inplatform_set_value),0) AS inplatform_set_value,
-        COALESCE(SUM(inplatform_kashurba_leads),0) AS inplatform_kashurba_leads,
-        0 AS gross_sale_count
+        {{ blended_metrics({
+            'spend': 'COALESCE(SUM(spend),0)',
+            'clicks': 'COALESCE(SUM(clicks),0)',
+            'impressions': 'COALESCE(SUM(impressions),0)',
+            'inplatform_leads': 'COALESCE(SUM(inplatform_leads),0)',
+            'inplatform_workable_leads': 'COALESCE(SUM(inplatform_workable_leads),0)',
+            'inplatform_appointments': 'COALESCE(SUM(inplatform_appointments),0)',
+            'inplatform_issues': 'COALESCE(SUM(inplatform_issues),0)',
+            'inplatform_net': 'COALESCE(SUM(inplatform_net),0)',
+            'inplatform_net_sale_count': 'COALESCE(SUM(inplatform_net_sale_count),0)',
+            'inplatform_set_value': 'COALESCE(SUM(inplatform_set_value),0)',
+            'inplatform_kashurba_leads': 'COALESCE(SUM(inplatform_kashurba_leads),0)'
+        }) }}
     FROM joined_data LEFT JOIN sf_data USING(date,date_granularity,sub_source_id)
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28

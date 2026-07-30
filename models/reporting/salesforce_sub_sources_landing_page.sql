@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_salesforce_sub_sources_landing_page'
+    materialized = 'ephemeral'
 )}}
 
 SELECT CASE

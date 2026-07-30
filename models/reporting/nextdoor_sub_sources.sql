@@ -1,6 +1,13 @@
 {{ config (
-    alias = target.database + '_nextdoor_sub_sources'
+    materialized = 'ephemeral'
 )}}
+
+{#
+    Nextdoor stopped spending 2025-11-04. The model is kept so the $1.46M of
+    spend history stays in blended_performance for year-over-year comparisons;
+    it costs nothing now that it is ephemeral. Safe to delete once the 2025
+    comparison window closes (after Nov 2026).
+#}
 
 SELECT 'Nextdoor' AS channel, 
         date, 
@@ -15,11 +22,7 @@ SELECT 'Nextdoor' AS channel,
         CASE WHEN campaign_name ~* 'Basement' THEN 'Basement' ELSE 'Roofing' END as erie_type,
         'National' as market,
         campaign_type_default as campaign_type,
-        CASE WHEN campaign_name ~* 'All areas' THEN 'All areas' 
-            WHEN campaign_name ~* 'Group' THEN 'Group' 
-            WHEN campaign_name ~* 'National' THEN 'National' 
-            ELSE 'Other'
-        END as region_bucket,
+        {{ region_bucket('campaign_name') }} as region_bucket,
         CASE WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Roof_Replacement' THEN 'Roof Replacement' 
             WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'General_Roofing' THEN 'General Roofing' 
             WHEN TRIM(REPLACE(REPLACE(ad_group_name,' - ','_'),' ','_'))::VARCHAR ~* 'Residential_Roofing' THEN 'Residential Roofing'
@@ -46,32 +49,10 @@ SELECT 'Nextdoor' AS channel,
         NULL as utm_discount,
         NULL as utm_lp_variant,
         NULL as utm_msclk_id,
-        COALESCE(SUM(spend),0) AS spend,
-        COALESCE(SUM(clicks),0) AS clicks,
-        COALESCE(SUM(impressions),0) AS impressions,
-        0 AS inplatform_leads,
-        0 as video_views,
-        0 as sf_leads,
-        0 as calls,
-        0 as appointments,
-        0 as demos,
-        0 as down_payments,
-        0 as closed_deals,
-        0 as gross,
-        0 as net,
-        0 as workable_leads,
-        0 as hits,
-        0 as issues,
-        0 as ooa_leads,
-        0 as net_sale_count,
-        0 AS inplatform_workable_leads,
-        0 AS inplatform_appointments,
-        0 as set_value,
-        0 AS inplatform_issues,
-        0 AS inplatform_net,
-        0 AS inplatform_net_sale_count,
-        0 AS inplatform_set_value,
-        0 AS inplatform_kashurba_leads,
-        0 AS gross_sale_count
+        {{ blended_metrics({
+            'spend': 'COALESCE(SUM(spend),0)',
+            'clicks': 'COALESCE(SUM(clicks),0)',
+            'impressions': 'COALESCE(SUM(impressions),0)'
+        }) }}
     FROM {{ source('reporting','nextdoor_ad_performance') }}
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
