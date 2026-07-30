@@ -11,9 +11,6 @@ packages:
   - git: "https://github.com/superbolt-x/bolt-dbt-shopify-package.git"
     revision: main
 
-  - git: "https://github.com/superbolt-x/bolt-dbt-tiktok-package.git"
-    revision: main
-
   - git: "https://github.com/superbolt-x/bolt-dbt-pinterest-package.git"
     revision: main
 

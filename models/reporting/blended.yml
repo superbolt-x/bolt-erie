@@ -13,12 +13,6 @@ sources:
       - name: superbolt_daily_file
         identifier: superbolt_daily_file
 
-  - name: supermetrics_raw
-    schema: supermetrics_raw
-    tables:
-      - name: tik_ads_insights
-        identifier: tik_ads_insights
-
   - name: gsheet_raw
     schema: gsheet_raw
     tables:
@@ -28,9 +22,6 @@ sources:
       - name: lp_variant_list
         identifier: lp_variant_list
       
-      - name: outbrain_campaign_insights
-        identifier: outbrain_campaign_insights
-
       - name: facebook_lp_urls
         identifier: facebook_lp_urls 
 
@@ -58,15 +49,6 @@ sources:
       - name: landing_page_performance_report
         identifier: landing_page_performance_report
 
-  - name: outbrain_raw
-    schema: outbrain_raw
-    tables:
-      - name: campaign_report
-        identifier: campaign_report
-
-      - name: campaign_history
-        identifier: campaign_history
-
   - name: reporting
     schema: reporting
     tables:
@@ -91,14 +73,8 @@ sources:
       - name: googleads_asset_group_performance
         identifier: erie_googleads_asset_group_performance
 
-      - name: tiktok_ad_performance
-        identifier: erie_tiktok_ad_performance
-
       - name: bingads_ad_performance
         identifier: erie_bingads_ad_performance
-
-      - name: outbrain_campaign_performance
-        identifier: erie_outbrain_campaign_performance
 
       - name: bingads_keyword_performance
         identifier: erie_bingads_keyword_performance

@@ -1,5 +1,5 @@
 {{ config (
-    alias = target.database + '_bingads_sub_sources_landing_page'
+    materialized = 'ephemeral'
 )}}
 
 WITH bingads_data as 

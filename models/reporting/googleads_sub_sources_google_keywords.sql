@@ -1,22 +1,8 @@
 {{ config (
-    alias = target.database + '_googleads_sub_sources_google_keywords'
+    materialized = 'ephemeral'
 )}}
 
-{% set date_granularity_list = ['day', 'week', 'month', 'quarter', 'year'] %}
-    
-WITH campaign_max_updated_date as (
- SELECT id , max(updated_at) as max_updated_at
- from {{ source('googleads_raw', 'campaign_history') }}
- group by 1),
-
-campaign_types as (
- SELECT campaign_max_updated_date.id as campaign_id, advertising_channel_type
- FROM campaign_max_updated_date 
- LEFT JOIN {{ source('googleads_raw', 'campaign_history') }}
- ON campaign_max_updated_date.id = campaign_history.id 
- AND campaign_max_updated_date.max_updated_at = campaign_history.updated_at),
-
-joined_data as  (
+WITH joined_data as  (
     
         (SELECT NULL as ad_final_urls,
                 NULL as sub_source_id,
@@ -44,7 +30,8 @@ joined_data as  (
                 spend, 
                 clicks, 
                 impressions,
-                regular_leads, 
+                regular_leads,
+                purchases,
                 video_views,
                 workable_leads,
                 appointments,
@@ -53,10 +40,10 @@ joined_data as  (
                 net_sales_value,
                 appointments_value,
                 leads,
-                account_id, 
+                account_id,
                 campaign_status
         FROM {{ source('reporting','googleads_keyword_performance') }}
-        left join campaign_types USING(campaign_id)
+        left join {{ ref('googleads_campaign_types') }} USING(campaign_id)
         where date >= '2022-12-01'
         and advertising_channel_type = 'SEARCH')
         
@@ -90,6 +77,7 @@ select
     clicks,
     impressions,
     regular_leads,
+    purchases,
     video_views,
     workable_leads,
     appointments,
@@ -120,20 +108,8 @@ SELECT
             WHEN campaign_name ~* 'Branded' OR campaign_name ~* 'metal roofing keywords' OR campaign_name ~* 'NBS evergreen' OR campaign_name ~* 'basements keywords' 
                 OR campaign_name ~* 'priority markets' OR campaign_name ~* 'worse cpl locations' OR advertising_channel_type = 'SEARCH' THEN 'Search'
         END as campaign_type,
-        CASE WHEN campaign_name ~* 'All areas' THEN 'All areas' 
-            WHEN campaign_name ~* 'Group' THEN 'Group' 
-            WHEN campaign_name ~* 'National' THEN 'National' 
-            ELSE 'Other'
-        END as region_bucket,
-        CASE WHEN ad_group_name ~* 'Roof Replacement' THEN 'Roof Replacement' 
-            WHEN ad_group_name ~* 'General Roofing' THEN 'General Roofing' 
-            WHEN ad_group_name ~* 'Residential Roofing' THEN 'Residential Roofing'
-            WHEN ad_group_name ~* 'Metal Roofing' THEN 'Metal Roofing' 
-            WHEN ad_group_name ~* 'Steel Roofing' THEN 'Steel Roofing'
-            WHEN ad_group_name ~* 'Fiberglass Roofing' THEN 'Fiberglass Roofing'
-            WHEN ad_group_name ~* 'Spanish Tiles' THEN 'Spanish Tiles'
-            ELSE 'Other'
-        END as service_type,
+        {{ region_bucket('campaign_name') }} as region_bucket,
+        {{ service_type_bucket('ad_group_name') }} as service_type,
         NULL as dispo,
         NULL as call_disposition,
         NULL as status_detail,
@@ -147,33 +123,21 @@ SELECT
         NULL as utm_discount,
         NULL as utm_lp_variant,
         NULL as utm_msclk_id,
-        COALESCE(SUM(spend),0) AS spend,
-        COALESCE(SUM(clicks),0) AS clicks,
-        COALESCE(SUM(impressions),0) AS impressions,
-        COALESCE(SUM(regular_leads),0) AS inplatform_leads,
-        COALESCE(SUM(video_views),0) as video_views,
-        0 as sf_leads,
-        0 as calls,
-        0 as appointments,
-        0 as demos,
-        0 as down_payments,
-        0 as closed_deals,
-        0 as gross,
-        0 as net,
-        0 as workable_leads,
-        0 as hits,
-        0 as issues,
-        0 as ooa_leads,
-        0 as net_sale_count,
-        COALESCE(SUM(workable_leads),0) AS inplatform_workable_leads,
-        COALESCE(SUM(appointments),0) AS inplatform_appointments,
-        0 as set_value,
-        COALESCE(SUM(issues),0) AS inplatform_issues,
-        COALESCE(SUM(net_sales_value),0) AS inplatform_net,
-        COALESCE(SUM(net_sales),0) AS inplatform_net_sale_count,
-        COALESCE(SUM(appointments_value),0) AS inplatform_set_value,
-        COALESCE(SUM(leads),0) AS inplatform_kashurba_leads,
-        0 AS gross_sale_count
+        {{ blended_metrics({
+            'spend': 'COALESCE(SUM(spend),0)',
+            'clicks': 'COALESCE(SUM(clicks),0)',
+            'impressions': 'COALESCE(SUM(impressions),0)',
+            'inplatform_leads': 'COALESCE(SUM(regular_leads),0)',
+            'video_views': 'COALESCE(SUM(video_views),0)',
+            'inplatform_workable_leads': 'COALESCE(SUM(workable_leads),0)',
+            'inplatform_appointments': 'COALESCE(SUM(appointments),0)',
+            'inplatform_issues': 'COALESCE(SUM(issues),0)',
+            'inplatform_net': 'COALESCE(SUM(net_sales_value),0)',
+            'inplatform_net_sale_count': 'COALESCE(SUM(net_sales),0)',
+            'inplatform_set_value': 'COALESCE(SUM(appointments_value),0)',
+            'inplatform_kashurba_leads': 'COALESCE(SUM(leads),0)',
+            'inplatform_conversions': 'COALESCE(SUM(purchases),0)'
+        }) }}
     FROM (SELECT * FROM final_data)
     WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
