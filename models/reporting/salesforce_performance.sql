@@ -25,6 +25,8 @@ WITH office_data as
         Facebook / Google / Bing rows if left in. COALESCE is required: ~20k
         rows have a NULL prod and a bare <> would drop them. #}
     WHERE COALESCE(prod,'') <> 'LeafFilter'
+    AND COALESCE(prod,'') <> 'Basement Waterproofing'
+    AND COALESCE(prod,'') <> 'Windows'
     ),
 
     
