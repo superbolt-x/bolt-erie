@@ -1,0 +1,154 @@
+version: 2
+
+# R17 — the project had zero tests and zero column contracts, so nothing failed loudly when
+# a derivation changed. These are deliberately a small, high-signal set: each one guards a
+# rule that has already been broken in production at least once. Anything checkable from
+# live data instead lives in erie_reporting_health.sql, which does not need a dbt run to
+# be useful.
+#
+# Run with:  dbt test --select reporting
+# Severity is `warn` where a failure is informational and `error` where a client-facing
+# number would be wrong.
+
+models:
+
+  - name: blended_performance
+    description: >
+      UNION ALL of the five channel sub-source models. Spend rows and Salesforce rows are
+      DIFFERENT ROWS — only date, date_granularity, channel, erie_type, campaign_type,
+      region_bucket and service_type are populated on both sides.
+    columns:
+      - name: erie_type
+        description: >
+          The funnel discriminator. Derived from ad-account id on every platform model and
+          from the Salesforce source code on salesforce_sub_sources. 'Unmapped' means an ad
+          account is missing from a CASE branch and the rows are in NEITHER funnel.
+        tests:
+          - not_null:
+              config:
+                severity: error
+          - accepted_values:
+              values: ['Roofing', 'Basement', 'Unmapped']
+              config:
+                severity: error
+          # 'Unmapped' is legal but should never be a steady state.
+          - accepted_values:
+              values: ['Roofing', 'Basement']
+              config:
+                severity: warn
+                error_if: ">1000"
+
+      - name: date_granularity
+        description: Exactly one of these must be filtered on in every downstream query.
+        tests:
+          - not_null:
+              config:
+                severity: error
+          - accepted_values:
+              values: ['day', 'week', 'month', 'quarter', 'year']
+              config:
+                severity: error
+
+      - name: channel
+        tests:
+          - accepted_values:
+              values: ['Google', 'YouTube', 'Bing', 'Facebook', 'Nextdoor', 'TikTok', 'Outbrain', 'Other']
+              config:
+                severity: error
+
+      - name: campaign_type
+        description: >
+          Domain differs by channel. 'Prospecting' is Meta; 'Campaign Type: Prospecting' is
+          Nextdoor — they are different channels, not two spellings, so never match on
+          ILIKE '%Prospecting%'.
+        tests:
+          - accepted_values:
+              values:
+                - 'Search'
+                - 'Performance Max'
+                - 'Demand Gen'
+                - 'Prospecting'
+                - 'Retargeting'
+                - 'Audience'
+                - 'Campaign Type: Prospecting'
+              config:
+                severity: warn
+
+      # Negative spend is checked by the singular test tests/assert_no_negative_spend.sql
+      # rather than dbt_utils.accepted_range — dbt_utils is not a direct dependency of this
+      # project (only the superbolt bolt-dbt-utils fork is).
+      - name: spend
+        tests:
+          - not_null:
+              config: {severity: error}
+
+  - name: googleads_campaign_performance
+    columns:
+      - name: erie_type
+        tests:
+          - not_null: {config: {severity: error}}
+          - accepted_values:
+              values: ['Roofing', 'Basement', 'Unmapped']
+              config: {severity: error}
+      - name: account_id
+        description: 4560674777 = Roofing (ECM); 2819798401 = Basement (EHBS).
+        tests:
+          - accepted_values:
+              values: ['4560674777', '2819798401']
+              quote: false
+              config: {severity: warn}
+
+  - name: bingads_campaign_performance
+    columns:
+      - name: erie_type
+        tests:
+          - not_null: {config: {severity: error}}
+          - accepted_values:
+              values: ['Roofing', 'Basement', 'Unmapped']
+              config: {severity: error}
+
+  - name: facebook_ad_performance
+    description: >
+      Ad-grain Meta. NOTE there is no erie_type column here — funnel comes from account_id.
+    columns:
+      - name: account_id
+        description: >
+          813620678687014 + 306770030564777 = Roofing; 1349056908916556 = Basement.
+          A value outside this set means blended will emit erie_type = 'Unmapped'.
+        tests:
+          - accepted_values:
+              values: ['813620678687014', '306770030564777', '1349056908916556']
+              quote: false
+              config: {severity: error}
+      - name: website_leads
+        description: >
+          Pixel-only lead count. Prefer this over `leads`, which is
+          website_leads + onfacebook_leads and double-counts a single Instant Form
+          submission (July 2026 Basement: 731 vs the published 368).
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: salesforce_performance
+    description: >
+      The CRM feed, from s3_raw.superbolt_daily_file. ROOFING ONLY — the daily file does not
+      carry Basement. The prod filter in this model excludes Basement/LeafFilter/Windows
+      conversions that Roofing channels generated, so that Roofing outcomes stay clean; it
+      is not the reason Basement has no data.
+    columns:
+      - name: date_granularity
+        tests:
+          - not_null: {config: {severity: error}}
+
+  - name: erie_reporting_health
+    description: >
+      Standing health check. EMPTY MEANS EVERYTHING PASSED. severity='fail' means a
+      client-facing number is wrong right now and `detail` says what to do.
+    columns:
+      - name: severity
+        tests:
+          - accepted_values:
+              values: ['fail', 'warn']
+              config: {severity: error}
+      - name: check_name
+        tests:
+          - not_null: {config: {severity: error}}
