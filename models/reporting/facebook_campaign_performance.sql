@@ -34,8 +34,17 @@ impressions,
 link_clicks,
 0 as purchases,
 website_leads+onfacebook_leads as leads,
-"offsite_conversion.fb_pixel_custom.Set" as appointment_set    
-FROM 
+{#
+    The Meta custom pixels. Erie never set up conversion ACTIONS on Meta the way Google
+    and Bing have, but these pixels do fire and are the only warehouse path to Meta's
+    down-funnel. Kept in step with facebook_ad_performance, which exposes the same set.
+#}
+"offsite_conversion.fb_pixel_custom.Set" as appointment_set,
+"offsite_conversion.fb_pixel_custom.issue" as issues,
+"offsite_conversion.fb_pixel_custom.sale" as sales,
+"offsite_conversion.fb_pixel_custom.net sale" as net_sales,
+"offsite_conversion.fb_pixel_custom.(kashurba) get pricing" as kashurba_leads
+FROM
    {{ ref('facebook_performance_by_campaign') }} 
 LEFT JOIN (SELECT campaign_id::VARCHAR as campaign_id, campaign_name, campaign_effective_status, 
         case

@@ -39,6 +39,7 @@ date,
 date_granularity,
 CASE WHEN account_id  = '4560674777' THEN 'Roofing'
     WHEN account_id = '2819798401' THEN 'Basement'
+    ELSE 'Unmapped'
     END AS erie_type,
 CASE WHEN campaign_name ~* 'all areas' THEN 'National'
     WHEN campaign_name ~* 'warm' THEN 'Retargeting'

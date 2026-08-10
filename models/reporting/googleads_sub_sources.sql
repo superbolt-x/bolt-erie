@@ -53,6 +53,31 @@ raw_ad_daily as (
     {%- endfor %}
 ),
 
+{#  R11 — the conversion fan-out fix.
+
+    raw_ad_daily is at ad x final-URL grain; googleads_ad_performance is at ad grain. The
+    LEFT JOIN below therefore returns one row per final URL, each carrying the ad's FULL
+    conversion values, and the final GROUP BY (which includes ad_final_urls) turns that into
+    N copies. Spend was always correct because it comes from the URL-split side; conversions
+    were not. Measured before this fix, inplatform_leads for Google+YouTube: day 143,427 ->
+    week 143,858 -> month 146,730 -> quarter 151,424 -> year 162,320 (+13.2%, +23.6% inside
+    Search), purely because coarser buckets collect more distinct URLs per ad.
+
+    Allocation is proportional to each URL's share of that ad's spend, which preserves the
+    ad-level total exactly and puts conversions where the money went. Ads with zero spend
+    fall back to an even split, and an unmatched join falls back to 1 (no split at all).  #}
+url_split as (
+    select *,
+           COALESCE(
+               spends / NULLIF(SUM(spends) OVER (
+                   PARTITION BY ad_id, ad_group_id, campaign_id, date, date_granularity), 0),
+               1.0 / NULLIF(COUNT(*) OVER (
+                   PARTITION BY ad_id, ad_group_id, campaign_id, date, date_granularity), 0),
+               1
+           ) as conv_share
+    from raw_ad_daily
+),
+
 ad_grain as (
     SELECT  ad_final_urls,
             u.sub_source_id,
@@ -76,18 +101,21 @@ ad_grain as (
             spends as spend,
             click as clicks,
             impression as impressions,
-            regular_leads,
-            purchases,
-            video_views,
-            workable_leads,
-            appointments,
-            issues,
-            net_sales,
-            net_sales_value,
-            appointments_value,
-            leads
+            {#  Each joined row carries its own conv_share, and the shares for one ad sum to
+                1 — so the ad-level total is preserved while the per-URL split matches spend.
+                An unmatched join (no raw row) leaves conv_share NULL, hence COALESCE to 1. #}
+            regular_leads      * COALESCE(conv_share, 1) as regular_leads,
+            purchases          * COALESCE(conv_share, 1) as purchases,
+            video_views        * COALESCE(conv_share, 1) as video_views,
+            workable_leads     * COALESCE(conv_share, 1) as workable_leads,
+            appointments       * COALESCE(conv_share, 1) as appointments,
+            issues             * COALESCE(conv_share, 1) as issues,
+            net_sales          * COALESCE(conv_share, 1) as net_sales,
+            net_sales_value    * COALESCE(conv_share, 1) as net_sales_value,
+            appointments_value * COALESCE(conv_share, 1) as appointments_value,
+            leads              * COALESCE(conv_share, 1) as leads
     FROM {{ source('reporting','googleads_ad_performance') }}
-    LEFT JOIN raw_ad_daily using(ad_id, ad_group_id, campaign_id, date, date_granularity)
+    LEFT JOIN url_split using(ad_id, ad_group_id, campaign_id, date, date_granularity)
     LEFT JOIN {{ ref('googleads_ad_url_subsources') }} u using(ad_final_urls)
     LEFT JOIN subsource_cte on subsource_cte.sf_sub_source_id::varchar = u.sub_source_id::varchar
     WHERE date >= '2022-12-01'
@@ -205,6 +233,13 @@ SELECT
             'inplatform_conversions': 'COALESCE(SUM(purchases),0)'
         }) }}
     FROM final_data
-    WHERE ((sub_source !~* 'CallRail' and sub_source !~* 'Link Extension') or sub_source is null or sub_source = '')
-    and date >= '2022-12-01'
+    {#  R16 — the CallRail / Link Extension exclusion that used to sit here has been
+        removed, not repaired. It could never match: sub_source comes from subsource_cte,
+        which reads salesforce_performance, and that model hardcodes sub_source and
+        sub_source_id to the literal 'not set' for all 5.8M rows — so the predicate was a
+        no-op and every CallRail row has always been included. Confirmed with the team
+        (2026-08-11) that CallRail SHOULD be included, so the no-op was accidentally
+        correct. Keeping dead code that looks like a filter is worse than having none:
+        it implies an exclusion that is not happening.  #}
+    WHERE date >= '2022-12-01'
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28

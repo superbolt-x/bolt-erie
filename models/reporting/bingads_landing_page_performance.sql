@@ -91,6 +91,7 @@ date,
 date_granularity,
 CASE WHEN  (account_id = '149506166' or account_id = '141944908')  THEN 'Basement'
     WHEN account_id = '149034657' THEN 'Roofing'
+ELSE 'Unmapped'
     END AS erie_type,
 'National' as market,
 CASE WHEN location IS NULL THEN 'Unknown' ELSE location END as office, 
