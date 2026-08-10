@@ -46,26 +46,19 @@ spend,
 impressions,
 link_clicks,
 purchases,
-{#
-    `leads` double-counts a single Instant Form lead: Meta reports the same submission
-    under both the on-Facebook action and the website pixel. Verified 2026-08-11 —
-    Basement July reads 731 here vs the 368 the weekly report publishes (ratio 1.99).
-    website_leads is the pixel-only count and is what every report actually uses, so it is
-    exposed alongside rather than replacing `leads` (which downstream models still read).
-#}
 website_leads+onfacebook_leads as leads,
-website_leads,
 {#
     The Meta custom pixels. Erie never set up conversion ACTIONS on Meta the way Google
     and Bing have, but these pixels do fire and are the only warehouse path to Meta's
-    down-funnel. appointment_set has existed since 2025-11-13 and was never consumed;
-    the rest are added here so facebook_sub_sources can pass them into blended_metrics.
+    down-funnel. appointment_set has existed since 2025-11-13 and was never consumed; the
+    rest are added here so facebook_sub_sources can pass them into blended_metrics.
+    Kept in step with facebook_campaign_performance, which exposes the same set.
 #}
 "offsite_conversion.fb_pixel_custom.Set" as appointment_set,
-"offsite_conversion.fb_pixel_custom.issue" as pixel_issues,
-"offsite_conversion.fb_pixel_custom.sale" as pixel_sales,
-"offsite_conversion.fb_pixel_custom.net sale" as pixel_net_sales,
-"offsite_conversion.fb_pixel_custom.(kashurba) get pricing" as pixel_kashurba_leads
+"offsite_conversion.fb_pixel_custom.issue" as issues,
+"offsite_conversion.fb_pixel_custom.sale" as sales,
+"offsite_conversion.fb_pixel_custom.net sale" as net_sales,
+"offsite_conversion.fb_pixel_custom.(kashurba) get pricing" as kashurba_leads
 FROM
     (SELECT *, SPLIT_PART(landing_page,'/',4) as base_url FROM {{ ref('facebook_performance_by_ad') }} r
     LEFT JOIN {{ source('gsheet_raw','facebook_lp_urls') }} g ON r.ad_name = g.name)

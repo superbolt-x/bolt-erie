@@ -58,30 +58,25 @@ SELECT
             Meta spend against 0 sets / 0 issues / 0 net sales, which reads as a failing
             channel rather than an unwired one.
 
-            inplatform_leads uses website_leads (the pixel-only count), NOT `leads`
-            (= website_leads + onfacebook_leads), because the latter double-counts a
-            single Instant Form submission. Verified against the Basement weekly report:
-            website_leads gives 368 for July, matching the published CPL of $130;
-            `leads` gives 731.
-
             Every Meta pixel is a conversion COUNT — there are no value-bearing pixels.
             So inplatform_net (a revenue VALUE on Google/Bing, from [roofing]netsale_value)
             and inplatform_set_value stay 0 here rather than being fed a count, which would
             silently make Meta Net COM and Set ROAS wrong. Meta also has no workable-lead
             pixel, so inplatform_workable_leads stays 0 — that remains a Tableau pull.
 
-            The `.sale` pixel is deliberately NOT mapped: it is ambiguous between gross and
-            net sale, and `.net sale` already covers the net count.
+            The `.sale` pixel is exposed upstream but deliberately NOT mapped: it is
+            ambiguous between gross and net sale, and `.net sale` already covers the net
+            count.
         #}
         {{ blended_metrics({
             'spend': 'COALESCE(SUM(spend),0)',
             'clicks': 'COALESCE(SUM(link_clicks),0)',
             'impressions': 'COALESCE(SUM(impressions),0)',
-            'inplatform_leads': 'COALESCE(SUM(website_leads),0)',
+            'inplatform_leads': 'COALESCE(SUM(leads),0)',
             'inplatform_appointments': 'COALESCE(SUM(appointment_set),0)',
-            'inplatform_issues': 'COALESCE(SUM(pixel_issues),0)',
-            'inplatform_net_sale_count': 'COALESCE(SUM(pixel_net_sales),0)',
-            'inplatform_kashurba_leads': 'COALESCE(SUM(pixel_kashurba_leads),0)'
+            'inplatform_issues': 'COALESCE(SUM(issues),0)',
+            'inplatform_net_sale_count': 'COALESCE(SUM(net_sales),0)',
+            'inplatform_kashurba_leads': 'COALESCE(SUM(kashurba_leads),0)'
         }) }}
     FROM {{ source('reporting','facebook_ad_performance') }}
     WHERE date >= '2022-12-01'
