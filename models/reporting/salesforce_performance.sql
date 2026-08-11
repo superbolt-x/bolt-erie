@@ -21,7 +21,7 @@ WITH office_data as
     (SELECT *, {{ get_date_parts('lead_entry_date') }}
     FROM {{ source('s3_raw','superbolt_daily_file') }}
     {#  LeafFilter is a separate Leaf Home brand and its leads carry the same
-        source codes as Erie's own paid channels, so they land inside the
+        source codes as Eries own paid channels, so they land inside the
         Facebook / Google / Bing rows if left in. COALESCE is required: ~20k
         rows have a NULL prod and a bare <> would drop them. #}
     WHERE COALESCE(prod,'') <> 'LeafFilter'
