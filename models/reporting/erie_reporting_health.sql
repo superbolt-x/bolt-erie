@@ -68,24 +68,32 @@ unmapped AS (
     HAVING SUM(spend) > 0
 ),
 
-{# ---------------------------------------------------------------- 3. Basement CRM leakage #}
-{#  Basement must have no CRM data — Erie's daily file is Roofing-only. If a Salesforce
-    metric ever appears on a Basement row, either the daily file now carries Basement (good
-    news, but the models need updating) or a source code is being misclassified.  #}
+{# ---------------------------------------------------------------- 3. Basement CRM feed #}
+{#  INVERTED 2026-08-12. This check used to fire when Basement CRM data APPEARED, because the
+    daily file was Roofing-only and anything showing up meant a misclassified source code.
+    The Erie team has now added Basement to the file, so the failure mode flipped: the risk
+    is the feed silently STOPPING, which would quietly return Basement to in-platform-only
+    reporting without anyone noticing.
+
+    Checks each Basement channel that has meaningful spend and asks whether CRM leads are
+    still arriving. Meta is excluded: Basement Meta CRM volume is small and lumpy enough that
+    a quiet fortnight is normal rather than a fault.  #}
 basement_crm AS (
-    SELECT 'BASEMENT_CRM_APPEARED' AS check_name,
-           'fail'                  AS severity,
-           channel                 AS entity,
-           'Basement rows now carry CRM data (' || SUM(sf_leads)::VARCHAR || ' sf_leads since '
-             || MIN(date)::VARCHAR || '). Either Basement was added to the daily file — in '
-             || 'which case salesforce_performance.sql and the erie-client skill both need '
-             || 'updating — or a source code is misclassified.' AS detail
+    SELECT 'BASEMENT_CRM_STOPPED' AS check_name,
+           'fail'                 AS severity,
+           channel                AS entity,
+           'Basement/' || channel || ' has $' || ROUND(SUM(spend))::VARCHAR || ' of spend in the '
+             || 'last 30 days but ' || SUM(sf_leads)::VARCHAR || ' CRM leads. The daily file has '
+             || 'carried Basement since 2026-08-12, so this means the feed stopped, prod stopped '
+             || 'being set, or the erie_type derivation regressed. Basement reporting silently '
+             || 'falls back to in-platform-only until it is fixed.' AS detail
     FROM {{ this.schema }}.{{ target.database }}_blended_performance
     WHERE date_granularity = 'day'
-      AND date >= DATEADD(day, -90, CURRENT_DATE)
+      AND date >= DATEADD(day, -30, CURRENT_DATE)
       AND erie_type = 'Basement'
+      AND channel IN ('Google', 'Bing')
     GROUP BY 1,2,3
-    HAVING SUM(sf_leads) > 0
+    HAVING SUM(spend) > 10000 AND SUM(sf_leads) = 0
 ),
 
 {# ---------------------------------------------------------------- 4. Meta funnel wiring #}
