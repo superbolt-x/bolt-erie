@@ -20,12 +20,19 @@ WITH office_data as
     filtered_data as
     (SELECT *, {{ get_date_parts('lead_entry_date') }}
     FROM {{ source('s3_raw','superbolt_daily_file') }}
-    {#  LeafFilter is a separate Leaf Home brand and its leads carry the same
+    {#  LeafFilter and Windows are separate Leaf Home brands whose leads carry the same
         source codes as Eries own paid channels, so they land inside the
         Facebook / Google / Bing rows if left in. COALESCE is required: ~20k
-        rows have a NULL prod and a bare <> would drop them. #}
+        rows have a NULL prod and a bare <> would drop them.
+
+        Basement Waterproofing was excluded here until 2026-08-12, because the daily
+        file carried Roofing only and the handful of Basement rows that appeared were
+        cross-sell — Basement product sold through a Roofing campaign — which had to stay
+        out of the Roofing numbers. The Erie team has now added Basement properly, so it is
+        kept and separated downstream by erie_type (derived from `prod`, not from the
+        source-code prefix). Cross-sell is still handled correctly because erie_type now
+        follows the product. #}
     WHERE COALESCE(prod,'') <> 'LeafFilter'
-    AND COALESCE(prod,'') <> 'Basement Waterproofing'
     AND COALESCE(prod,'') <> 'Windows'
     ),
 
@@ -47,6 +54,11 @@ WITH office_data as
         CASE WHEN utm_content ~* 'shorts_stay_off_the_ladder_gutter_guard_4000_value_banner_split_gg_lp' THEN 'shorts stay off the ladder gutter guards 4000 value banner split gg lp'
             WHEN source IN ('SM2','SM4','RYT','BRYT','BSM2','BSM4') OR utm_source = 'youtube' THEN TRIM(REPLACE(REPLACE(REPLACE(REPLACE(lower(utm_content),'lps','lp'),'__',' '),'_',' '),' - ',' '))::VARCHAR ELSE utm_content END as utm_content_adj,
         utm_keyword, NULL AS utm_match_type, utm_placement, NULL AS utm_discount, utm_lp_variant,utm_campaign_id,utm_msclk_id,
+        {#  `prod` is the authoritative product and is what erie_type is derived from
+            downstream. utm_ad_group_name is carried because Basement populates it where
+            utm_term holds a keyword rather than an ad-group id. #}
+        prod,
+        utm_ad_group_name,
         COUNT(DISTINCT lead_id) as leads,
         SUM(COALESCE(number_of_calls,0)) as calls,
         SUM(COALESCE("set",0)) as appointments,
@@ -63,7 +75,7 @@ WITH office_data as
         SUM(COALESCE(median_value_per_set::float,0)*COALESCE("set",0)) as set_value,
         SUM(COALESCE(gross_sale_count,0)) as gross_sale_count
         FROM filtered_data
-        GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
+        GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
         {% if not loop.last %}UNION ALL
         {% endif %}
     {% endfor %})
@@ -92,6 +104,8 @@ SELECT
     END as utm_campaign, 
     utm_term, utm_content_adj as utm_content, utm_keyword, utm_match_type, 
     utm_placement, utm_discount, utm_lp_variant,utm_campaign_id, utm_msclk_id,
+    prod,
+    utm_ad_group_name,
     leads,
     calls,
     appointments,
