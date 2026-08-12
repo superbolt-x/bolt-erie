@@ -21,14 +21,14 @@ WITH office_data as
     (SELECT *, {{ get_date_parts('lead_entry_date') }}
     FROM {{ source('s3_raw','superbolt_daily_file') }}
     {#  LeafFilter and Windows are separate Leaf Home brands whose leads carry the same
-        source codes as Erie's own paid channels, so they land inside the
+        source codes as Eries own paid channels, so they land inside the
         Facebook / Google / Bing rows if left in. COALESCE is required: ~20k
         rows have a NULL prod and a bare <> would drop them.
 
-        'Basement Waterproofing' was excluded here until 2026-08-12, because the daily
+        Basement Waterproofing was excluded here until 2026-08-12, because the daily
         file carried Roofing only and the handful of Basement rows that appeared were
         cross-sell — Basement product sold through a Roofing campaign — which had to stay
-        out of Roofing's numbers. The Erie team has now added Basement properly, so it is
+        out of the Roofing numbers. The Erie team has now added Basement properly, so it is
         kept and separated downstream by erie_type (derived from `prod`, not from the
         source-code prefix). Cross-sell is still handled correctly because erie_type now
         follows the product. #}
