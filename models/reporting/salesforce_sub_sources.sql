@@ -68,7 +68,12 @@ SELECT {{ erie_channel('source', 'utm_source', 'date') }} AS channel,
             WHEN utm_campaign_id = 6930690664241 THEN 'Soc - Meta - Roofing - Prospecting - National - Florida Regional - Lead - CBO (Lifetime) Campaign'
 	  		WHEN utm_campaign_id = 6931185343441 THEN 'Soc - Meta - Roofing - Prospecting - National - Great Lakes and East Great Lakes Regional - Instant Form - Lifetime'
 	  	  	WHEN utm_campaign_id = 6930683609841 THEN 'Soc - Meta - Roofing - Prospecting - National - Northeast Regional - Lead - CBO (Lifetime) Campaign'
-            ELSE utm_campaign::VARCHAR
+            {#  Meta path: prefer the current platform name resolved by campaign_id (bg,
+                extended below with facebook_campaigns) over the raw utm_campaign text, which
+                is hardcoded in the Instant Form and goes stale whenever a campaign is
+                duplicated/renamed. utm_campaign_id itself is reliably populated on Meta
+                (unlike Basement), so this is a straight id join, no name-normalization needed. #}
+            ELSE COALESCE(bg_campaign_name, utm_campaign)::VARCHAR
         END as utm_campaign,
         CASE WHEN source IN ('PMX','BPMX','IL2','SMD','BIL2','BSMD') OR utm_source ~* 'google' THEN COALESCE(gb_ad_group_name, utm_ad_group_name)::VARCHAR
             WHEN source IN ('IL3','BIL3') OR (utm_source ~* 'bing' AND source NOT IN ('BNA','PMX2')) THEN COALESCE(gb_ad_group_name, utm_ad_group_name)::VARCHAR
@@ -123,6 +128,9 @@ SELECT {{ erie_channel('source', 'utm_source', 'date') }} AS channel,
             UNION ALL
             SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, NULL as advertising_channel_type
             FROM {{ ref('bingads_campaigns') }}
+            UNION ALL
+            SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, NULL as advertising_channel_type
+            FROM {{ ref('facebook_campaigns') }}
             ) bg ON s.utm_campaign_id_adj = bg.campaign_id
     {#  NAME-BASED CAMPAIGN JOIN — the Basement path.
 
