@@ -62,8 +62,8 @@
              AND ({{ from_utm }}) IS NOT NULL
              AND ({{ from_source }}) IS NOT NULL
             THEN ({{ from_utm }})
-        WHEN ({{ from_source }}) IS NOT NULL THEN ({{ from_source }})
         WHEN ({{ from_utm }}) IS NOT NULL THEN ({{ from_utm }})
+        WHEN ({{ from_source }}) IS NOT NULL THEN ({{ from_source }})
         ELSE 'Other'
     END
 {% endmacro %}
