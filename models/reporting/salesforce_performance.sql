@@ -70,7 +70,11 @@ WITH office_data as
         SUM(COALESCE("gross",0)) as gross,
         SUM(COALESCE("net",0)) as net,
         SUM(COALESCE(workable_leads,0)) as workable_leads,
-        COUNT(DISTINCT CASE WHEN market = '999 - Invalid' THEN lead_id END) as ooa_leads,
+        {#  Erie added an authoritative "OOA Lead" flag to the daily file on 2026-09-24
+            (ooa_lead: 0/1). It replaces the market='999 - Invalid' string-match proxy
+            this used to use, which agreed with the flag on 99.8% of leads (246,491 vs
+            246,025 of 1.55M) -- close enough to switch to the source of truth. #}
+        COUNT(DISTINCT CASE WHEN ooa_lead = 1 THEN lead_id END) as ooa_leads,
         SUM(COALESCE(net_sale_count,0)) as net_sale_count,
         SUM(COALESCE(median_value_per_set::float,0)*COALESCE("set",0)) as set_value,
         SUM(COALESCE(gross_sale_count,0)) as gross_sale_count
