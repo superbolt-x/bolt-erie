@@ -26,11 +26,7 @@ SELECT
                 or ((campaign_name !~* 'sandbox' or campaign_name !~* 'All Area') and account_id = '1349056908916556')) AND campaign_name ~* 'Local' 
              THEN 'Local'
         END as market,
-        CASE WHEN campaign_name !~* 'warm' THEN 'Prospecting' 
-            WHEN campaign_name ~* 'warm' THEN 'Retargeting' 
-            WHEN campaign_name ~* 'LP Clicks Traffic' THEN 'Traffic' 
-            WHEN campaign_name ~* 'LP Views Leads' THEN 'View Content' 
-        END as campaign_type,
+        COALESCE({{ erie_meta_campaign_type('campaign_name') }}, 'Prospecting') as campaign_type,
         {{ region_bucket('campaign_name') }} as region_bucket,
         {{ service_type_bucket('adset_name') }} as service_type,
         NULL as dispo,
