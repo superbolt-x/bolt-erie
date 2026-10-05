@@ -49,7 +49,7 @@ SELECT {{ erie_channel('source', 'utm_source', 'date') }} AS channel,
             ELSE 'Other'
         END as market,
         {#  Meta: campaign name wins over the source code. #}
-        {%- set meta_name = "COALESCE(bg_campaign_name, nm_campaign_name, NULLIF(utm_campaign,''))::VARCHAR" %}
+        {%- set meta_name = "COALESCE(bg_campaign_name, nm_campaign_name, utm_campaign)::VARCHAR" %}
         CASE WHEN channel = 'Facebook'
                 AND {{ erie_meta_campaign_type(meta_name) }} IS NOT NULL
                 THEN {{ erie_meta_campaign_type(meta_name) }}
