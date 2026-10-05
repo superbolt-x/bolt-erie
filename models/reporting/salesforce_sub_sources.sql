@@ -48,7 +48,12 @@ SELECT {{ erie_channel('source', 'utm_source', 'date') }} AS channel,
             WHEN source = 'RYT' THEN 'Retargeting'
             ELSE 'Other'
         END as market,
-        CASE WHEN source IN ('SM2','SM4','SM1','SM','BSM','BSM2','BSM1') 
+        {#  Meta: campaign name wins over the source code. #}
+        CASE WHEN {{ erie_channel('source', 'utm_source', 'date') }} = 'Facebook'
+                AND COALESCE(bg_campaign_name, nm_campaign_name, utm_campaign) ~* 'warm|retargeting' THEN 'Retargeting'
+            WHEN {{ erie_channel('source', 'utm_source', 'date') }} = 'Facebook'
+                AND COALESCE(bg_campaign_name, nm_campaign_name, utm_campaign) ~* 'prospecting' THEN 'Prospecting'
+            WHEN source IN ('SM2','SM4','SM1','SM','BSM','BSM2','BSM1')
                 OR (utm_source ~* 'facebook' AND utm_campaign !~* 'warm') THEN 'Prospecting'
             WHEN source IN ('SMR','SMO','BSMR')
                 OR (utm_source ~* 'facebook' AND utm_campaign ~* 'warm') THEN 'Retargeting'
