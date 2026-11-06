@@ -126,7 +126,18 @@ SELECT {{ erie_channel('source', 'utm_source', 'date') }} AS channel,
             'set_value': 'COALESCE(SUM(set_value),0)',
             'gross_sale_count': 'COALESCE(SUM(gross_sale_count),0)'
         }) }}
-    FROM (SELECT *, COALESCE(utm_campaign_id::VARCHAR,utm_campaign) as utm_campaign_id_adj
+    FROM (SELECT *,
+            CASE
+                {#  B006 was renamed South Bend -> Crown Point in Google Ads on 2026-11-06 (campaign
+                    id 21400816505). 107 of its 168 Basement leads carry the old name and no
+                    utm_campaign_id, so they only matched by name. Pin them to the campaign id so
+                    they land on whatever name googleads_campaigns currently holds — the same one
+                    the spend rows use — before AND after campaign_history picks up the new name. #}
+                WHEN COALESCE(NULLIF(utm_campaign_id::VARCHAR,''),'') = ''
+                 AND {{ normalize_campaign_name('utm_campaign') }} = 'b006southbendgeneralsearchincline'
+                THEN '21400816505'
+                ELSE COALESCE(utm_campaign_id::VARCHAR,utm_campaign)
+            END as utm_campaign_id_adj
             FROM {{ source('reporting','salesforce_performance') }}) s
     LEFT JOIN (SELECT campaign_id::VARCHAR as campaign_id, campaign_name as bg_campaign_name, advertising_channel_type
             FROM {{ ref('googleads_campaigns') }}
